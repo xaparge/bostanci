@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Quartz;
+using Quartz.Impl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,7 +9,7 @@ namespace Iksap.ItsmReporting.Web.Scheduling
 {
     public class SchedulerWrapper
     {
-        public void RunJob()
+        public static void RunJob()
         {
             try
             {

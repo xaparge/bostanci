@@ -141,13 +141,11 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.UseDefaultCredentials = false;
                 client.Credentials = new NetworkCredential(senderEmail, senderPassword);
-
-                toEmail = "slarapordenemesi@gmail.com";  // Geçici olarak konulmuştur, program aktif halde kaldırılması gerekmektedir.
-
+                
                 MailMessage mailMessage = new MailMessage(senderEmail, toEmail, subject, emailBody);
                 mailMessage.IsBodyHtml = true;
                 mailMessage.BodyEncoding = UTF8Encoding.UTF8;
-                //mailMessage.CC.Add("support@iksap.com");
+                mailMessage.CC.Add("support@iksap.com");
                 client.Send(mailMessage);
                 System.Threading.Thread.Sleep(1000);
 

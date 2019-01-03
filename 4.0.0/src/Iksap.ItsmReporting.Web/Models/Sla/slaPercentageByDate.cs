@@ -9,8 +9,8 @@ namespace Iksap.ItsmReporting.Web.Models.Sla
     {
         public int PercentYear { get; set; }
         public int PercentMonth { get; set; }
-        public double SuccessfulPercentage { get; set; }
-        public double FailedPercentage { get; set; }
+        public string SuccessfulPercentage { get; set; }
+        public string FailedPercentage { get; set; }
         public bool IsDeleted { get; set; }
         public int DeletedUserId { get; set; }
         public DateTime DeletionTime { get; set; }

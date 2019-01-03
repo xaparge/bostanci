@@ -23,8 +23,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
         public ActionResult Index()
         {
-            SchedulerWrapper sw = new SchedulerWrapper();
-            //sw.RunJob();
             return View();
         }
         [HttpPost]
@@ -99,7 +97,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
         }
 
         [HttpPost]
-        [System.Web.Mvc.Route("Home/SlaMonthlyChart")]
+        [System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
         public JsonResult SlaMonthlyChart()
         {
             SlaReport sr = new SlaReport();
@@ -162,16 +160,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 dr["negatif"] = Math.Round(Convert.ToDouble(dictionary[i + 1][1]), 2);
                 dt.Rows.Add(dr);
             }
-
-            //foreach (KeyValuePair<int, List<string>> item in dictionary)
-            //{
-            //    DataRow dr = dt.NewRow();
-            //    dr["ay"] = item.Key;
-            //    dr["pozitif"] = Math.Round(Convert.ToDouble(item.Value[0]), 2);
-            //    dr["negatif"] = Math.Round(Convert.ToDouble(item.Value[1]), 2);
-            //    dt.Rows.Add(dr);
-
-            //}
 
             //Looping and extracting each DataColumn to List<Object>
             foreach (DataColumn dc in dt.Columns)
