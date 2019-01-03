@@ -22,7 +22,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
         public ActionResult Index()
         {
-           
+           //denemedğir!
             return View();
         }
         [HttpPost]
