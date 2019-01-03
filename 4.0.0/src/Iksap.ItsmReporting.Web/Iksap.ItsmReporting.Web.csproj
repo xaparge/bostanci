@@ -3117,6 +3117,8 @@
     <Compile Include="Models\DataModel\slaOpenProject_Result.cs">
       <DependentUpon>itsmreporting_operationsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Scheduling\SchedulerWrapper.cs" />
+    <Compile Include="Scheduling\SendMail.cs" />
     <Compile Include="Views\ItsmReportingWebViewPageBase.cs" />
     <Compile Include="Views\UrlChecker.cs" />
   </ItemGroup>

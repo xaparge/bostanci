@@ -11,6 +11,7 @@ using Iksap.ItsmReporting.Web.Models;
 using Iksap.ItsmReporting.Web.Models.DataModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Iksap.ItsmReporting.Web.Scheduling;
 
 namespace Iksap.ItsmReporting.Web.Controllers
 
@@ -22,7 +23,8 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
         public ActionResult Index()
         {
-           //denemedğir!
+            SchedulerWrapper sw = new SchedulerWrapper();
+            //sw.RunJob();
             return View();
         }
         [HttpPost]
@@ -61,8 +63,8 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 slaPercentageByDate abc = new slaPercentageByDate();
                 abc.PercentMonth = i;
                 abc.PercentYear = 2018;
-                abc.SuccessfulPercentage = success_rate;
-                abc.FailedPercentage = fail_rate;
+                abc.SuccessfulPercentage = Math.Round(success_rate, 2).ToString();
+                abc.FailedPercentage = Math.Round(fail_rate, 2).ToString();
                 sr.insertSlaPercentageByDate(abc);
             }
 
@@ -97,13 +99,13 @@ namespace Iksap.ItsmReporting.Web.Controllers
         }
 
         [HttpPost]
-        [System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
+        [System.Web.Mvc.Route("Home/SlaMonthlyChart")]
         public JsonResult SlaMonthlyChart()
         {
             SlaReport sr = new SlaReport();
             List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
 
-            Dictionary<int, List<double>> dictionary = new Dictionary<int, List<double>>();
+            Dictionary<int, List<string>> dictionary = new Dictionary<int, List<string>>();
             double success_count = 0;
             double fail_count = 0;
 
@@ -111,11 +113,11 @@ namespace Iksap.ItsmReporting.Web.Controllers
             old_reports = sr.getSlaPercentageByDate();
             for (int i = 0; i < 12; i++)
             {
-                List<double> successAndFail = new List<double>();
-  
-                successAndFail.Add(Math.Round(old_reports[old_reports.Count - i - 1].SuccessfulPercentage, 2));
-                successAndFail.Add(Math.Round(old_reports[old_reports.Count - i-1].FailedPercentage, 2));
-                dictionary.Add(i, successAndFail);
+                List<string> successAndFail = new List<string>();
+
+                successAndFail.Add(old_reports[old_reports.Count - i - 1].SuccessfulPercentage);
+                successAndFail.Add(old_reports[old_reports.Count - i - 1].FailedPercentage);
+                dictionary.Add(old_reports.Count - i, successAndFail);
             }
 
             singleSla = sr.getSingleSlaTables("close", DateTime.Now.Month, 2018);
@@ -131,10 +133,9 @@ namespace Iksap.ItsmReporting.Web.Controllers
                     fail_count++;
                 }
             }
-            double success_rate = (success_count * 100) / (success_count + fail_count);
-            double fail_rate = (fail_count * 100) / (success_count + fail_count);
-            List<double> successAndFail2 = new List<double>();
-
+            double success_rate = Math.Round((success_count * 100) / (success_count + fail_count), 2);
+            double fail_rate = Math.Round((fail_count * 100) / (success_count + fail_count), 2);
+            List<string> successAndFail2 = new List<string>();
             successAndFail2.Add(CheckNull(success_rate));
             successAndFail2.Add(CheckNull(fail_rate));
 
@@ -142,27 +143,35 @@ namespace Iksap.ItsmReporting.Web.Controllers
             slaPercentageByDate x = new slaPercentageByDate();
             x.PercentYear = DateTime.Now.Year;
             x.PercentMonth = DateTime.Now.Month;
-            x.SuccessfulPercentage = success_rate;
-            x.FailedPercentage = fail_rate;
+            x.SuccessfulPercentage = success_rate.ToString();
+            x.FailedPercentage = fail_rate.ToString();
             sr.updateSlaPercentageByDate(x);
 
             List<object> iData = new List<object>();
             //Creating sample data
             DataTable dt = new DataTable();
             dt.Columns.Add("ay", System.Type.GetType("System.String"));
-            dt.Columns.Add("pozitif", System.Type.GetType("System.Int32"));
-            dt.Columns.Add("negatif", System.Type.GetType("System.Int32"));
-
-
-            foreach (KeyValuePair<int, List<double>> item in dictionary)
+            dt.Columns.Add("pozitif", System.Type.GetType("System.Double"));
+            dt.Columns.Add("negatif", System.Type.GetType("System.Double"));
+            for (int i = 0; i < dictionary.Count; i++)
             {
-                DataRow dr = dt.NewRow();
-                dr["ay"] = item.Key;
-                dr["pozitif"] = item.Value[0];
-                dr["negatif"] = item.Value[1];
-                dt.Rows.Add(dr);
 
+                DataRow dr = dt.NewRow();
+                dr["ay"] = i + 1;
+                dr["pozitif"] = Math.Round(Convert.ToDouble(dictionary[i + 1][0]), 2);
+                dr["negatif"] = Math.Round(Convert.ToDouble(dictionary[i + 1][1]), 2);
+                dt.Rows.Add(dr);
             }
+
+            //foreach (KeyValuePair<int, List<string>> item in dictionary)
+            //{
+            //    DataRow dr = dt.NewRow();
+            //    dr["ay"] = item.Key;
+            //    dr["pozitif"] = Math.Round(Convert.ToDouble(item.Value[0]), 2);
+            //    dr["negatif"] = Math.Round(Convert.ToDouble(item.Value[1]), 2);
+            //    dt.Rows.Add(dr);
+
+            //}
 
             //Looping and extracting each DataColumn to List<Object>
             foreach (DataColumn dc in dt.Columns)
@@ -174,14 +183,15 @@ namespace Iksap.ItsmReporting.Web.Controllers
             //Source data returned as JSON
             return Json(iData, JsonRequestBehavior.AllowGet);
         }
-        public double CheckNull(double item)
+        public string CheckNull(double item)
         {
-            if (!Double.IsNaN(item)) {
+            if (!Double.IsNaN(item))
+            {
+                return item.ToString();
 
-                return item;
-            
-            }else  return 0;
-           
+            }
+            else return "0";
+
 
         }
         [HttpPost]
@@ -218,7 +228,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
             //}
 
-           
+
 
             //if (!string.IsNullOrWhiteSpace(lastName))
             //{
@@ -230,7 +240,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
             //    people = people.Where(x => x.login.ToLower().Contains(login.ToLower()));
             //}
 
-           
+
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -273,65 +283,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
             //[Column(TypeName = "date")]
             //public DateTime Tarih { get; set; }
-        }
-        public JsonResult getUsers()
-        {
-            SlaReport sr = new SlaReport();
-            List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
-
-            singleSla = sr.getSingleSlaTables("open", 0, 0);
-
-            //Dictionary<int, List<double>> percentReports = new Dictionary<int, List<double>>();
-            //percentReports = sr.getOldReports();
-
-            //singleSla = sr.getSingleSlaTables("close", DateTime.Now.Month, DateTime.Now.Year);
-            //double success_count = 0, fail_count = 0;
-            //for (int i = 0; i < singleSla.Count; i++)
-            //{
-            //    if (singleSla[i].success_rate < 100)
-            //    {
-            //        success_count++;
-            //    }
-            //    else if (singleSla[i].success_rate >= 100)
-            //    {
-            //        fail_count++;
-            //    }
-            //}
-            //double success_rate = (success_count * 100) / (success_count + fail_count);
-            //double fail_rate = (fail_count * 100) / (success_count + fail_count);
-            //List<double> successAndFail = new List<double>();
-            //successAndFail.Add(Math.Round(success_rate, 2));
-            //successAndFail.Add(Math.Round(fail_rate, 2));
-            //percentReports[DateTime.Now.Month] = successAndFail;
-
-            //string temp = successAndFail[0].ToString() + "-" + successAndFail[1].ToString();
-            //sr.updateOldReport(DateTime.Now.Month, temp);
-
-            SendMail sm = new SendMail();
-            sm.SendMailToUsers(singleSla);
-
-            return (Json(singleSla, JsonRequestBehavior.AllowGet));
-        }
-
-
-
-        public bool sendMail()
-        {
-            try
-            {
-                SlaReport sr = new SlaReport();
-                List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
-
-                singleSla = sr.getSingleSlaTables("open", 0, 0);
-
-                SendMail sm = new SendMail();
-                sm.SendMailToUsers(singleSla);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
         }
 
     }

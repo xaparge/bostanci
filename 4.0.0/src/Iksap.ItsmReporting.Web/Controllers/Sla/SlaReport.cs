@@ -70,8 +70,8 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 slaPercentageByDate temp = new slaPercentageByDate();
                 temp.PercentYear = Convert.ToInt32(dt.Rows[i][0]);
                 temp.PercentMonth = Convert.ToInt32(dt.Rows[i][1]);
-                temp.SuccessfulPercentage = Convert.ToDouble(dt.Rows[i][2]);
-                temp.FailedPercentage = Convert.ToDouble(dt.Rows[i][3]);
+                temp.SuccessfulPercentage = dt.Rows[i][2].ToString();
+                temp.FailedPercentage = dt.Rows[i][3].ToString();
                 old_percentage.Add(temp);
             }
             return old_percentage;
