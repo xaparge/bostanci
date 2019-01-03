@@ -99,7 +99,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
         }
 
         [HttpPost]
-        [System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
+        [System.Web.Mvc.Route("Home/SlaMonthlyChart")]
         public JsonResult SlaMonthlyChart()
         {
             SlaReport sr = new SlaReport();
@@ -163,6 +163,16 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 dt.Rows.Add(dr);
             }
 
+            //foreach (KeyValuePair<int, List<string>> item in dictionary)
+            //{
+            //    DataRow dr = dt.NewRow();
+            //    dr["ay"] = item.Key;
+            //    dr["pozitif"] = Math.Round(Convert.ToDouble(item.Value[0]), 2);
+            //    dr["negatif"] = Math.Round(Convert.ToDouble(item.Value[1]), 2);
+            //    dt.Rows.Add(dr);
+
+            //}
+
             //Looping and extracting each DataColumn to List<Object>
             foreach (DataColumn dc in dt.Columns)
             {
@@ -218,7 +228,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
             //}
 
-           
+
 
             //if (!string.IsNullOrWhiteSpace(lastName))
             //{
@@ -230,7 +240,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
             //    people = people.Where(x => x.login.ToLower().Contains(login.ToLower()));
             //}
 
-           
+
 
             if (!string.IsNullOrEmpty(search))
             {
