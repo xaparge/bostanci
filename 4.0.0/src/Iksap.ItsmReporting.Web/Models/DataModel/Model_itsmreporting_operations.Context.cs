@@ -27,10 +27,10 @@ namespace Iksap.ItsmReporting.Web.Models.DataModel
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<mail_scheduled_task> mail_scheduled_task { get; set; }
         public virtual DbSet<mail_send_of_percentage> mail_send_of_percentage { get; set; }
         public virtual DbSet<sla_percentage_bydate> sla_percentage_bydate { get; set; }
         public virtual DbSet<mail_sent> mail_sent { get; set; }
-        public virtual DbSet<mail_scheduled_task> mail_scheduled_task { get; set; }
     
         public virtual ObjectResult<slaClosedProjectByDate_Result> slaClosedProjectByDate(Nullable<int> monthvalue, Nullable<int> yearvalue)
         {
