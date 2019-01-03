@@ -16,7 +16,7 @@ namespace Iksap.ItsmReporting.Web
             
             base.Application_Start(sender, e);
             //SchedulerWrapper sw = new SchedulerWrapper();
-            SchedulerWrapper.RunJob();
+            //SchedulerWrapper.RunJob();
         }
     }
 }
