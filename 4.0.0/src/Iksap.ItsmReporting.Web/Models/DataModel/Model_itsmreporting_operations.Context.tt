@@ -2,7 +2,7 @@
 <#@ include file="EF6.Utility.CS.ttinclude"#><#@
  output extension=".cs"#><#
 
-const string inputFile = @"itsmreporting_operationsModel.edmx";
+const string inputFile = @"Model_itsmreporting_operations.edmx";
 var textTransform = DynamicTextTransformation.Create(this);
 var code = new CodeGenerationTools(this);
 var ef = new MetadataTools(this);

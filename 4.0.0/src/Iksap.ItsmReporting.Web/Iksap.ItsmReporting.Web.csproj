@@ -2725,15 +2725,15 @@
       <DependentUpon>bitnami_redmineModel.edmx</DependentUpon>
       <LastGenOutput>bitnami_redmineModel.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\DataModel\itsmreporting_operationsModel.Context.tt">
+    <Content Include="Models\DataModel\Model_itsmreporting_operations.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>itsmreporting_operationsModel.edmx</DependentUpon>
-      <LastGenOutput>itsmreporting_operationsModel.Context.cs</LastGenOutput>
+      <DependentUpon>Model_itsmreporting_operations.edmx</DependentUpon>
+      <LastGenOutput>Model_itsmreporting_operations.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\DataModel\itsmreporting_operationsModel.tt">
+    <Content Include="Models\DataModel\Model_itsmreporting_operations.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>itsmreporting_operationsModel.edmx</DependentUpon>
-      <LastGenOutput>itsmreporting_operationsModel.cs</LastGenOutput>
+      <DependentUpon>Model_itsmreporting_operations.edmx</DependentUpon>
+      <LastGenOutput>Model_itsmreporting_operations.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -2750,19 +2750,19 @@
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
     <Content Include="lib\jquery-datatable\skin\bootstrap\images\Sorting icons.psd" />
-    <EntityDeploy Include="Models\DataModel\itsmreporting_operationsModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>itsmreporting_operationsModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\DataModel\itsmreporting_operationsModel.edmx.diagram">
-      <DependentUpon>itsmreporting_operationsModel.edmx</DependentUpon>
-    </Content>
     <EntityDeploy Include="Models\DataModel\bitnami_redmineModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>bitnami_redmineModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <Content Include="Models\DataModel\bitnami_redmineModel.edmx.diagram">
       <DependentUpon>bitnami_redmineModel.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Models\DataModel\Model_itsmreporting_operations.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model_itsmreporting_operations.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DataModel\Model_itsmreporting_operations.edmx.diagram">
+      <DependentUpon>Model_itsmreporting_operations.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Scripts\esm\popper-utils.js" />
@@ -2962,36 +2962,24 @@
     <Compile Include="Models\DataModel\issue_template_settings.cs">
       <DependentUpon>bitnami_redmineModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DataModel\itsmreporting_operationsModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>itsmreporting_operationsModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DataModel\itsmreporting_operationsModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>itsmreporting_operationsModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DataModel\itsmreporting_operationsModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>itsmreporting_operationsModel.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Models\DataModel\journals.cs">
       <DependentUpon>bitnami_redmineModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DataModel\journal_details.cs">
       <DependentUpon>bitnami_redmineModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DataModel\mail_send_of_percentage.cs">
-      <DependentUpon>itsmreporting_operationsModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DataModel\mail_sent.cs">
-      <DependentUpon>itsmreporting_operationsModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Account\TenantChangeModalViewModel.cs" />
     <Compile Include="Models\Account\TenantChangeViewModel.cs" />
     <Compile Include="Models\Common\Modals\ModalHeaderViewModel.cs" />
+    <Compile Include="Models\DataModel\mail_scheduled_task.cs">
+      <DependentUpon>Model_itsmreporting_operations.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataModel\mail_send_of_percentage.cs">
+      <DependentUpon>Model_itsmreporting_operations.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataModel\mail_sent.cs">
+      <DependentUpon>Model_itsmreporting_operations.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DataModel\members.cs">
       <DependentUpon>bitnami_redmineModel.tt</DependentUpon>
     </Compile>
@@ -3000,6 +2988,21 @@
     </Compile>
     <Compile Include="Models\DataModel\messages.cs">
       <DependentUpon>bitnami_redmineModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataModel\Model_itsmreporting_operations.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model_itsmreporting_operations.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataModel\Model_itsmreporting_operations.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model_itsmreporting_operations.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataModel\Model_itsmreporting_operations.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model_itsmreporting_operations.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\DataModel\news.cs">
       <DependentUpon>bitnami_redmineModel.tt</DependentUpon>
@@ -3040,8 +3043,20 @@
     <Compile Include="Models\DataModel\settings.cs">
       <DependentUpon>bitnami_redmineModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DataModel\slaClosedProjectByDateByRow_Result.cs">
+      <DependentUpon>Model_itsmreporting_operations.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataModel\slaClosedProjectByDate_Result.cs">
+      <DependentUpon>Model_itsmreporting_operations.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataModel\slaOpenProject_Result.cs">
+      <DependentUpon>Model_itsmreporting_operations.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataModel\slaUsersMail_Result.cs">
+      <DependentUpon>Model_itsmreporting_operations.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DataModel\sla_percentage_bydate.cs">
-      <DependentUpon>itsmreporting_operationsModel.tt</DependentUpon>
+      <DependentUpon>Model_itsmreporting_operations.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DataModel\time_entries.cs">
       <DependentUpon>bitnami_redmineModel.tt</DependentUpon>
@@ -3108,17 +3123,6 @@
     <Compile Include="Models\Users\EditUserModalViewModel.cs" />
     <Compile Include="Models\Users\UserListViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\DataModel\slaClosedProjectByDateByRow_Result.cs">
-      <DependentUpon>itsmreporting_operationsModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DataModel\slaClosedProjectByDate_Result.cs">
-      <DependentUpon>itsmreporting_operationsModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DataModel\slaOpenProject_Result.cs">
-      <DependentUpon>itsmreporting_operationsModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Scheduling\SchedulerWrapper.cs" />
-    <Compile Include="Scheduling\SendMail.cs" />
     <Compile Include="Views\ItsmReportingWebViewPageBase.cs" />
     <Compile Include="Views\UrlChecker.cs" />
   </ItemGroup>

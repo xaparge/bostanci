@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\ozgur\Desktop\Iksap.ItsmReporting\4.0.0\src\Iksap.ItsmReporting.Web\Models\DataModel\itsmreporting_operationsModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\ozgur\source\repos\xaparge\bostanci\4.0.0\src\Iksap.ItsmReporting.Web\Models\DataModel\Model_itsmreporting_operations.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

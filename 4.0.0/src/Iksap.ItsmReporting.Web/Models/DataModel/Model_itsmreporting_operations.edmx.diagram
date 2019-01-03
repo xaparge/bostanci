@@ -4,11 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="0d27b21307c14c138c8ae8512638e33d" Name="Diagram1">
-        <EntityTypeShape EntityType="itsmreporting_operationsModel.mail_send_of_percentage" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="itsmreporting_operationsModel.sla_percentage_bydate" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="4db670bd85eb496fb9950156d02c1e77" Name="Diagram1">
+        <EntityTypeShape EntityType="itsmreporting_operationsModel.mail_scheduled_task" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="itsmreporting_operationsModel.mail_send_of_percentage" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="itsmreporting_operationsModel.sla_percentage_bydate" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="itsmreporting_operationsModel.mail_sent" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="itsmreporting_operationsModel.mail_scheduled_task" Width="1.5" PointX="0.875" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
