@@ -12,6 +12,7 @@ using Iksap.ItsmReporting.Web.Models.DataModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Iksap.ItsmReporting.Web.Scheduling;
+using Iksap.ItsmReporting.Web.Models.Home;
 
 namespace Iksap.ItsmReporting.Web.Controllers
 
@@ -20,7 +21,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
     public class HomeController : ItsmReportingControllerBase
     {
         PersonService personService = new PersonService();
-
+        ProjectsListService projectsListService = new ProjectsListService();
         public ActionResult Index()
         {
             return View();
@@ -95,7 +96,42 @@ namespace Iksap.ItsmReporting.Web.Controllers
             //Source data returned as JSON
             return Json(iData, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult GetCountries()
+        {
+        
+                  var projects = projectsListService.GetProjects().ToList();
 
+            var Countries = new List<string>();
+            Countries.Add("Australia");
+            Countries.Add("India");
+            Countries.Add("Russia");
+            return Json(projects, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult GetStates(string country)
+        {
+
+            var States = new List<string>();
+            if (!string.IsNullOrWhiteSpace(country))
+            {
+                if (country.Equals("Australia"))
+                {
+                    States.Add("Sydney");
+                    States.Add("Perth");
+                }
+                if (country.Equals("India"))
+                {
+                    States.Add("Delhi");
+                    States.Add("Mumbai");
+                }
+                if (country.Equals("Russia"))
+                {
+                    States.Add("Minsk");
+                    States.Add("Moscow");
+                }
+            }
+            return Json(States, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         [System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
         public JsonResult SlaMonthlyChart()
