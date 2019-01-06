@@ -11,7 +11,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
 {
     public class SlaReport
     {
-        MySqlConnection dbConn = new MySqlConnection("server = 127.0.0.1; uid=root;pwd=12345678;database=itsmreporting_operations");
+        MySqlConnection dbConn = new MySqlConnection("server=127.0.0.1; uid=root;pwd=12345678; database=itsmreporting_operations");
 
         public List<SingleSlaTable> getSingleSlaTables(string project_state, int month, int year)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.
         {
@@ -22,9 +22,10 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
             }
             else if (project_state == "close")
             {
-                dbComm = new MySqlCommand("itsmreporting_operations.slaClosedProjectByDate", dbConn);
+                dbComm = new MySqlCommand("itsmreporting_operations.slaClosedProjectByDateByProjects", dbConn);
                 dbComm.Parameters.AddWithValue("@monthvalue", month);
                 dbComm.Parameters.AddWithValue("@yearvalue", year);
+                dbComm.Parameters.AddWithValue("@projects_id", 5);
             }
             else
             {
@@ -43,13 +44,6 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 singleSla[i] = temp.singleSlaTable;
                 sla = temp.slaTable;
             }
-
-            // UPDATE KISMI HOMECONTROLLER'DA YAPILABİLİR
-            //slaPercentageByDate old_reports = new slaPercentageByDate();
-            //old_reports.PercentYear = year;
-            //old_reports.PercentMonth = month;
-            //old_reports.SuccessfulPercentage = singleSla
-            //updateSlaPercentageByDate(old_reports);
 
             return singleSla;
         }
@@ -180,55 +174,104 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 {
                     temp.closed_on = Convert.ToDateTime("1000-01-01");
                 }
-                if (dt.Rows[i][2].ToString() == "Immediate")
+                temp.project_id = Convert.ToInt32(dt.Rows[i][10]);
+                if (dt.Rows[i][2].ToString() == "Immediate" || dt.Rows[i][2].ToString() == "Urgent")
                 {
                     Rate r = new Rate();
                     r.id = 1;
-                    r.time_limit = 4;
-                    temp.rate = r;
-                }
-                else if (dt.Rows[i][2].ToString() == "Urgent")
-                {
-                    Rate r = new Rate();
-                    r.id = 2;
-                    r.work_start_time = new DateTime(1001, 01, 01, 09, 00, 00);     // sadece saat ve dakika kısmı kullanılacak
-                    r.work_end_time = new DateTime(1001, 01, 01, 18, 00, 00);     // sadece saat ve dakika kısmı kullanılacak
-                    r.total_time = 9;
-                    r.time_limit = 9;
+                    r.name = dt.Rows[i][2].ToString();
+                    //r.time_limit = 9;
                     temp.rate = r;
                 }
                 else if (dt.Rows[i][2].ToString() == "High")
                 {
                     Rate r = new Rate();
-                    r.id = 3;
-                    r.work_start_time = new DateTime(1001, 01, 01, 09, 00, 00);     // sadece saat ve dakika kısmı kullanılacak
-                    r.work_end_time = new DateTime(1001, 01, 01, 18, 00, 00);     // sadece saat ve dakika kısmı kullanılacak
-                    r.total_time = 9;
-                    r.time_limit = 18;
+                    r.id = 2;
+                    r.name = dt.Rows[i][2].ToString();
                     temp.rate = r;
                 }
                 else if (dt.Rows[i][2].ToString() == "Normal")
                 {
                     Rate r = new Rate();
-                    r.id = 4;
-                    r.work_start_time = new DateTime(1001, 01, 01, 09, 00, 00);     // sadece saat ve dakika kısmı kullanılacak
-                    r.work_end_time = new DateTime(1001, 01, 01, 18, 00, 00);     // sadece saat ve dakika kısmı kullanılacak
-                    r.total_time = 9;
-                    r.time_limit = 27;
+                    r.id = 3;
+                    r.name = dt.Rows[i][2].ToString();
                     temp.rate = r;
                 }
                 else if (dt.Rows[i][2].ToString() == "Low")
                 {
                     Rate r = new Rate();
-                    r.id = 5;
-                    r.work_start_time = new DateTime(1001, 01, 01, 09, 00, 00);     // sadece saat ve dakika kısmı kullanılacak
-                    r.work_end_time = new DateTime(1001, 01, 01, 18, 00, 00);     // sadece saat ve dakika kısmı kullanılacak
-                    r.total_time = 9;
-                    r.time_limit = 45;
+                    r.id = 4;
+                    r.name = dt.Rows[i][2].ToString();
                     temp.rate = r;
                 }
 
                 slaList.Add(temp);
+            }
+            slaList = getSlaRateInfos(slaList);
+            int aaaa = slaList[0].rate.work_end_time.Hour;
+            return slaList;
+        }
+
+        private List<SlaTable> getSlaRateInfos(List<SlaTable> slaList)
+        {
+            MySqlCommand dbComm = new MySqlCommand("SELECT * FROM sla_rate_list", dbConn);
+            dbConn.Open();
+            DataTable dt = new DataTable();
+            MySqlDataAdapter da = new MySqlDataAdapter(dbComm);
+            da.Fill(dt);
+            dbConn.Close();
+
+            for (int i = 0; i < slaList.Count; i++)
+            {
+                bool assign_control = false;
+                for (int j = 4; j < dt.Rows.Count - 4; j++)     // sla_rate_list'te ilk 4 değer default veriler olduğu için döngü 4'ten başlatıldı.
+                {
+                    if (slaList[i].project_id == Convert.ToInt32(dt.Rows[j][2]) && slaList[i].rate.name == dt.Rows[j][1].ToString())
+                    {
+                        TimeSpan tsWorkStart = TimeSpan.Parse(dt.Rows[j][4].ToString());
+                        slaList[i].rate.work_start_time = new DateTime(0001, 01, 01, tsWorkStart.Hours, tsWorkStart.Minutes, 0);
+
+                        TimeSpan tsWorkEnd = TimeSpan.Parse(dt.Rows[j][5].ToString());
+                        slaList[i].rate.work_end_time = new DateTime(0001, 01, 01, tsWorkEnd.Hours, tsWorkEnd.Minutes, 0);
+                        slaList[i].rate.time_limit = Convert.ToInt32(dt.Rows[j][3]);
+
+                        TimeSpan tsLunchStart = TimeSpan.Parse(dt.Rows[j][6].ToString());
+                        slaList[i].rate.lunch_start_time = new DateTime(0001, 01, 01, tsLunchStart.Hours, tsLunchStart.Minutes, 0);      // Şimdilik kullanılmıyor, ileriki sürümlerde kullanılabilir diye ataması yapılmıştır.
+
+                        TimeSpan tsLunchEnd = TimeSpan.Parse(dt.Rows[j][7].ToString());
+                        slaList[i].rate.lunch_end_time = new DateTime(0001, 01, 01, tsLunchEnd.Hours, tsLunchEnd.Minutes, 0);      // Şimdilik kullanılmıyor, ileriki sürümlerde kullanılabilir diye ataması yapılmıştır.
+
+                        TimeSpan ts = slaList[i].rate.work_end_time - slaList[i].rate.work_start_time;
+                        slaList[i].rate.total_time = ts.Hours;
+                        assign_control = true;
+                        break;
+                    }
+                }
+                if (!assign_control)     // bu koşul şirket için özel atanmış değerler yoksa default değer atamasını sağlar.
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (slaList[i].rate.name == dt.Rows[j][1].ToString())
+                        {
+                            TimeSpan tsWorkStart = TimeSpan.Parse(dt.Rows[j][4].ToString());
+                            slaList[i].rate.work_start_time = new DateTime(0001, 01, 01, tsWorkStart.Hours, tsWorkStart.Minutes, 0);
+
+                            TimeSpan tsWorkEnd = TimeSpan.Parse(dt.Rows[j][5].ToString());
+                            slaList[i].rate.work_end_time = new DateTime(0001, 01, 01, tsWorkEnd.Hours, tsWorkEnd.Minutes, 0);
+                            slaList[i].rate.time_limit = Convert.ToInt32(dt.Rows[j][3]);
+
+                            TimeSpan tsLunchStart = TimeSpan.Parse(dt.Rows[j][6].ToString());
+                            slaList[i].rate.lunch_start_time = new DateTime(0001, 01, 01, tsLunchStart.Hours, tsLunchStart.Minutes, 0);      // Şimdilik kullanılmıyor, ileriki sürümlerde kullanılabilir diye ataması yapılmıştır.
+
+                            TimeSpan tsLunchEnd = TimeSpan.Parse(dt.Rows[j][7].ToString());
+                            slaList[i].rate.lunch_end_time = new DateTime(0001, 01, 01, tsLunchEnd.Hours, tsLunchEnd.Minutes, 0);      // Şimdilik kullanılmıyor, ileriki sürümlerde kullanılabilir diye ataması yapılmıştır.
+
+                            TimeSpan ts = slaList[i].rate.work_end_time - slaList[i].rate.work_start_time;
+                            slaList[i].rate.total_time = ts.Hours;
+                            break;
+                        }
+                    }
+                }
             }
             return slaList;
         }

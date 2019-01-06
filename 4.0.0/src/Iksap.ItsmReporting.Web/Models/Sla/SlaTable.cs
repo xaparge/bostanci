@@ -15,6 +15,7 @@ namespace Iksap.ItsmReporting.Web.Models.Sla
         public string subject { get; set; }
         public DateTime created_on { get; set; }
         public DateTime closed_on { get; set; }
+        public int project_id { get; set; }
         public Rate rate { get; set; }
         public int sla_time_hour { get; set; }
         public int sla_time_minute { get; set; }

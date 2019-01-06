@@ -35,10 +35,10 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                         singleSla[i].firstname = dt.Rows[j][4].ToString();
                         singleSla[i].lastname = dt.Rows[j][5].ToString();
                         singleSla[i].address = dt.Rows[j][6].ToString();
-                        if (dt.Rows[j][1].ToString() == "Urgent") { singleSla[i].rate.id = 2; }
-                        else if (dt.Rows[j][1].ToString() == "High") { singleSla[i].rate.id = 3; }
-                        else if (dt.Rows[j][1].ToString() == "Normal") { singleSla[i].rate.id = 4; }
-                        else if (dt.Rows[j][1].ToString() == "Low") { singleSla[i].rate.id = 5; }
+                        if (dt.Rows[j][1].ToString() == "Urgent") { singleSla[i].rate.id = 1; }
+                        else if (dt.Rows[j][1].ToString() == "High") { singleSla[i].rate.id = 2; }
+                        else if (dt.Rows[j][1].ToString() == "Normal") { singleSla[i].rate.id = 3; }
+                        else if (dt.Rows[j][1].ToString() == "Low") { singleSla[i].rate.id = 4; }
                         break;
                     }
                 }
@@ -115,10 +115,10 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                     if ((singleSla[i].success_rate >= 100) || (singleSla[i].success_rate > percentsForSend[j] && singleSla[i].last_sent_percent < percentsForSend[j]))
                     {
                         string priority = "";
-                        if (singleSla[i].rate.id == 2) { priority = "Acil"; }
-                        else if (singleSla[i].rate.id == 3) { priority = "Yüksek"; }
-                        else if (singleSla[i].rate.id == 4) { priority = "Normal"; }
-                        else if (singleSla[i].rate.id == 5) { priority = "Düşük"; }
+                        if (singleSla[i].rate.id == 1) { priority = "Acil"; }
+                        else if (singleSla[i].rate.id == 2) { priority = "Yüksek"; }
+                        else if (singleSla[i].rate.id == 3) { priority = "Normal"; }
+                        else if (singleSla[i].rate.id == 4) { priority = "Düşük"; }
                         SendEmail(singleSla[i].address, singleSla[i].id + " no'lu Ticket Hakk.", "<p>" + singleSla[i].firstname + " " + singleSla[i].lastname + ", " + singleSla[i].id + " numaralı (" + priority + ") ticket'ın süresi %" + singleSla[i].success_rate + " olmuştur</p>");
                         setSentMailList(singleSla[i].id, singleSla[i].address, DateTime.Now.ToString(), Convert.ToDouble(singleSla[i].success_rate));
                         break;
