@@ -8,15 +8,13 @@
             return '$' + value.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, ' ').replace('.', ',');
         }
     });
-
+   
     //initRealTimeChart();
     initDonutChart();
    // initSparkline();
     initSlaMonthlyChart();
 
-
 });
-
 var realtime = 'on';
 function initRealTimeChart() {
     //Real time ==========================================================================================
@@ -117,49 +115,95 @@ function getRandomData() {
     return res;
 }
 
+var myNewChart
+var dataT 
+function SlaMonthlyChart(mems) {
+    let aData = mems;
+    let aLabels = aData.result[0];
+    let aDatasetnegatif = aData.result[1];
+    let aDatasetpozitif = aData.result[2];
+    dataT= {
+        //labels: aLabels,
+        labels: aLabels,
+        datasets: [{
+            label: "Sla geçenler (%)",
+            data: aDatasetnegatif,
+            stack: 'Stack 0',
+            fill: false,
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "rgb(54, 162, 235)",
+            borderWidth: 1
+        },
+        {
+            label: "Sla sağlayanlar (%)",
+            data: aDatasetpozitif,
+            stack: 'Stack 0',
+            fill: false,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgb(255, 99, 132)",
+            borderWidth: 1
+        }
+
+        ]
+    };
+    let ctx = $("#bar_chart").get(0).getContext("2d");
+    myNewChart = new Chart(ctx, {
+        type: 'bar',
+        data: dataT,
+        options: {
+            responsive: true,
+            title: { display: true, text: 'Aylık Sla Yüzdesi' },
+            legend: { position: 'bottom' },
+            scales: {
+                xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' } }],
+                yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' }, ticks: { stepSize: 50, beginAtZero: true } }]
+            },
+        }
+    });
+    
+}
 function initSlaMonthlyChart() {
     $.ajax({
         type: "POST",
-        url: "Home/SlaMonthlyChart",
+        url: "/Home/SlaMonthlyChart?projects=" + 0,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (mems) {
-            console.log(mems);
-            var aData = mems;
-            var aLabels = aData.result[0];
-            var aDatasetnegatif = aData.result[1];
-            var aDatasetpozitif = aData.result[2];
-            var dataT = {
+            let aData = mems;
+            let aLabels = aData.result[0];
+            let aDatasetnegatif = aData.result[1];
+            let aDatasetpozitif = aData.result[2];
+            let dataT = {
                 //labels: aLabels,
-                labels: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran","Temmuz","Ağustoz","Eylul","Ekim","Kasım","Aralık"],
-                datasets: [{
-                    label: "Negatif",
-                    data: aDatasetnegatif,
-                    stack: 'Stack 0',
-                    fill: false,
-                    backgroundColor: "rgba(54, 162, 235, 0.2)",
-                    borderColor: "rgb(54, 162, 235)",
-                    borderWidth: 1
-                },
-                {
-                    label: "Pozitif",
-                    data: aDatasetpozitif,
-                    stack: 'Stack 0',
-                    fill: false,
-                    backgroundColor: "rgba(255, 99, 132, 0.2)",
-                    borderColor: "rgb(255, 99, 132)",
-                    borderWidth: 1
-                }
+                labels: aLabels,
+                datasets: [
+                    {
+                        label: "Sla geçenler (%)",
+                        data: aDatasetnegatif,
+                        stack: 'Stack 0',
+                        fill: false,
+                        backgroundColor: "rgba(255, 99, 132, 0.2)",//kırmızı
+                        borderColor: "rgb(255, 99, 132)",
+                        borderWidth: 1
+                    }, {
+                        label: "Sla sağlayanlar (%)",
+                        data: aDatasetpozitif ,
+                        stack: 'Stack 0',
+                        fill: false,
+                        backgroundColor: "rgba(54, 162, 235, 0.2)",//mavi
+                        borderColor: "rgb(54, 162, 235)",
+                        borderWidth: 1
+                    },
 
                 ]
             };
-            var ctx = $("#bar_chart").get(0).getContext("2d");
-            var myNewChart = new Chart(ctx, {
+            let ctx = $("#bar_chart").get(0).getContext("2d");
+            myNewChart = new Chart(ctx, {
                 type: 'bar',
                 data: dataT,
                 options: {
                     responsive: true,
-                    title: { display: true, text: 'Aylık' },
+                    title: { display: true, text: 'Aylık Sla Yüzdesi' },
                     legend: { position: 'bottom' },
                     scales: {
                         xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' } }],
@@ -168,8 +212,10 @@ function initSlaMonthlyChart() {
                 }
             });
 
+         
         }
     });
+    
 
 }
 
@@ -343,3 +389,116 @@ function initSlaDetay() {
             });
 
 }
+
+
+      
+$(document).ready(function () {
+    
+    $(function () {//for combobox grouping
+        $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
+            function (OptgroupData, OptgroupResults) {
+                $('#projectsDropDownList').select2({
+                    dataAdapter: OptgroupData,
+                    resultsAdapter: OptgroupResults,
+                    closeOnSelect: false,
+                    placeholder: "Proje Seçin / Arayın..."
+                });
+            });
+    });
+
+    $(function () {// Loading projects into combobox
+        AjaxCall('/Home/GetProjetsTreeList', null).done(function (response) {
+            if (response.result.length > 0) {
+
+                $('#projectsDropDownList').html('');
+                var options = '';
+                for (var i = 0; i < response.result.length; i++) {
+                    options += response.result[i];
+                }
+                $('#projectsDropDownList').append(options);
+            }
+        }).fail(function (error) {
+            alert(error.StatusText + ' Projeler yüklenemedi');
+        });
+
+        $('#showValue').click(function () {// update chart when project selection
+            var project = $('#projectsDropDownList').val();
+            myNewChart.destroy();
+            $.ajax({
+                url: "/Home/SlaMonthlyChart?projects=" + project,
+                dataType: 'json',
+                type: 'post',
+                success: function (data) {
+                    SlaMonthlyChart(data)
+                }
+            }).done(function (response) {
+             
+                myNewChart.update();
+                
+                }).fail(function (error) {
+                   alert(error.StatusText);
+              });
+        });
+
+
+    });
+    
+    function AjaxCall(url, data, type) {
+        console.log(url);
+        return $.ajax({
+            url: url,
+            type: type ? type : 'GET',
+            data: data,
+            contentType: 'application/json'
+        });
+    }
+
+    document.getElementById("bar_chart").onclick = function (evt) {
+        let activePoints = myNewChart.getElementsAtEvent(evt);
+        let negetifSla = activePoints[0];
+        let pozitifSla = activePoints[1];
+        let secilenAy = myNewChart.data.labels[negetifSla._index];
+        let year = secilenAy.split("-")[0];
+        let month = secilenAy.split("-")[1];
+
+        let negetifSlaValue = myNewChart.data.datasets[negetifSla._datasetIndex].data[negetifSla._index];
+        let pozitifSlaValue = myNewChart.data.datasets[pozitifSla._datasetIndex].data[pozitifSla._index];
+        
+        var filterValues = {};
+
+
+        let project = $('#projectsDropDownList').val();
+        console.log(project);
+        var table = $('#slaMonthlyDetailTable').DataTable();
+        $('#slaMonthlyDetailTable').dataTable().fnClearTable();
+        $.ajax({
+            url: "/Home/SlaMonthlyChartDetailTable?projects=" + project + " &month=" + month + " &year=" + year,
+            dataType: 'json',
+            type: 'post',
+            success: function (data) {
+                $.each(data.result.data, function (a, b) {
+                   
+                    table.row.add([
+                        b.id,
+                        b.start_time,
+                        b.success_rate
+
+                    ]).draw(false);
+                });
+
+
+            }
+        }).fail(function (error) {
+            alert(error.StatusText);
+        });
+
+
+        //if (negetifSla !== undefined)
+        //    alert(label1 + ": " + value1);
+    };
+    function myTrim(x) {
+        return x.replace(/^\s+|\s+$/gm, '');
+    }
+
+});
+

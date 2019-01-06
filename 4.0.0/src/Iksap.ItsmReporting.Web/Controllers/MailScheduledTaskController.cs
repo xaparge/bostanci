@@ -65,7 +65,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 SlaReport sr = new SlaReport();
                 List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
 
-                singleSla = sr.getSingleSlaTables("open", 0, 0);
+                singleSla = sr.getSingleSlaTables("open", 0, 0,"");
 
                 SendMail sm = new SendMail();
                 sm.SendMailToUsers(singleSla);

@@ -15,21 +15,25 @@ namespace Iksap.ItsmReporting.Web.Models.Home
         }
 
 
-        public IQueryable<PersonViewModel> GetProjects()
+        public IQueryable<ProjectsViewModel> GetProjects()
         {
             return from p in context.projects
         
-                   select new PersonViewModel
+                   select new ProjectsViewModel
                    {
                        id = p.id,
-                       name = p.name
+                       name = p.name,
+                       parent_id=p.parent_id
 
                    };
         }
-        public class PersonViewModel
+        public class ProjectsViewModel
         {
             public int id { get; set; }
             public string name { get; set; }
+            public int? parent_id  { get; set; }
         }
+       
+
     }
 }

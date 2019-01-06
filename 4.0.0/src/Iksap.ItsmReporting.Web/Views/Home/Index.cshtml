@@ -5,68 +5,21 @@
 @section styles {
     <link href="~/lib/morris.js/morris.css" rel="stylesheet" />
     <link href="~/lib/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+
+    @Styles.Render("~/Bundles/select2css")
+
 }
 @section scripts{
     @Scripts.Render("~/Bundles/home-index")
     @Scripts.Render("~/Bundles/dataTablesjs")
+    @Scripts.Render("~/Bundles/select2js")
+
+
+
     <script>
 
-        $(function () {
 
-            AjaxCall('Home/GetCountries', null).done(function (response) {
-                console.log(response);
-                console.log(response);
-                if (response.result.length > 0) {
-                    $('#countryDropDownList').html('');
-                    var options = '';
-                    options += '<option value="Select">Select</option>';
-                    console.log(response.result.length);
-                    for (var i = 0; i < response.result.length; i++) {
-                        options += '<option value="' + response.result[i].id + '">' + response.result[i].name + '</option>';
-                     
-                        //$('#countryDropDownList').append($('<option></option>').text(response.result[i]).val(response.result[i]));
-                    }
 
-                    $('#countryDropDownList').append(options);
-                   
-                    $('#countryDropDownList').selectpicker('refresh');
-
-                }
-            }).fail(function (error) {
-                alert(error.StatusText);
-            });
-
-            $('#countryDropDownList').on("change", function () {
-                var country = $('#countryDropDownList').val();
-                var obj = { country: country };
-                AjaxCall('Home/GetStates', JSON.stringify(obj), 'POST').done(function (response) {
-                    if (response.length > 0) {
-                        $('#stateDropDownList').html('');
-                        var options = '';
-                        options += '<option value="Select">Select</option>';
-                       
-                        for (var i = 0; i < response.length; i++) {
-                            options += '<option value="' + response[i].id + '">' + response[i].name + '</option>';
-                          
-                        }
-                        $('#stateDropDownList').append(options);
-
-                    }
-                }).fail(function (error) {
-                    alert(error.StatusText);
-                });
-            });
-
-        });
-
-        function AjaxCall(url, data, type) {
-            return $.ajax({
-                url: url,
-                type: type ? type : 'GET',
-                data: data,
-                contentType: 'application/json'
-            });
-        }
     </script>
 }
 <div class="block-header">
@@ -75,90 +28,133 @@
 <!-- Widgets -->
 <div class="row clearfix">
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box bg-pink hover-expand-effect">
+        <div class="info-box bg-orange hover-expand-effect">
             <div class="icon">
                 <i class="material-icons">playlist_add_check</i>
             </div>
             <div class="content">
-                <div class="text">NEW TASKS</div>
-                <div class="number count-to" data-from="0" data-to="125" data-speed="1000" data-fresh-interval="20"></div>
+                <div class="text">Ticket başarısı(%)</div>
+                <div class="number count-to" data-from="0" data-to="85" data-speed="1000" data-fresh-interval="20"></div>
             </div>
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="info-box bg-cyan hover-expand-effect">
             <div class="icon">
-                <i class="material-icons">help</i>
+                <i class="material-icons">mood</i>
             </div>
             <div class="content">
-                <div class="text">NEW TICKETS</div>
-                <div class="number count-to" data-from="0" data-to="257" data-speed="1000" data-fresh-interval="20"></div>
+                <div class="text">Bu ayki ticket sayısı</div>
+                <div class="number count-to" data-from="0" data-to="17" data-speed="1000" data-fresh-interval="20"></div>
             </div>
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="info-box bg-light-green hover-expand-effect">
             <div class="icon">
-                <i class="material-icons">forum</i>
+                <i class="material-icons">thumb_up</i>
             </div>
             <div class="content">
-                <div class="text">NEW COMMENTS</div>
-                <div class="number count-to" data-from="0" data-to="243" data-speed="1000" data-fresh-interval="20"></div>
+                <div class="text">Başarılı ticket sayısı</div>
+                <div class="number count-to" data-from="0" data-to="1225" data-speed="1000" data-fresh-interval="20"></div>
             </div>
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box bg-orange hover-expand-effect">
+        <div class="info-box bg-pink hover-expand-effect">
             <div class="icon">
-                <i class="material-icons">person_add</i>
+                <i class="material-icons">thumb_down</i>
             </div>
             <div class="content">
-                <div class="text">NEW VISITORS</div>
-                <div class="number count-to" data-from="0" data-to="1225" data-speed="1000" data-fresh-interval="20"></div>
+                <div class="text">Başarısız ticket sayısı</div>
+                <div class="number count-to" data-from="0" data-to="243" data-speed="1000" data-fresh-interval="20"></div>
             </div>
         </div>
     </div>
 </div>
 <!-- #END# Widgets -->
 <!-- Bar Chart -->
+<div id="output">
+
+</div>
 <div class="row clearfix">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card">
             <div class="header">
-  
-                    <div class="row clearfix">
-                       
-                            <div class="col-md-2">
-                                <h2>Sla Aylık Rapor</h2>
-                            </div>
-                       
-                            <div class="col-md-4">
-                                <select id="countryDropDownList" class="form-control show-tick selectpicker" data-live-search="true">
-                                </select>
-                            </div>
-                     
-                            <div class="col-md-6">
-                                <ul class="header-dropdown m-r--5">
-                                    <li class="dropdown">
-                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                            <i class="material-icons">more_vert</i>
-                                        </a>
-                                        <ul class="dropdown-menu pull-right">
-                                            <li><a href="javascript:void(0);">Action</a></li>
-                                            <li><a href="javascript:void(0);">Another action</a></li>
-                                            <li><a href="javascript:void(0);">Something else here</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                     
+
+                <div class="row clearfix">
+
+                    <div class="col-md-2">
+                        <h2>Sla Aylık Rapor</h2>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="col-lg-10">
+
+                            <select multiple='multiple' style="width:100%" id='projectsDropDownList'></select>
                         </div>
-               
+
+                        <div class="col-lg-2">
+                            <span class="input-group-btn">
+                                <button type="button" id="showValue" class="btn btn-info  waves-effect">
+                                    <i class="material-icons">save</i>
+                                    <span>Tamam</span>
+                                </button>
+
+                            </span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">more_vert</i>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a href="javascript:void(0);">Action</a></li>
+                                    <li><a href="javascript:void(0);">Another action</a></li>
+                                    <li><a href="javascript:void(0);">Something else here</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+
                 </div>
             </div>
-                <div class="body">
-                    <canvas id="bar_chart" height="90"></canvas>
+            <div class="body">
+                <canvas id="bar_chart" height="90"></canvas>
+                <hr>
+                <div class="header">
+                    <h2>
+                        Sla Detayları
+                    </h2>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table id="slaMonthlyDetailTable" class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr>
+                                <td>Ticket Id</td>
+                                <td>Time</td>
+                                <td>Rate</td>
+
+                            </tr>
+                        </thead>
+                        <thead id="searchHeader">
+                            <tr>
+                                <th><input type="text" data-column="1" class="form-control search-input" /></th>
+                                <th><input type="text" data-column="2" class="form-control search-input" /></th>
+                                <th><input type="text" data-column="3" class="form-control search-input" /></th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
+        </div>
     </div>
 </div>
 <!-- #END# Bar Chart -->
@@ -184,28 +180,7 @@
                     </ul>
                 </div>
                 <div class="body">
-                    <div class="table-responsive">
-                        <table id="peopleTable" class="table table-bordered table-striped table-hover dataTable js-exportable">
-                            <thead>
-                                <tr>
-
-                                    <th>firstname</th>
-
-                                    <th>lastname</th>
-
-                                    <th>login</th>
-
-                                </tr>
-                            </thead>
-                            <thead id="searchHeader">
-                                <tr>
-                                    <th><input type="text" data-column="1" class="form-control search-input" /></th>
-                                    <th><input type="text" data-column="2" class="form-control search-input" /></th>
-                                    <th><input type="text" data-column="3" class="form-control search-input" /></th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                  
                 </div>
             </div>
         </div>
@@ -447,27 +422,27 @@
     </div>
     <!-- #END# Task Info -->
     <!-- Browser Usage -->
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-            <div class="card">
-                <div class="header">
-                    <h2>BROWSER USAGE</h2>
-                    <ul class="header-dropdown m-r--5">
-                        <li class="dropdown">
-                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">more_vert</i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a href="javascript:void(0);">Action</a></li>
-                                <li><a href="javascript:void(0);">Another action</a></li>
-                                <li><a href="javascript:void(0);">Something else here</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div class="body">
-                    <div id="donut_chart" class="dashboard-donut-chart"></div>
-                </div>
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="card">
+            <div class="header">
+                <h2>BROWSER USAGE</h2>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another action</a></li>
+                            <li><a href="javascript:void(0);">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body">
+                <div id="donut_chart" class="dashboard-donut-chart"></div>
             </div>
         </div>
-        <!-- #END# Browser Usage -->
+    </div>
+    <!-- #END# Browser Usage -->
 </div>

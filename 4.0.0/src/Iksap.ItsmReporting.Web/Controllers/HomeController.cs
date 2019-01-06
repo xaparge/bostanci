@@ -13,6 +13,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Iksap.ItsmReporting.Web.Scheduling;
 using Iksap.ItsmReporting.Web.Models.Home;
+using static Iksap.ItsmReporting.Web.Models.Home.ProjetsTreeList;
+using Microsoft.Ajax.Utilities;
 
 namespace Iksap.ItsmReporting.Web.Controllers
 
@@ -20,24 +22,54 @@ namespace Iksap.ItsmReporting.Web.Controllers
     [AbpMvcAuthorize]
     public class HomeController : ItsmReportingControllerBase
     {
-        PersonService personService = new PersonService();
-        ProjectsListService projectsListService = new ProjectsListService();
+        //PersonService personService = new PersonService();
+        //ProjectsListService projectsListService = new ProjectsListService();
+        ProjetsTreeList projetsTreeList = new ProjetsTreeList();
+       private static Dictionary<int, string> months = new Dictionary<int, string>(){{1,"Ocak"},{2, "Şubat"}, {3,"Mart"},
+                                                                        {4,"Nisan"},  {5,"Mayıs"},{6,"Haziran"},
+                                                                        {7,"Temmuz"}, {8,"Ağustos"},{9,"Eylül"},
+                                                                        {10,"Ekim"}, {11,"Kasım"}, {12,"Aralık"}};
+        private static Dictionary< string, int> monthsNumber = new Dictionary<string,int>(){{"Ocak",1},{"Şubat",2}, {"Mart",3},
+                                                                        {"Nisan",4},  {"Mayıs",5},{"Haziran",6},
+                                                                        {"Temmuz",7}, {"Ağustos",8},{"Eylül",9},
+                                                                        {"Ekim",10}, {"Kasım",11}, {"Aralık",12}};
+
+
         public ActionResult Index()
         {
             return View();
         }
-        [HttpPost]
-        public JsonResult SlaMonthlyChart2()
+        //[HttpPost]
+        //[System.Web.Mvc.Route("ItsmReport/Home/GetProjetsTreeList")]
+        public JsonResult GetProjetsTreeList()
         {
+
+            //var projects = projectsListService.GetProjects().ToList();
+
+            return Json(projetsTreeList.PopulateTreeView(), JsonRequestBehavior.AllowGet);
+        }
+        //[HttpPost]
+        //[System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
+        public JsonResult SlaMonthlyChart(string projects)
+        {
+            if (projects == null)
+                projects = "1";
+            List<int> projectsIdList = new List<int>();
+            projectsIdList = projects.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+
+           
             SlaReport sr = new SlaReport();
             List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
 
-            Dictionary<int, List<double>> dictionary = new Dictionary<int, List<double>>();
+            Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
+
             double success_count = 0;
             double fail_count = 0;
-            for (int i = 1; i < 13; i++)
+            int month = DateTime.Now.Month;
+            int year = DateTime.Now.Year;
+            for (int i = 0; i < 12; i++)
             {
-                singleSla = sr.getSingleSlaTables("close", i, 2018);
+                singleSla = sr.getSingleSlaTables("close", month, year, projects);
 
                 for (int j = 0; j < singleSla.Count; j++)
                 {
@@ -50,136 +82,23 @@ namespace Iksap.ItsmReporting.Web.Controllers
                         fail_count++;
                     }
                 }
-                double success_rate = (success_count * 100) / (success_count + fail_count);
-                double fail_rate = (fail_count * 100) / (success_count + fail_count);
+                double success_rate = Math.Round((success_count * 100) / (success_count + fail_count), 2);
+                double fail_rate = Math.Round((fail_count * 100) / (success_count + fail_count), 2);
+                List<string> successAndFail2 = new List<string>();
+                successAndFail2.Add(CheckNull(success_rate));
+                successAndFail2.Add(CheckNull(fail_rate));
 
-                List<double> successAndFail = new List<double>();
+                dictionary[months[month]] = successAndFail2;
 
-                successAndFail.Add(success_rate);
-                successAndFail.Add(fail_rate);
-
-                dictionary.Add(i, successAndFail);
-                slaPercentageByDate abc = new slaPercentageByDate();
-                abc.PercentMonth = i;
-                abc.PercentYear = 2018;
-                abc.SuccessfulPercentage = Math.Round(success_rate, 2).ToString();
-                abc.FailedPercentage = Math.Round(fail_rate, 2).ToString();
-                sr.insertSlaPercentageByDate(abc);
-            }
-
-
-            List<object> iData = new List<object>();
-            //Creating sample data
-            DataTable dt = new DataTable();
-            dt.Columns.Add("ay", System.Type.GetType("System.String"));
-            dt.Columns.Add("pozitif", System.Type.GetType("System.Int32"));
-            dt.Columns.Add("negatif", System.Type.GetType("System.Int32"));
-
-
-            foreach (KeyValuePair<int, List<double>> item in dictionary)
-            {
-                DataRow dr = dt.NewRow();
-                dr["ay"] = item.Key;
-                dr["pozitif"] = item.Value[0];
-                dr["negatif"] = item.Value[1];
-                dt.Rows.Add(dr);
-
-            }
-
-            //Looping and extracting each DataColumn to List<Object>
-            foreach (DataColumn dc in dt.Columns)
-            {
-                List<object> x = new List<object>();
-                x = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
-                iData.Add(x);
-            }
-            //Source data returned as JSON
-            return Json(iData, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult GetCountries()
-        {
-        
-                  var projects = projectsListService.GetProjects().ToList();
-
-            var Countries = new List<string>();
-            Countries.Add("Australia");
-            Countries.Add("India");
-            Countries.Add("Russia");
-            return Json(projects, JsonRequestBehavior.AllowGet);
-        }
-        [HttpPost]
-        public JsonResult GetStates(string country)
-        {
-
-            var States = new List<string>();
-            if (!string.IsNullOrWhiteSpace(country))
-            {
-                if (country.Equals("Australia"))
+                if (month > 1)
+                    month--;
+                else
                 {
-                    States.Add("Sydney");
-                    States.Add("Perth");
+                    month = 12;
+                    year -= 1;
                 }
-                if (country.Equals("India"))
-                {
-                    States.Add("Delhi");
-                    States.Add("Mumbai");
-                }
-                if (country.Equals("Russia"))
-                {
-                    States.Add("Minsk");
-                    States.Add("Moscow");
-                }
+
             }
-            return Json(States, JsonRequestBehavior.AllowGet);
-        }
-        [HttpPost]
-        [System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
-        public JsonResult SlaMonthlyChart()
-        {
-            SlaReport sr = new SlaReport();
-            List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
-
-            Dictionary<int, List<string>> dictionary = new Dictionary<int, List<string>>();
-            double success_count = 0;
-            double fail_count = 0;
-
-            List<slaPercentageByDate> old_reports = new List<slaPercentageByDate>();
-            old_reports = sr.getSlaPercentageByDate();
-            for (int i = 0; i < 12; i++)
-            {
-                List<string> successAndFail = new List<string>();
-
-                successAndFail.Add(old_reports[old_reports.Count - i - 1].SuccessfulPercentage);
-                successAndFail.Add(old_reports[old_reports.Count - i - 1].FailedPercentage);
-                dictionary.Add(old_reports.Count - i, successAndFail);
-            }
-
-            singleSla = sr.getSingleSlaTables("close", DateTime.Now.Month, 2018);
-
-            for (int j = 0; j < singleSla.Count; j++)
-            {
-                if (singleSla[j].success_rate < 100)
-                {
-                    success_count++;
-                }
-                else if (singleSla[j].success_rate >= 100)
-                {
-                    fail_count++;
-                }
-            }
-            double success_rate = Math.Round((success_count * 100) / (success_count + fail_count), 2);
-            double fail_rate = Math.Round((fail_count * 100) / (success_count + fail_count), 2);
-            List<string> successAndFail2 = new List<string>();
-            successAndFail2.Add(CheckNull(success_rate));
-            successAndFail2.Add(CheckNull(fail_rate));
-
-            dictionary[DateTime.Now.Month] = successAndFail2;
-            slaPercentageByDate x = new slaPercentageByDate();
-            x.PercentYear = DateTime.Now.Year;
-            x.PercentMonth = DateTime.Now.Month;
-            x.SuccessfulPercentage = success_rate.ToString();
-            x.FailedPercentage = fail_rate.ToString();
-            sr.updateSlaPercentageByDate(x);
 
             List<object> iData = new List<object>();
             //Creating sample data
@@ -187,14 +106,26 @@ namespace Iksap.ItsmReporting.Web.Controllers
             dt.Columns.Add("ay", System.Type.GetType("System.String"));
             dt.Columns.Add("pozitif", System.Type.GetType("System.Double"));
             dt.Columns.Add("negatif", System.Type.GetType("System.Double"));
+
+            int month_count = DateTime.Now.Month + 1;
+            int yearlabel = DateTime.Now.Year-1;
             for (int i = 0; i < dictionary.Count; i++)
             {
-
                 DataRow dr = dt.NewRow();
-                dr["ay"] = i + 1;
-                dr["pozitif"] = Math.Round(Convert.ToDouble(dictionary[i + 1][0]), 2);
-                dr["negatif"] = Math.Round(Convert.ToDouble(dictionary[i + 1][1]), 2);
+
+                dr["ay"] = yearlabel +" - "+months[month_count];
+                dr["pozitif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][0]), 2);
+                dr["negatif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][1]), 2);
                 dt.Rows.Add(dr);
+
+                
+                if (month_count < 12) { 
+                    month_count++;
+                }
+                else { 
+                    month_count = 1;
+                    yearlabel = DateTime.Now.Year;
+                }
             }
 
             //Looping and extracting each DataColumn to List<Object>
@@ -207,6 +138,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
             //Source data returned as JSON
             return Json(iData, JsonRequestBehavior.AllowGet);
         }
+      
         public string CheckNull(double item)
         {
             if (!Double.IsNaN(item))
@@ -218,79 +150,118 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
 
         }
-        [HttpPost]
-        public JsonResult getPeople()
+
+       
+
+        //[HttpPost]
+        //[System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChartDetailTable")]
+        public JsonResult SlaMonthlyChartDetailTable(string projects, string month, string year)
         {
-            var draw = Request.Form.GetValues("draw").FirstOrDefault();
-            var start = Request.Form.GetValues("start").FirstOrDefault();
-            var length = Request.Form.GetValues("length").FirstOrDefault();
 
+          
+            SlaReport slaReport = new SlaReport();
+            SlaDetailTable dataTable = new SlaDetailTable();
+            //dataTable.draw = int.Parse(Request.QueryString["draw"]);
 
-            //Global search field
-            var search = Request.Form.GetValues("search[value]").FirstOrDefault();
+            List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
 
-            //Custom column search fields
-            //var firstName = Request.Form.GetValues("columns[1][search][value]").FirstOrDefault();
-            //var lastName = Request.Form.GetValues("columns[2][search][value]").FirstOrDefault();
-            //var login = Request.Form.GetValues("columns[3][search][value]").FirstOrDefault();
+            singleSla = slaReport.getSingleSlaTables("close", monthsNumber[month.Trim()], Convert.ToInt32(year.Trim()), projects);
+            //singleSla = slaReport.getSingleSlaTablesPaging("close", monthsNumber[month], year, projects, 0, 10);
 
-            string sortColumnName = Request["columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]"];//Sıralama yapılacak column adı
-            string sortDirection = Request["order[0][dir]"];//sıralama türü
-
-            int pageSize = length != null ? Convert.ToInt32(length) : 0;
-            int skip = start != null ? Convert.ToInt32(start) : 0;
-            int recordsTotal = 0;
-
-            //var people = personService.GetPeople(); // Get People IQueryble
-            var people = personService.GetPeople();
-
-
-            ////Start search
-            //if (!string.IsNullOrWhiteSpace(firstName))
+            string filterName = Request.QueryString["name"];
+            string filterSurName = Request.QueryString["surname"];
+            string filterClassroom = Request.QueryString["classroom"];
+            var result = from s in singleSla
+                         where (string.IsNullOrEmpty(filterName) || s.id.Equals(filterName))
+                         && (string.IsNullOrEmpty(filterSurName) || s.closed_on.Equals(filterSurName))
+                         && (string.IsNullOrEmpty(filterClassroom) || s.success_rate.Equals(filterClassroom))
+                         select s;
+            //select new
             //{
-            //    people = people.Where(x => x.firstname.ToLower().Contains(firstName.ToLower()));
+            //    s.id,
+            //    s.closed_on,
+            //    s.success_rate
+            //};
 
-            //}
-
-
-
-            //if (!string.IsNullOrWhiteSpace(lastName))
-            //{
-            //    people = people.Where(x => x.lastname.ToLower().Contains(lastName.ToLower()));
-            //}
-
-            //if (!string.IsNullOrWhiteSpace(login))
-            //{
-            //    people = people.Where(x => x.login.ToLower().Contains(login.ToLower()));
-            //}
-
-
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                people = people.Where(x => x.login.ToLower().Contains(search.ToLower())
-                  || x.firstname.ToLower().Contains(search.ToLower())
-                  || x.lastname.ToLower().Contains(search.ToLower())
-                  || x.login.ToLower().Contains(search.ToLower()));
-            }
-
-            recordsTotal = people.Count();
-            var data = people.OrderBy(x => x.firstname).Skip(skip).Take(pageSize).ToList();
-            int FiltrelenmisKayitSayisi = data.Count;
-            //return Json(new { data = data, draw = Request["draw"], recordsTotal = recordsTotal, recordsFiltered = FiltrelenmisKayitSayisi });
-
-
-
-            return Json(data, JsonRequestBehavior.AllowGet);
-            //return Json(data, JsonRequestBehavior.AllowGet);
-            //return Json(new
-            //{
-            //    draw = draw,
-            //    recordsFiltered = FiltrelenmisKayitSayisi,
-            //    recordsTotal = recordsTotal,
-            //    data = data
-            //}, JsonRequestBehavior.AllowGet);
+            dataTable.data = result.ToArray();
+            dataTable.recordsTotal = singleSla.Count;
+            dataTable.recordsFiltered = result.Count();
+            return Json(dataTable, JsonRequestBehavior.AllowGet);
         }
+
+        //[HttpPost]
+        //public JsonResult getPeople() 
+        //{
+        //    var draw = Request.Form.GetValues("draw").FirstOrDefault();
+        //    var start = Request.Form.GetValues("start").FirstOrDefault();
+        //    var length = Request.Form.GetValues("length").FirstOrDefault();
+
+
+        //    //Global search field
+        //    var search = Request.Form.GetValues("search[value]").FirstOrDefault();
+
+        //    //Custom column search fields
+        //    //var firstName = Request.Form.GetValues("columns[1][search][value]").FirstOrDefault();
+        //    //var lastName = Request.Form.GetValues("columns[2][search][value]").FirstOrDefault();
+        //    //var login = Request.Form.GetValues("columns[3][search][value]").FirstOrDefault();
+
+        //    string sortColumnName = Request["columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]"];//Sıralama yapılacak column adı
+        //    string sortDirection = Request["order[0][dir]"];//sıralama türü
+
+        //    int pageSize = length != null ? Convert.ToInt32(length) : 0;
+        //    int skip = start != null ? Convert.ToInt32(start) : 0;
+        //    int recordsTotal = 0;
+
+        //    //var people = personService.GetPeople(); // Get People IQueryble
+        //    var people = personService.GetPeople();
+
+
+        //    ////Start search
+        //    //if (!string.IsNullOrWhiteSpace(firstName))
+        //    //{
+        //    //    people = people.Where(x => x.firstname.ToLower().Contains(firstName.ToLower()));
+
+        //    //}
+
+
+
+        //    //if (!string.IsNullOrWhiteSpace(lastName))
+        //    //{
+        //    //    people = people.Where(x => x.lastname.ToLower().Contains(lastName.ToLower()));
+        //    //}
+
+        //    //if (!string.IsNullOrWhiteSpace(login))
+        //    //{
+        //    //    people = people.Where(x => x.login.ToLower().Contains(login.ToLower()));
+        //    //}
+
+
+
+        //    if (!string.IsNullOrEmpty(search))
+        //    {
+        //        people = people.Where(x => x.login.ToLower().Contains(search.ToLower())
+        //          || x.firstname.ToLower().Contains(search.ToLower())
+        //          || x.lastname.ToLower().Contains(search.ToLower())
+        //          || x.login.ToLower().Contains(search.ToLower()));
+        //    }
+
+        //    recordsTotal = people.Count();
+        //    var data = people.OrderBy(x => x.firstname).Skip(skip).Take(pageSize).ToList();
+        //    int FiltrelenmisKayitSayisi = data.Count;
+        //    //return Json(new { data = data, draw = Request["draw"], recordsTotal = recordsTotal, recordsFiltered = FiltrelenmisKayitSayisi });
+
+
+
+        //    return Json(data, JsonRequestBehavior.AllowGet);
+        //    //return Json(data, JsonRequestBehavior.AllowGet);
+        //    //return Json(new
+        //    //{
+        //    //    draw = draw,
+        //    //    recordsFiltered = FiltrelenmisKayitSayisi,
+        //    //    recordsTotal = recordsTotal,
+        //    //    data = data
+        //    //}, JsonRequestBehavior.AllowGet);
+        //}
         public partial class isler
         {
             [Required]

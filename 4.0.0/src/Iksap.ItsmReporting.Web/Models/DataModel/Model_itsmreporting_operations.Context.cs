@@ -75,5 +75,22 @@ namespace Iksap.ItsmReporting.Web.Models.DataModel
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<slaUsersMail_Result>("slaUsersMail");
         }
+    
+        public virtual ObjectResult<slaClosedProjectByDateByProjects_Result> slaClosedProjectByDateByProjects(Nullable<int> monthvalue, Nullable<int> yearvalue, Nullable<int> projects_id)
+        {
+            var monthvalueParameter = monthvalue.HasValue ?
+                new ObjectParameter("monthvalue", monthvalue) :
+                new ObjectParameter("monthvalue", typeof(int));
+    
+            var yearvalueParameter = yearvalue.HasValue ?
+                new ObjectParameter("yearvalue", yearvalue) :
+                new ObjectParameter("yearvalue", typeof(int));
+    
+            var projects_idParameter = projects_id.HasValue ?
+                new ObjectParameter("projects_id", projects_id) :
+                new ObjectParameter("projects_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<slaClosedProjectByDateByProjects_Result>("slaClosedProjectByDateByProjects", monthvalueParameter, yearvalueParameter, projects_idParameter);
+        }
     }
 }
