@@ -13,7 +13,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
     {
         MySqlConnection dbConn = new MySqlConnection("server=127.0.0.1; uid=root;pwd=12345678; database=itsmreporting_operations");
 
-        public List<SingleSlaTable> getSingleSlaTables(string project_state, int month, int year)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.
+        public List<SingleSlaTable> getSingleSlaTables(string project_state, int month, int year, int projects_id)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.
         {
             MySqlCommand dbComm;
             if (project_state == "open")
@@ -25,7 +25,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 dbComm = new MySqlCommand("itsmreporting_operations.slaClosedProjectByDateByProjects", dbConn);
                 dbComm.Parameters.AddWithValue("@monthvalue", month);
                 dbComm.Parameters.AddWithValue("@yearvalue", year);
-                dbComm.Parameters.AddWithValue("@projects_id", 5);
+                dbComm.Parameters.AddWithValue("@projects_id", projects_id);
             }
             else
             {
