@@ -15,7 +15,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
     public class SendMail
     {
 
-        MySqlConnection dbConn = new MySqlConnection("server = 127.0.0.1; uid = root; pwd = 12345678; database = itsmreporting_operations");
+        MySqlConnection dbConn = new MySqlConnection("server=127.0.0.1; uid=root; pwd=" + System.Configuration.ConfigurationManager.AppSettings["DbPassword"].ToString() + "; database=itsmreporting_operations");
         private List<SingleSlaTable> getUsersOfMail(List<SingleSlaTable> singleSla)     // mail gönderilecek ticket'lara mail adresini ad soyad ve son gönderildiği yüzdeyi getirir.
         {
             MySqlCommand dbComm = new MySqlCommand("itsmreporting_operations.slaUsersMail", dbConn);

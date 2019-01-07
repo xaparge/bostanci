@@ -55,7 +55,7 @@ namespace Iksap.ItsmReporting.Web.Models.Home
 
         public static List<Category> GetListFromDatabase()
         {
-            MySqlConnection dbConn = new MySqlConnection("server = 127.0.0.1; uid=root;pwd=12345678;database=bitnami_redmine");
+            MySqlConnection dbConn = new MySqlConnection("server=127.0.0.1; uid=root;pwd=" + System.Configuration.ConfigurationManager.AppSettings["DbPassword"].ToString() + "; database=bitnami_redmine");
             dbConn.Open();
             DbCommand cmd = dbConn.CreateCommand();
             cmd.CommandText = "SELECT id, name, parent_id FROM projects";

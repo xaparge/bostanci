@@ -11,7 +11,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
 {
     public class SlaReport
     {
-        MySqlConnection dbConn = new MySqlConnection("server = 127.0.0.1; uid=root;pwd=12345678;database=itsmreporting_operations");
+        MySqlConnection dbConn = new MySqlConnection("server = 127.0.0.1; uid=root;pwd=" + System.Configuration.ConfigurationManager.AppSettings["DbPassword"].ToString() + "; database=itsmreporting_operations");
         public List<SingleSlaTable> getSingleSlaTablesPaging(string project_state, int month, int year, string projectList,int start,int skip)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.
         {
             MySqlCommand dbComm;

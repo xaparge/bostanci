@@ -120,29 +120,32 @@ var dataT
 function SlaMonthlyChart(mems) {
     let aData = mems;
     let aLabels = aData.result[0];
-    let aDatasetnegatif = aData.result[1];
-    let aDatasetpozitif = aData.result[2];
+    let aDatasetnegatif = aData.result[2];
+    let aDatasetpozitif = aData.result[1];
     dataT= {
         //labels: aLabels,
         labels: aLabels,
-        datasets: [{
-            label: "Sla geçenler (%)",
-            data: aDatasetnegatif,
-            stack: 'Stack 0',
-            fill: false,
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
-            borderColor: "rgb(54, 162, 235)",
-            borderWidth: 1
-        },
+        datasets: [
         {
             label: "Sla sağlayanlar (%)",
             data: aDatasetpozitif,
             stack: 'Stack 0',
             fill: false,
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
+           backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "rgb(54, 162, 235)",
+            borderWidth: 1
+        },
+{
+            label: "Sla geçenler (%)",
+            data: aDatasetnegatif,
+            stack: 'Stack 0',
+            fill: false,
+ backgroundColor: "rgba(255, 99, 132, 0.2)",
+           
             borderColor: "rgb(255, 99, 132)",
             borderWidth: 1
         }
+        
 
         ]
     };
