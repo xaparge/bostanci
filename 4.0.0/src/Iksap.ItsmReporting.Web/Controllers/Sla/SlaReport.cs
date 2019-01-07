@@ -11,9 +11,52 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
 {
     public class SlaReport
     {
-        MySqlConnection dbConn = new MySqlConnection("server=127.0.0.1; uid=root;pwd=12345678; database=itsmreporting_operations");
+        MySqlConnection dbConn = new MySqlConnection("server = 127.0.0.1; uid=root;pwd=12345678;database=itsmreporting_operations");
+        public List<SingleSlaTable> getSingleSlaTablesPaging(string project_state, int month, int year, string projectList,int start,int skip)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.
+        {
+            MySqlCommand dbComm;
+            if (project_state == "open")
+            {
+                dbComm = new MySqlCommand("itsmreporting_operations.slaOpenProject", dbConn);
+            }
+            else if (project_state == "close")
+            {
+                dbComm = new MySqlCommand("itsmreporting_operations.slaClosedProjectByDateByProjectsByPaging", dbConn);
+                dbComm.Parameters.AddWithValue("@monthvalue", month);
+                dbComm.Parameters.AddWithValue("@yearvalue", year);
+                dbComm.Parameters.AddWithValue("@pageStart", start);
+                dbComm.Parameters.AddWithValue("@pageEnd", skip);
+                dbComm.Parameters.AddWithValue("@projects_id", projectList);
+            }
+            else
+            {
+                List<SingleSlaTable> sst = new List<SingleSlaTable>();
+                return sst;
+            }
+            dbComm.CommandType = CommandType.StoredProcedure;
 
-        public List<SingleSlaTable> getSingleSlaTables(string project_state, int month, int year, int projects_id)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.
+            var sla = slaList(dbComm);
+            var singleSla = NormalizedSla(sla);
+
+            for (int i = 0; i < singleSla.Count; i++)
+            {
+                Slas temp = new Slas();
+                temp = MainReport(sla, singleSla[i]);
+                singleSla[i] = temp.singleSlaTable;
+                sla = temp.slaTable;
+            }
+
+            // UPDATE KISMI HOMECONTROLLER'DA YAPILABİLİR
+            //slaPercentageByDate old_reports = new slaPercentageByDate();
+            //old_reports.PercentYear = year;
+            //old_reports.PercentMonth = month;
+            //old_reports.SuccessfulPercentage = singleSla
+            //updateSlaPercentageByDate(old_reports);
+
+            return singleSla;
+        }
+
+        public List<SingleSlaTable> getSingleSlaTables(string project_state, int month, int year, string projectList)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.
         {
             MySqlCommand dbComm;
             if (project_state == "open")
@@ -25,7 +68,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 dbComm = new MySqlCommand("itsmreporting_operations.slaClosedProjectByDateByProjects", dbConn);
                 dbComm.Parameters.AddWithValue("@monthvalue", month);
                 dbComm.Parameters.AddWithValue("@yearvalue", year);
-                dbComm.Parameters.AddWithValue("@projects_id", projects_id);
+                dbComm.Parameters.AddWithValue("@projects_id", projectList);
             }
             else
             {

@@ -17,7 +17,7 @@ namespace Iksap.ItsmReporting.Web.Scheduling
                 SlaReport sr = new SlaReport();
                 List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
 
-                singleSla = sr.getSingleSlaTables("open", 0, 0);
+                singleSla = sr.getSingleSlaTables("open", 0, 0,"");
 
                 Controllers.Sla.SendMail sm = new Controllers.Sla.SendMail();
                 sm.SendMailToUsers(singleSla);

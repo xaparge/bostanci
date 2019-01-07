@@ -8,6 +8,16 @@ namespace Iksap.ItsmReporting.Web
         {
             bundles.IgnoreList.Clear();
 
+
+            bundles.Add(
+                new StyleBundle("~/Bundles/select2css")
+                    .Include(
+                    "~/lib/select2/select2.optgroupSelect.css", 
+                    "~/lib/select2/vendor/select2.css"          
+                    )
+            );
+
+
             bundles.Add(
                 new StyleBundle("~/Bundles/account-vendor/css")
                     .Include("~/fonts/roboto/roboto.css", new CssRewriteUrlTransform())
@@ -56,7 +66,7 @@ namespace Iksap.ItsmReporting.Web
                 .Include("~/fonts/roboto/roboto.css", new CssRewriteUrlTransform())
                 .Include("~/fonts/material-icons/materialicons.css", new CssRewriteUrlTransform())
                 .Include("~/lib/bootstrap/dist/css/bootstrap.css", new CssRewriteUrlTransform())
-                .Include("~/lib/bootstrap-select/dist/css/bootstrap-select.css", new CssRewriteUrlTransform())
+                //.Include("~/lib/bootstrap-select/dist/css/bootstrap-select.css", new CssRewriteUrlTransform())
                 .Include("~/lib/toastr/toastr.css", new CssRewriteUrlTransform())
                 .Include("~/lib/famfamfam-flags/dist/sprite/famfamfam-flags.css", new CssRewriteUrlTransform())
                 .Include("~/lib/font-awesome/css/font-awesome.css", new CssRewriteUrlTransform())
@@ -82,7 +92,7 @@ namespace Iksap.ItsmReporting.Web
                         "~/lib/sweetalert/dist/sweetalert.min.js",
                         "~/lib/spin.js/spin.js",
                         "~/lib/spin.js/jquery.spin.js",
-                        "~/lib/bootstrap-select/dist/js/bootstrap-select.js",
+                        //"~/lib/bootstrap-select/dist/js/bootstrap-select.js",
                         "~/lib/jquery-slimscroll/jquery.slimscroll.js",
                         "~/lib/Waves/dist/waves.js",
                         "~/lib/push.js/push.js",
@@ -132,7 +142,15 @@ namespace Iksap.ItsmReporting.Web
                         "~/lib/jquery-datatable/extensions/export/buttons.print.min.js"
                     )
             );
-
+            //dataTables Bundles
+            bundles.Add(
+                new ScriptBundle("~/Bundles/select2js")
+                    .Include(
+                        "~/lib/select2/vendor/jquery.mousewheel.js",
+                        "~/lib/select2/vendor/select2.js",
+                        "~/lib/select2/select2.optgroupSelect.js"
+                    )
+            );
             //APPLICATION RESOURCES
 
             //~/Bundles/css

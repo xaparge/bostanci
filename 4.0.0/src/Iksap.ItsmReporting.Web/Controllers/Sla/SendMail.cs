@@ -141,11 +141,12 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.UseDefaultCredentials = false;
                 client.Credentials = new NetworkCredential(senderEmail, senderPassword);
-                
+                toEmail = "hakan.yavuzalp@iksap.com";
                 MailMessage mailMessage = new MailMessage(senderEmail, toEmail, subject, emailBody);
                 mailMessage.IsBodyHtml = true;
                 mailMessage.BodyEncoding = UTF8Encoding.UTF8;
-                mailMessage.CC.Add("support@iksap.com");
+                //mailMessage.CC.Add("support@iksap.com");
+                mailMessage.CC.Add("ozgur.aslan@iksap.com");
                 client.Send(mailMessage);
                 System.Threading.Thread.Sleep(1000);
 

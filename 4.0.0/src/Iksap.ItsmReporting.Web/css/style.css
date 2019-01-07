@@ -8032,3 +8032,8 @@ html.ie11 .bs-searchbox .form-control {
 .swal-footer {
     text-align: center;
 }
+
+/*li.select2-results__option strong.select2-results__group:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}*/

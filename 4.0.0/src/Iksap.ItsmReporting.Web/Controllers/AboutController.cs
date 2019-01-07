@@ -13,23 +13,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
             //sendMail();
             return View();
         }
-        public bool sendMail()
-        {
-            try
-            {
-                SlaReport sr = new SlaReport();
-                List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
-
-                singleSla = sr.getSingleSlaTables("open", 0, 0);
-
-                SendMail sm = new SendMail();
-                sm.SendMailToUsers(singleSla);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+        
     }
 }
