@@ -222,8 +222,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 {
                     Rate r = new Rate();
                     r.id = 1;
-                    r.name = dt.Rows[i][2].ToString();
-                    //r.time_limit = 9;
+                    r.name = "Urgent";
                     temp.rate = r;
                 }
                 else if (dt.Rows[i][2].ToString() == "High")
@@ -251,7 +250,6 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 slaList.Add(temp);
             }
             slaList = getSlaRateInfos(slaList);
-            int aaaa = slaList[0].rate.work_end_time.Hour;
             return slaList;
         }
 
