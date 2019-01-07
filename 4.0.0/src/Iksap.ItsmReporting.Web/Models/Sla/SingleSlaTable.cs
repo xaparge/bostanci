@@ -9,7 +9,9 @@ namespace Iksap.ItsmReporting.Web.Models.Sla
     {
         public int id { get; set; }
 
+        public string created_on_str { get; set; }
         public DateTime created_on { get; set; }    // sonuçları kontrol etmek için eklendi
+        public string closed_on_str { get; set; }
         public DateTime closed_on { get; set; }    // sonuçları kontrol etmek için eklendi
 
         public string address { get; set; }     // mail adresi
@@ -28,5 +30,7 @@ namespace Iksap.ItsmReporting.Web.Models.Sla
         public double last_sent_percent { get; set; }
 
         public double success_rate { get; set; }
+
+        public string redmine_link { get; set; }    // index.js'de verilecek linkte kullanılacaktır.
     }
 }

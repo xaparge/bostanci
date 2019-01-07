@@ -63,12 +63,14 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
             Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
 
-            double success_count = 0;
-            double fail_count = 0;
+            double success_count;
+            double fail_count;
             int month = DateTime.Now.Month;
             int year = DateTime.Now.Year;
             for (int i = 0; i < 12; i++)
             {
+                success_count = 0;
+                fail_count = 0;
                 singleSla = sr.getSingleSlaTables("close", month, year, projects);
 
                 for (int j = 0; j < singleSla.Count; j++)
@@ -168,13 +170,15 @@ namespace Iksap.ItsmReporting.Web.Controllers
             singleSla = slaReport.getSingleSlaTables("close", monthsNumber[month.Trim()], Convert.ToInt32(year.Trim()), projects);
             //singleSla = slaReport.getSingleSlaTablesPaging("close", monthsNumber[month], year, projects, 0, 10);
 
-            string filterName = Request.QueryString["name"];
-            string filterSurName = Request.QueryString["surname"];
-            string filterClassroom = Request.QueryString["classroom"];
+            string filterTicketId = Request.QueryString["ticketId"];
+            string filterCreatedOn = Request.QueryString["created_on"];
+            string filterClosedOn= Request.QueryString["closed_on"];
+            string filterRate = Request.QueryString["rate"];
             var result = from s in singleSla
-                         where (string.IsNullOrEmpty(filterName) || s.id.Equals(filterName))
-                         && (string.IsNullOrEmpty(filterSurName) || s.closed_on.Equals(filterSurName))
-                         && (string.IsNullOrEmpty(filterClassroom) || s.success_rate.Equals(filterClassroom))
+                         where (string.IsNullOrEmpty(filterTicketId) || s.id.Equals(filterTicketId))
+                         && (string.IsNullOrEmpty(filterCreatedOn) || s.closed_on.Equals(filterCreatedOn))
+                         && (string.IsNullOrEmpty(filterClosedOn) || s.success_rate.Equals(filterClosedOn))
+                         && (string.IsNullOrEmpty(filterRate) || s.success_rate.Equals(filterRate))
                          select s;
             //select new
             //{
@@ -186,6 +190,14 @@ namespace Iksap.ItsmReporting.Web.Controllers
             dataTable.data = result.ToArray();
             dataTable.recordsTotal = singleSla.Count;
             dataTable.recordsFiltered = result.Count();
+            string link = "http://89.106.1.162/redmine/issues/";
+            for (int i = 0; i < singleSla.Count; i++)
+            {
+                singleSla[i].redmine_link = "<a href=" + link + singleSla[i].id + " target =\"_blank\">" + singleSla[i].id + "</a>";
+                singleSla[i].created_on_str = singleSla[i].created_on.ToString("dd/MM/yyyy HH:mm:ss");
+                singleSla[i].closed_on_str = singleSla[i].closed_on.ToString("dd/MM/yyyy HH:mm:ss");
+            }
+
             return Json(dataTable, JsonRequestBehavior.AllowGet);
         }
 
@@ -196,7 +208,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
         //    var start = Request.Form.GetValues("start").FirstOrDefault();
         //    var length = Request.Form.GetValues("length").FirstOrDefault();
 
-
+        
         //    //Global search field
         //    var search = Request.Form.GetValues("search[value]").FirstOrDefault();
 

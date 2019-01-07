@@ -473,6 +473,7 @@ $(document).ready(function () {
         let project = $('#projectsDropDownList').val();
         console.log(project);
         var table = $('#slaMonthlyDetailTable').DataTable();
+     
         $('#slaMonthlyDetailTable').dataTable().fnClearTable();
         $.ajax({
             url: "/Home/SlaMonthlyChartDetailTable?projects=" + project + " &month=" + month + " &year=" + year,
@@ -480,16 +481,15 @@ $(document).ready(function () {
             type: 'post',
             success: function (data) {
                 $.each(data.result.data, function (a, b) {
-                   
+                    console.log(b.redmine_link);
                     table.row.add([
-                        b.id,
-                        b.start_time,
+                        b.redmine_link,
+                        '---------------',
+                        b.created_on_str,
+                        b.closed_on_str,
                         b.success_rate
-
                     ]).draw(false);
                 });
-
-
             }
         }).fail(function (error) {
             alert(error.StatusText);
@@ -499,6 +499,7 @@ $(document).ready(function () {
         //if (negetifSla !== undefined)
         //    alert(label1 + ": " + value1);
     };
+
     function myTrim(x) {
         return x.replace(/^\s+|\s+$/gm, '');
     }

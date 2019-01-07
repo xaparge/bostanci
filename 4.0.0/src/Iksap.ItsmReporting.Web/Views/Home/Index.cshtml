@@ -13,14 +13,6 @@
     @Scripts.Render("~/Bundles/home-index")
     @Scripts.Render("~/Bundles/dataTablesjs")
     @Scripts.Render("~/Bundles/select2js")
-
-
-
-    <script>
-
-
-
-    </script>
 }
 <div class="block-header">
     <h2>DASHBOARD</h2>
@@ -138,19 +130,22 @@
                     <table id="slaMonthlyDetailTable" class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr>
-                                <td>Ticket Id</td>
-                                <td>Time</td>
-                                <td>Rate</td>
+                                <td>Ticket No</td>
+                                <td>İsim Soyisim</td>
+                                <td>Açılış Tarihi</td>
+                                <td>Kapanış Tarihi</td>
+                                <td>Önem Derecesi</td>
 
                             </tr>
                         </thead>
-                        <thead id="searchHeader">
+                        @*<thead id="searchHeader">
                             <tr>
                                 <th><input type="text" data-column="1" class="form-control search-input" /></th>
                                 <th><input type="text" data-column="2" class="form-control search-input" /></th>
                                 <th><input type="text" data-column="3" class="form-control search-input" /></th>
+                                <th><input type="text" data-column="3" class="form-control search-input" /></th>
                             </tr>
-                        </thead>
+                        </thead>*@
                     </table>
                 </div>
             </div>
