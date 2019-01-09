@@ -12,48 +12,22 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
     public class SlaReport
     {
         MySqlConnection dbConn = new MySqlConnection("server = 127.0.0.1; uid=root;pwd=" + System.Configuration.ConfigurationManager.AppSettings["DbPassword"].ToString() + "; database=itsmreporting_operations");
-        public List<SingleSlaTable> getSingleSlaTablesPaging(string project_state, int month, int year, string projectList, int start, int skip)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.
+
+        public List<int> getProjectsByTenant(int tenant_id)
         {
-            MySqlCommand dbComm;
-            if (project_state == "open")
-            {
-                dbComm = new MySqlCommand("itsmreporting_operations.slaOpenProject", dbConn);
-            }
-            else if (project_state == "close")
-            {
-                dbComm = new MySqlCommand("itsmreporting_operations.slaClosedProjectByDateByProjectsByPaging", dbConn);
-                dbComm.Parameters.AddWithValue("@monthvalue", month);
-                dbComm.Parameters.AddWithValue("@yearvalue", year);
-                dbComm.Parameters.AddWithValue("@pageStart", start);
-                dbComm.Parameters.AddWithValue("@pageEnd", skip);
-                dbComm.Parameters.AddWithValue("@projects_id", projectList);
-            }
-            else
-            {
-                List<SingleSlaTable> sst = new List<SingleSlaTable>();
-                return sst;
-            }
-            dbComm.CommandType = CommandType.StoredProcedure;
+            MySqlCommand cmd = new MySqlCommand("Select PercentYear, PercentMonth, SuccessfulPercentage, FailedPercentage From sla_percentage_bydate", dbConn);
+            DataTable dt = new DataTable();
+            dbConn.Open();
+            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+            da.Fill(dt);
+            dbConn.Close();
 
-            var sla = slaList(dbComm);
-            var singleSla = NormalizedSla(sla);
-
-            for (int i = 0; i < singleSla.Count; i++)
+            List<int> project_id = new List<int>();
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                Slas temp = new Slas();
-                temp = MainReport(sla, singleSla[i]);
-                singleSla[i] = temp.singleSlaTable;
-                sla = temp.slaTable;
+                project_id.Add(Convert.ToInt32(dt.Rows[i][2]));
             }
-
-            // UPDATE KISMI HOMECONTROLLER'DA YAPILABİLİR
-            //slaPercentageByDate old_reports = new slaPercentageByDate();
-            //old_reports.PercentYear = year;
-            //old_reports.PercentMonth = month;
-            //old_reports.SuccessfulPercentage = singleSla
-            //updateSlaPercentageByDate(old_reports);
-
-            return singleSla;
+            return project_id;
         }
 
         public List<SingleSlaTable> getSingleSlaTables(string project_state, int month, int year, string projectList)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.

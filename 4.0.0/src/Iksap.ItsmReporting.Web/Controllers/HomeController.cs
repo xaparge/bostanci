@@ -15,6 +15,7 @@ using Iksap.ItsmReporting.Web.Scheduling;
 using Iksap.ItsmReporting.Web.Models.Home;
 using static Iksap.ItsmReporting.Web.Models.Home.ProjetsTreeList;
 using Microsoft.Ajax.Utilities;
+using Abp.Runtime.Security;
 
 namespace Iksap.ItsmReporting.Web.Controllers
 
@@ -24,8 +25,9 @@ namespace Iksap.ItsmReporting.Web.Controllers
     {
         //PersonService personService = new PersonService();
         //ProjectsListService projectsListService = new ProjectsListService();
+
         ProjetsTreeList projetsTreeList = new ProjetsTreeList();
-       private static Dictionary<int, string> months = new Dictionary<int, string>(){{1,"Ocak"},{2, "Şubat"}, {3,"Mart"},
+        private static Dictionary<int, string> months = new Dictionary<int, string>(){{1,"Ocak"},{2, "Şubat"}, {3,"Mart"},
                                                                         {4,"Nisan"},  {5,"Mayıs"},{6,"Haziran"},
                                                                         {7,"Temmuz"}, {8,"Ağustos"},{9,"Eylül"},
                                                                         {10,"Ekim"}, {11,"Kasım"}, {12,"Aralık"}};
@@ -34,9 +36,9 @@ namespace Iksap.ItsmReporting.Web.Controllers
                                                                         {"Temmuz",7}, {"Ağustos",8},{"Eylül",9},
                                                                         {"Ekim",10}, {"Kasım",11}, {"Aralık",12}};
 
-
         public ActionResult Index()
         {
+            
             return View();
         }
         //[HttpPost]
@@ -45,8 +47,9 @@ namespace Iksap.ItsmReporting.Web.Controllers
         {
 
             //var projects = projectsListService.GetProjects().ToList();
-
-            return Json(projetsTreeList.PopulateTreeView(), JsonRequestBehavior.AllowGet);
+            var currentTenantId = User.Identity.GetTenantId();
+            var currentUserId = User.Identity.GetUserId();
+            return Json(projetsTreeList.PopulateTreeView(currentUserId.ToString()), JsonRequestBehavior.AllowGet);
         }
         //[HttpPost]
         //[System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
@@ -99,7 +102,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
                     month = 12;
                     year -= 1;
                 }
-
             }
 
             List<object> iData = new List<object>();
@@ -197,7 +199,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 singleSla[i].created_on_str = singleSla[i].created_on.ToString("dd/MM/yyyy HH:mm:ss");
                 singleSla[i].closed_on_str = singleSla[i].closed_on.ToString("dd/MM/yyyy HH:mm:ss");
             }
-
             return Json(dataTable, JsonRequestBehavior.AllowGet);
         }
 
