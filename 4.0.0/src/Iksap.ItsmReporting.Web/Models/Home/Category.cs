@@ -56,62 +56,136 @@ namespace Iksap.ItsmReporting.Web.Models.Home
             return _id;
         }
 
-        public static List<Category> GetListFromDatabase(string currentUserId)
+        public static List<Category> projects;
+        public static List<Category> GetListFromDatabase(int currentUserId)
         {
-            //List<int> projects = new List<int>();
-            //projects = getProjectListByTenant(currentUserId);
-
-            MySqlConnection dbConn = new MySqlConnection("server=127.0.0.1; uid=root;pwd=" + System.Configuration.ConfigurationManager.AppSettings["DbPassword"].ToString() + "; database=itsmreporting_operations");
-
-            MySqlCommand cmd = new MySqlCommand("itsmreporting_operations.slaProjectsByUsers", dbConn);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@user_id", currentUserId);
-
+            MySqlConnection dbConn = new MySqlConnection("server=127.0.0.1; uid=root; pwd=" + System.Configuration.ConfigurationManager.AppSettings["DbPassword"].ToString() + "; database=itsmreporting_operations");
             dbConn.Open();
+            MySqlCommand cmd = new MySqlCommand("allProjects", dbConn);
+            cmd.CommandType = CommandType.StoredProcedure;
 
             DataTable dt = new DataTable();
             MySqlDataAdapter da = new MySqlDataAdapter(cmd);
             da.Fill(dt);
-            List<Category> categories = new List<Category>();
+
+            projects = new List<Category>();
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 Category c = new Category();
-                c.Id = Convert.ToInt32(dt.Rows[i][0]);
-                c.Name = dt.Rows[i][1].ToString();
+                c.Id = (int)dt.Rows[i][0];
+                c.Name = (string)dt.Rows[i][1];
                 if (dt.Rows[i][2] != DBNull.Value)
                 {
                     c.Parent = new Category();
-                    c.Parent.Id = Convert.ToInt32(dt.Rows[i][2]);
+                    c.Parent.Id = (int)dt.Rows[i][2];
+                }
+                projects.Add(c);
+            }
+
+            List<Category> categories = new List<Category>();
+
+            MySqlCommand cmd2 = new MySqlCommand("slaProjectsByUsers", dbConn);
+            cmd2.Parameters.AddWithValue("@user_id", currentUserId);
+            cmd2.CommandType = CommandType.StoredProcedure;
+
+            DataTable dt2 = new DataTable();
+            MySqlDataAdapter da2 = new MySqlDataAdapter(cmd2);
+            da2.Fill(dt2);
+            for (int i = 0; i < dt2.Rows.Count; i++)
+            {
+                Category c = new Category();
+                c.Id = Convert.ToInt32(dt2.Rows[i][0]);
+                c.Name = dt2.Rows[i][1].ToString();
+                if (dt2.Rows[i][2] != DBNull.Value)
+                {
+                    c.Parent = new Category();
+                    c.Parent.Id = Convert.ToInt32(dt2.Rows[i][2]);
                 }
                 categories.Add(c);
             }
-
-
-            // PARAMETRE EKLEMEDE SORUN VAR
-            //DbCommand cmd = dbConn.CreateCommand();
-            //cmd.CommandText = "itsmreporting_operations.slaProjectsByUsers";
-            //cmd.CommandType = CommandType.StoredProcedure;
-            //cmd.Parameters.Add(currentUserId);
-            //dbConn.Open();
-            //DbDataReader reader = cmd.ExecuteReader();
-
-            //List<Category> categories = new List<Category>();
-            //foreach (DbDataRecord row in reader)
-            //{
-            //    Category c = new Category();
-            //    c.Id = (int)row["id"];
-            //    c.Name = (string)row["name"];
-            //    if (row["parent_id"] != DBNull.Value)
-            //    {
-            //        c.Parent = new Category();
-            //        c.Parent.Id = (int)row["parent_id"];
-            //    }
-            //    categories.Add(c);
-            //}
-            //reader.Close();
             dbConn.Close();
+
+            // Bir alt projeleri idlerini bulma
+            List<int> subProjects = new List<int>();
+            for (int i = 0; i < categories.Count; i++)
+            {
+                if (!subProjects.Contains(categories[i].Id))
+                    subProjects.Add(categories[i].Id);
+            }
+
+            List<int> subProjects2 = new List<int>();
+            for (int i = 0; i < subProjects.Count; i++)     // Varsa ilk alt projeleri bulur
+            {
+                for (int j = 0; j < projects.Count; j++)
+                {
+                    try
+                    {
+                        if (projects[j].Parent.Id == subProjects[i])
+                        {
+                            categories.Add(projects[j]);
+                            if (!subProjects.Contains(projects[j].Id))
+                                subProjects2.Add(projects[j].Id);
+                        }
+                    } catch { }
+                }
+            }
+
+            List<int> subProjects3 = new List<int>();     // Varsa ikinci alt projeleri bulur
+            for (int i = 0; i < subProjects2.Count; i++)
+            {
+                for (int j = 0; j < projects.Count; j++)
+                {
+                    try
+                    {
+                        if (projects[j].Parent.Id == subProjects2[i])
+                        {
+                            categories.Add(projects[j]);
+                            if (!subProjects2.Contains(projects[j].Id))
+                                subProjects3.Add(projects[j].Id);
+                        }
+                    }
+                    catch { }
+                }
+            }
+
+            for (int i = 0; i < subProjects3.Count; i++)     // Varsa üçüncü alt projeleri bulur
+            {
+                for (int j = 0; j < projects.Count; j++)
+                {
+                    try
+                    {
+                        if (projects[j].Parent.Id == subProjects3[i])
+                        {
+                            categories.Add(projects[j]);
+                        }
+                    }
+                    catch { }
+                }
+            }
+
             return categories;
         }
+
+        //public static List<List<int>> subProjects = new List<List<int>>();
+
+        //public static List<Category> c = new List<Category>();
+        //public static List<Category> getSubProjects(List<int> subProj)
+        //{
+        //    for (int i = 0; i < subProj.Count; i++)
+        //    {
+        //        for (int j = 0; j < projects.Count; j++)
+        //        {
+        //            try
+        //            {
+        //                if (subProj[i] == projects[j].Parent.Id)
+        //                {
+        //                    c.Add(projects[j]);
+        //                }
+        //            }
+        //            catch { }
+        //        }
+        //    }
+        //}
 
         //public static List<int> getProjectListByTenant(string tenant_id)
         //{
@@ -159,7 +233,4 @@ namespace Iksap.ItsmReporting.Web.Models.Home
         ////    return categories;
         //}
     }
-
-
-
 }

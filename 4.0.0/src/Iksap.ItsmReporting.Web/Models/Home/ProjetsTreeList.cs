@@ -17,7 +17,7 @@ namespace Iksap.ItsmReporting.Web.Models.Home
         //                        <option value='4'>Upper West Side</option>
         //                        <option value='10'>Manhattanville</option>
         //                    </optgroup>
-        public List<string> PopulateTreeView(string currentUserId)
+        public List<string> PopulateTreeView(int currentUserId)
         {
             IList<Category> topLevelCategories = TreeHelper.ConvertToForest(Category.GetListFromDatabase(currentUserId));
           

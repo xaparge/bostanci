@@ -3118,6 +3118,7 @@
     <Compile Include="Models\DataModel\workflows.cs">
       <DependentUpon>bitnami_redmineModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetProjectsAndSub.cs" />
     <Compile Include="Models\Home\Category.cs" />
     <Compile Include="Models\Home\ITreeNode.cs" />
     <Compile Include="Models\Home\ProjectsListService.cs" />
@@ -3138,6 +3139,7 @@
     <Compile Include="Models\Layout\SideBarUserAreaViewModel.cs" />
     <Compile Include="Models\PersonService.cs" />
     <Compile Include="Models\PersonViewModel.cs" />
+    <Compile Include="Models\project.cs" />
     <Compile Include="Models\Roles\EditRoleModalViewModel.cs" />
     <Compile Include="Models\Roles\RoleListViewModel.cs" />
     <Compile Include="Models\Sla\Rate.cs" />

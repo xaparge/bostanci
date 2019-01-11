@@ -47,9 +47,10 @@ namespace Iksap.ItsmReporting.Web.Controllers
         {
 
             //var projects = projectsListService.GetProjects().ToList();
-            var currentTenantId = User.Identity.GetTenantId();
             var currentUserId = User.Identity.GetUserId();
-            return Json(projetsTreeList.PopulateTreeView(currentUserId.ToString()), JsonRequestBehavior.AllowGet);
+            GetProjectsAndSub aa = new GetProjectsAndSub();
+            aa.getProjects((int)currentUserId);
+            return Json(projetsTreeList.PopulateTreeView((int)currentUserId), JsonRequestBehavior.AllowGet);
         }
         //[HttpPost]
         //[System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
