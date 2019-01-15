@@ -10,10 +10,9 @@
     });
    
     //initRealTimeChart();
-   // initDonutChart();
-   // initSparkline();
+    // initDonutChart();
+    // initSparkline();
     initSlaMonthlyChart();
-
 });
 var realtime = 'on';
 function initRealTimeChart() {
@@ -242,9 +241,6 @@ function initSlaDetay3() {
             "dataType": "json",
             "data": data.result,
             "success": function (veri) {
-                console.log(veri.result);
-                console.log(veri);
-                //data = veri.result[0];
             }
         },
         "columns": [
@@ -282,7 +278,6 @@ function initSlaDetay22() {
             "type": "POST",
             "dataType": "json",
             "success": function (veri) {
-                console.log("veri",veri);
                 var tdata = veri.result;
                 data: tdata;
 
@@ -313,7 +308,6 @@ function initSlaDetay2() {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-            console.log("yeni", data.result);
              var exampleTable  = $('#peopleTable')
                 .DataTable({
                     data: data.result,
@@ -352,7 +346,6 @@ function initSlaDetay() {
                 method: 'get',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
                     var exampleTable = $('#example')
                         .DataTable({
                             data: data,
@@ -392,62 +385,50 @@ function initSlaDetay() {
             });
 
 }
-
-
       
 $(document).ready(function () {
-    
-    $(function () {//for combobox grouping
-        $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
-            function (OptgroupData, OptgroupResults) {
-                $('#projectsDropDownList').select2({
-                    dataAdapter: OptgroupData,
-                    resultsAdapter: OptgroupResults,
-                    closeOnSelect: false,
-                    placeholder: "Proje Seçin / Arayın..."
-                });
-            });
-    });
-
     $(function () {// Loading projects into combobox
-        AjaxCall('/Home/GetProjetsTreeList', null).done(function (response) {
-            if (response.result.length > 0) {
 
-                $('#projectsDropDownList').html('');
-                var options = '';
-                for (var i = 0; i < response.result.length; i++) {
-                    options += response.result[i];
-                }
-                $('#projectsDropDownList').append(options);
-            }
+        AjaxCall('/Home/GetProjetsTreeList', null).done(function (response) {
+            Vue.component('treeselect', VueTreeselect.Treeselect);
+            new Vue({
+                //name: 'app',   // sonradan eklendi
+                el: '#app',
+                data: response.result
+            });
         }).fail(function (error) {
             alert(error.StatusText + ' Projeler yüklenemedi');
         });
 
         $('#showValue').click(function () {// update chart when project selection
-            var project = $('#projectsDropDownList').val();
+
+            //var dropDown = document.getElementById("dropDownList");
+            //project.getElementsByTagName("treeselect")[1];
+
+            //var project = $('#dropDownList');
+            var project = $('#app');
+            console.log(project);
             myNewChart.destroy();
             $.ajax({
                 url: "/Home/SlaMonthlyChart?projects=" + project,
                 dataType: 'json',
                 type: 'post',
                 success: function (data) {
-                    SlaMonthlyChart(data)
+                    SlaMonthlyChart(data);
                 }
             }).done(function (response) {
-             
+
                 myNewChart.update();
-                
-                }).fail(function (error) {
-                   alert(error.StatusText);
-              });
+
+            }).fail(function (error) {
+                alert(error.StatusText);
+            });
         });
 
 
     });
-    
+
     function AjaxCall(url, data, type) {
-        console.log(url);
         return $.ajax({
             url: url,
             type: type ? type : 'GET',
@@ -471,7 +452,6 @@ $(document).ready(function () {
 
 
         let project = $('#projectsDropDownList').val();
-        console.log(project);
         var table = $('#slaMonthlyDetailTable').DataTable();
      
         $('#slaMonthlyDetailTable').dataTable().fnClearTable();
@@ -481,7 +461,6 @@ $(document).ready(function () {
             type: 'post',
             success: function (data) {
                 $.each(data.result.data, function (a, b) {
-                    console.log(b.redmine_link);
                     table.row.add([
                         b.redmine_link,
                         '---------------',

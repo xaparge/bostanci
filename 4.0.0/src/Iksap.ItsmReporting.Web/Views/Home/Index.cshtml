@@ -4,7 +4,10 @@
 }
 @section styles {
     <link href="~/lib/morris.js/morris.css" rel="stylesheet" />
+
     <link href="~/lib/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="~/lib/vue/vue-treeselect.min.css" rel="stylesheet" />
+
 
     @Styles.Render("~/Bundles/select2css")
 
@@ -13,6 +16,9 @@
     @Scripts.Render("~/Bundles/home-index")
     @Scripts.Render("~/Bundles/dataTablesjs")
     @Scripts.Render("~/Bundles/select2js")
+
+    <script src="~/lib/vue/vue.js"></script>
+    <script src="~/lib/vue/vue-treeselect.min.js"></script>
 }
 <div class="block-header">
     <h2>DASHBOARD</h2>
@@ -82,8 +88,15 @@
 
                     <div class="col-md-6">
                         <div class="col-lg-10">
+                            <div id="app">
 
-                            <select multiple='multiple' style="width:100%" id='projectsDropDownList'></select>
+                                <treeselect :multiple="true"
+                                            :options="options"
+                                            placeholder="Proje seçin..."
+                                            v-model="value"
+                                            id="dropDownList" />
+                            </div>
+                            @*<select multiple='multiple' style="width:100    %" id='projectsDropDownList'></select>*@
                         </div>
 
                         <div class="col-lg-2">
@@ -139,13 +152,13 @@
                             </tr>
                         </thead>
                         @*<thead id="searchHeader">
-                            <tr>
-                                <th><input type="text" data-column="1" class="form-control search-input" /></th>
-                                <th><input type="text" data-column="2" class="form-control search-input" /></th>
-                                <th><input type="text" data-column="3" class="form-control search-input" /></th>
-                                <th><input type="text" data-column="3" class="form-control search-input" /></th>
-                            </tr>
-                        </thead>*@
+                                <tr>
+                                    <th><input type="text" data-column="1" class="form-control search-input" /></th>
+                                    <th><input type="text" data-column="2" class="form-control search-input" /></th>
+                                    <th><input type="text" data-column="3" class="form-control search-input" /></th>
+                                    <th><input type="text" data-column="3" class="form-control search-input" /></th>
+                                </tr>
+                            </thead>*@
                     </table>
                 </div>
             </div>
@@ -175,7 +188,7 @@
                     </ul>
                 </div>
                 <div class="body">
-                  
+
                 </div>
             </div>
         </div>
@@ -321,123 +334,123 @@
 
 
 @*<div class="row clearfix">
-    <!-- Task Info -->
-    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-        <div class="card">
-            <div class="header">
-                <h2>TASK INFOS</h2>
-                <ul class="header-dropdown m-r--5">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <i class="material-icons">more_vert</i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another action</a></li>
-                            <li><a href="javascript:void(0);">Something else here</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <div class="body">
-                <div class="table-responsive">
-                    <table class="table table-hover dashboard-task-infos">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Task</th>
-                                <th>Status</th>
-                                <th>Manager</th>
-                                <th>Progress</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Task A</td>
-                                <td><span class="label bg-green">Doing</span></td>
-                                <td>xxxxx</td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-green" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" style="width: 62%"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Task B</td>
-                                <td><span class="label bg-blue">To Do</span></td>
-                                <td>xxxx</td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Task C</td>
-                                <td><span class="label bg-light-blue">On Hold</span></td>
-                                <td>xxxxxx</td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-light-blue" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="width: 72%"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Task D</td>
-                                <td><span class="label bg-orange">Wait Approvel</span></td>
-                                <td>xxxxxxx</td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100" style="width: 95%"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>Task E</td>
-                                <td>
-                                    <span class="label bg-red">Suspended</span>
-                                </td>
-                                <td>xxxxx</td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-red" role="progressbar" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100" style="width: 87%"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <!-- Task Info -->
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+            <div class="card">
+                <div class="header">
+                    <h2>TASK INFOS</h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="javascript:void(0);">Action</a></li>
+                                <li><a href="javascript:void(0);">Another action</a></li>
+                                <li><a href="javascript:void(0);">Something else here</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table table-hover dashboard-task-infos">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Task</th>
+                                    <th>Status</th>
+                                    <th>Manager</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Task A</td>
+                                    <td><span class="label bg-green">Doing</span></td>
+                                    <td>xxxxx</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" style="width: 62%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Task B</td>
+                                    <td><span class="label bg-blue">To Do</span></td>
+                                    <td>xxxx</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Task C</td>
+                                    <td><span class="label bg-light-blue">On Hold</span></td>
+                                    <td>xxxxxx</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-light-blue" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="width: 72%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Task D</td>
+                                    <td><span class="label bg-orange">Wait Approvel</span></td>
+                                    <td>xxxxxxx</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100" style="width: 95%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Task E</td>
+                                    <td>
+                                        <span class="label bg-red">Suspended</span>
+                                    </td>
+                                    <td>xxxxx</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-red" role="progressbar" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100" style="width: 87%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- #END# Task Info -->
-    <!-- Browser Usage -->
-    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-        <div class="card">
-            <div class="header">
-                <h2>BROWSER USAGE</h2>
-                <ul class="header-dropdown m-r--5">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <i class="material-icons">more_vert</i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another action</a></li>
-                            <li><a href="javascript:void(0);">Something else here</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <div class="body">
-                <div id="donut_chart" class="dashboard-donut-chart"></div>
+        <!-- #END# Task Info -->
+        <!-- Browser Usage -->
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div class="card">
+                <div class="header">
+                    <h2>BROWSER USAGE</h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="javascript:void(0);">Action</a></li>
+                                <li><a href="javascript:void(0);">Another action</a></li>
+                                <li><a href="javascript:void(0);">Something else here</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body">
+                    <div id="donut_chart" class="dashboard-donut-chart"></div>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- #END# Browser Usage -->
-</div>*@
+        <!-- #END# Browser Usage -->
+    </div>*@

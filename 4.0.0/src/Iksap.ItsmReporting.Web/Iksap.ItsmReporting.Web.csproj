@@ -2289,6 +2289,9 @@
     <Content Include="lib\toastr\toastr.js" />
     <Content Include="lib\toastr\toastr.min.css" />
     <Content Include="lib\toastr\toastr.min.js" />
+    <Content Include="lib\vue\vue-treeselect.min.css" />
+    <Content Include="lib\vue\vue-treeselect.min.js" />
+    <Content Include="lib\vue\vue.js" />
     <Content Include="lib\Waves\dist\waves.css" />
     <Content Include="lib\Waves\dist\waves.js" />
     <Content Include="lib\Waves\dist\waves.min.css" />
@@ -2823,6 +2826,8 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Scripts\vue.js" />
+    <Content Include="Scripts\vue.min.js" />
     <Content Include="Views\Account\Login.css">
       <DependentUpon>Login.less</DependentUpon>
     </Content>

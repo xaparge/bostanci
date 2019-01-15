@@ -40,7 +40,7 @@ namespace Iksap.ItsmReporting.Web.Models
             MySqlDataAdapter da2 = new MySqlDataAdapter(cmd2);
             da2.Fill(dt2);
 
-            projectTree = "var myData=[";
+            projectTree = "{value: null, options: [";
             bool changed = false;
             for (int i = 0; i < dt2.Rows.Count; i++)
             {
@@ -53,18 +53,13 @@ namespace Iksap.ItsmReporting.Web.Models
                 projects.Add(p);
                 if (changed)
                     projectTree += ", ";
-                projectTree += "{ Id: " + p.id + ", ";
-                projectTree += "Name: " + p.name;
+                projectTree += "{ id: " + p.id + ", ";
+                projectTree += "label: '" + p.name + "'";
                 getSubProject(p.id);
-                if (subChanged)
-                {
-                    projectTree += "]";
-                    subChanged = false;
-                }
                 projectTree += " }";
                 changed = true;
             }
-            projectTree += "]";
+            projectTree += "]}";
             dbConn.Close();
             return projectTree;
         }
@@ -80,7 +75,7 @@ namespace Iksap.ItsmReporting.Web.Models
                 {
                     if (!subChanged)
                     {
-                        projectTree += ", sub: [";
+                        projectTree += ", children: [";
                         subChanged = true;
                     }
                     if (virguleControl)
@@ -88,13 +83,19 @@ namespace Iksap.ItsmReporting.Web.Models
                         projectTree += ", ";
                         virguleControl = true;
                     }
-                    projectTree += "{ Id: " + allProjects[i].id + ", Name: " + allProjects[i].name + " }";
+                    projectTree += "{ id: " + allProjects[i].id + ", label: '" + allProjects[i].name + "'";
                     virguleControl = true;
                     bool LastState = subChanged;
                     subChanged = false;
                     getSubProject(allProjects[i].id);
                     subChanged = LastState;
+                    projectTree += " }";
                 }
+            }
+            if (subChanged)
+            {
+                projectTree += "]";
+                subChanged = false;
             }
             return subProjects;
         }

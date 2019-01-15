@@ -16,6 +16,8 @@ using Iksap.ItsmReporting.Web.Models.Home;
 using static Iksap.ItsmReporting.Web.Models.Home.ProjetsTreeList;
 using Microsoft.Ajax.Utilities;
 using Abp.Runtime.Security;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Iksap.ItsmReporting.Web.Controllers
 
@@ -45,18 +47,23 @@ namespace Iksap.ItsmReporting.Web.Controllers
         //[System.Web.Mvc.Route("ItsmReport/Home/GetProjetsTreeList")]
         public JsonResult GetProjetsTreeList()
         {
-
             //var projects = projectsListService.GetProjects().ToList();
             var currentUserId = User.Identity.GetUserId();
             GetProjectsAndSub aa = new GetProjectsAndSub();
-            aa.getProjects((int)currentUserId);
-            return Json(projetsTreeList.PopulateTreeView((int)currentUserId), JsonRequestBehavior.AllowGet);
+            var treeList = aa.getProjects((int)currentUserId);
+            //var aaaaaaaa = projetsTreeList.PopulateTreeView((int)currentUserId);
+            //return Json(projetsTreeList.PopulateTreeView((int)currentUserId), JsonRequestBehavior.AllowGet);
+            //treeList = "{value: null, options: [ { id: 'a', label: 'a', children: [ { id: 'aa', label: 'aa', }, { id: 'ab', label: 'ab', } ], }, { id: 'b', label: 'b', }, { id: 'c', label: 'c', } ],}";
+            //JObject json = JObject.Parse(treeList);
+            dynamic json = JsonConvert.DeserializeObject(treeList);
+            return Json(json, JsonRequestBehavior.AllowGet);
         }
+        
         //[HttpPost]
         //[System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
         public JsonResult SlaMonthlyChart(string projects)
         {
-            if (projects == null)
+            if (projects == null || projects == "")
                 projects = "1";
             List<int> projectsIdList = new List<int>();
             projectsIdList = projects.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
@@ -122,7 +129,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 dr["pozitif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][0]), 2);
                 dr["negatif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][1]), 2);
                 dt.Rows.Add(dr);
-
                 
                 if (month_count < 12) { 
                     month_count++;
@@ -143,7 +149,99 @@ namespace Iksap.ItsmReporting.Web.Controllers
             //Source data returned as JSON
             return Json(iData, JsonRequestBehavior.AllowGet);
         }
-      
+
+        public JsonResult SlaMonthlyChartByProject(string projects)
+        {
+            if (projects == null)
+                projects = "1";
+            List<int> projectsIdList = new List<int>();
+            projectsIdList = projects.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+
+
+            SlaReport sr = new SlaReport();
+            List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
+
+            Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
+
+            double success_count;
+            double fail_count;
+            int month = DateTime.Now.Month;
+            int year = DateTime.Now.Year;
+            for (int i = 0; i < 12; i++)
+            {
+                success_count = 0;
+                fail_count = 0;
+                singleSla = sr.getSingleSlaTables("close", month, year, projects);
+
+                for (int j = 0; j < singleSla.Count; j++)
+                {
+                    if (singleSla[j].success_rate < 100)
+                    {
+                        success_count++;
+                    }
+                    else if (singleSla[j].success_rate >= 100)
+                    {
+                        fail_count++;
+                    }
+                }
+                double success_rate = Math.Round((success_count * 100) / (success_count + fail_count), 2);
+                double fail_rate = Math.Round((fail_count * 100) / (success_count + fail_count), 2);
+                List<string> successAndFail2 = new List<string>();
+                successAndFail2.Add(CheckNull(success_rate));
+                successAndFail2.Add(CheckNull(fail_rate));
+
+                dictionary[months[month]] = successAndFail2;
+
+                if (month > 1)
+                    month--;
+                else
+                {
+                    month = 12;
+                    year -= 1;
+                }
+            }
+
+            List<object> iData = new List<object>();
+            //Creating sample data
+            DataTable dt = new DataTable();
+            dt.Columns.Add("ay", System.Type.GetType("System.String"));
+            dt.Columns.Add("pozitif", System.Type.GetType("System.Double"));
+            dt.Columns.Add("negatif", System.Type.GetType("System.Double"));
+
+            int month_count = DateTime.Now.Month + 1;
+            int yearlabel = DateTime.Now.Year - 1;
+            for (int i = 0; i < dictionary.Count; i++)
+            {
+                DataRow dr = dt.NewRow();
+
+                dr["ay"] = yearlabel + " - " + months[month_count];
+                dr["pozitif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][0]), 2);
+                dr["negatif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][1]), 2);
+                dt.Rows.Add(dr);
+
+                if (month_count < 12)
+                {
+                    month_count++;
+                }
+                else
+                {
+                    month_count = 1;
+                    yearlabel = DateTime.Now.Year;
+                }
+            }
+
+            //Looping and extracting each DataColumn to List<Object>
+            foreach (DataColumn dc in dt.Columns)
+            {
+                List<object> y = new List<object>();
+                y = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
+                iData.Add(y);
+            }
+            //Source data returned as JSON
+            return Json(iData, JsonRequestBehavior.AllowGet);
+        }
+
+
         public string CheckNull(double item)
         {
             if (!Double.IsNaN(item))
