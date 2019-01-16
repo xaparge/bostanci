@@ -18,6 +18,7 @@ using Microsoft.Ajax.Utilities;
 using Abp.Runtime.Security;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using MySql.Data.MySqlClient;
 
 namespace Iksap.ItsmReporting.Web.Controllers
 
@@ -33,19 +34,19 @@ namespace Iksap.ItsmReporting.Web.Controllers
                                                                         {4,"Nisan"},  {5,"Mayıs"},{6,"Haziran"},
                                                                         {7,"Temmuz"}, {8,"Ağustos"},{9,"Eylül"},
                                                                         {10,"Ekim"}, {11,"Kasım"}, {12,"Aralık"}};
-        private static Dictionary< string, int> monthsNumber = new Dictionary<string,int>(){{"Ocak",1},{"Şubat",2}, {"Mart",3},
+        private static Dictionary<string, int> monthsNumber = new Dictionary<string, int>(){{"Ocak",1},{"Şubat",2}, {"Mart",3},
                                                                         {"Nisan",4},  {"Mayıs",5},{"Haziran",6},
                                                                         {"Temmuz",7}, {"Ağustos",8},{"Eylül",9},
                                                                         {"Ekim",10}, {"Kasım",11}, {"Aralık",12}};
 
         public ActionResult Index()
         {
-            
+
             return View();
         }
         //[HttpPost]
-        //[System.Web.Mvc.Route("ItsmReport/Home/GetProjetsTreeList")]
-        public JsonResult GetProjetsTreeList()
+        //[System.Web.Mvc.Route("ItsmReport/Home/GetProjectsTreeList")]
+        public JsonResult GetProjectsTreeList()
         {
             //var projects = projectsListService.GetProjects().ToList();
             var currentUserId = User.Identity.GetUserId();
@@ -55,22 +56,23 @@ namespace Iksap.ItsmReporting.Web.Controllers
             //return Json(projetsTreeList.PopulateTreeView((int)currentUserId), JsonRequestBehavior.AllowGet);
             //treeList = "{value: null, options: [ { id: 'a', label: 'a', children: [ { id: 'aa', label: 'aa', }, { id: 'ab', label: 'ab', } ], }, { id: 'b', label: 'b', }, { id: 'c', label: 'c', } ],}";
             //JObject json = JObject.Parse(treeList);
+
+            //treeList = treeList.Substring(14, treeList.Length - 15);
+
             dynamic json = JsonConvert.DeserializeObject(treeList);
+
             return Json(json, JsonRequestBehavior.AllowGet);
         }
-        
+
         //[HttpPost]
         //[System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
-        public JsonResult SlaMonthlyChart(string projects)
+        public JsonResult SlaMonthlyChart(string projectsName)
         {
-            if (projects == null || projects == "")
-                projects = "1";
-            List<int> projectsIdList = new List<int>();
-            projectsIdList = projects.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
-
-           
             SlaReport sr = new SlaReport();
             List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
+
+            GetProjectsAndSub calculate = new GetProjectsAndSub();
+            string selectedProjectNumbers = calculate.getProjects(projectsName);
 
             Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
 
@@ -82,7 +84,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
             {
                 success_count = 0;
                 fail_count = 0;
-                singleSla = sr.getSingleSlaTables("close", month, year, projects);
+                singleSla = sr.getSingleSlaTables("close", month, year, selectedProjectNumbers);
 
                 for (int j = 0; j < singleSla.Count; j++)
                 {
@@ -120,20 +122,22 @@ namespace Iksap.ItsmReporting.Web.Controllers
             dt.Columns.Add("negatif", System.Type.GetType("System.Double"));
 
             int month_count = DateTime.Now.Month + 1;
-            int yearlabel = DateTime.Now.Year-1;
+            int yearlabel = DateTime.Now.Year - 1;
             for (int i = 0; i < dictionary.Count; i++)
             {
                 DataRow dr = dt.NewRow();
 
-                dr["ay"] = yearlabel +" - "+months[month_count];
+                dr["ay"] = yearlabel + " - " + months[month_count];
                 dr["pozitif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][0]), 2);
                 dr["negatif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][1]), 2);
                 dt.Rows.Add(dr);
-                
-                if (month_count < 12) { 
+
+                if (month_count < 12)
+                {
                     month_count++;
                 }
-                else { 
+                else
+                {
                     month_count = 1;
                     yearlabel = DateTime.Now.Year;
                 }
@@ -254,26 +258,29 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
         }
 
-       
+
 
         //[HttpPost]
         //[System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChartDetailTable")]
         public JsonResult SlaMonthlyChartDetailTable(string projects, string month, string year)
         {
 
-          
+
             SlaReport slaReport = new SlaReport();
             SlaDetailTable dataTable = new SlaDetailTable();
             //dataTable.draw = int.Parse(Request.QueryString["draw"]);
 
+            GetProjectsAndSub calculate = new GetProjectsAndSub();
+            string selectedProjectNumbers = calculate.getProjects(projects);
+
             List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
 
-            singleSla = slaReport.getSingleSlaTables("close", monthsNumber[month.Trim()], Convert.ToInt32(year.Trim()), projects);
+            singleSla = slaReport.getSingleSlaTables("close", monthsNumber[month.Trim()], Convert.ToInt32(year.Trim()), selectedProjectNumbers);
             //singleSla = slaReport.getSingleSlaTablesPaging("close", monthsNumber[month], year, projects, 0, 10);
 
             string filterTicketId = Request.QueryString["ticketId"];
             string filterCreatedOn = Request.QueryString["created_on"];
-            string filterClosedOn= Request.QueryString["closed_on"];
+            string filterClosedOn = Request.QueryString["closed_on"];
             string filterRate = Request.QueryString["rate"];
             var result = from s in singleSla
                          where (string.IsNullOrEmpty(filterTicketId) || s.id.Equals(filterTicketId))
@@ -308,7 +315,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
         //    var start = Request.Form.GetValues("start").FirstOrDefault();
         //    var length = Request.Form.GetValues("length").FirstOrDefault();
 
-        
+
         //    //Global search field
         //    var search = Request.Form.GetValues("search[value]").FirstOrDefault();
 

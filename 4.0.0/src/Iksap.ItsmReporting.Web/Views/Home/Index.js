@@ -8,7 +8,7 @@
             return '$' + value.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, ' ').replace('.', ',');
         }
     });
-   
+
     //initRealTimeChart();
     // initDonutChart();
     // initSparkline();
@@ -72,22 +72,22 @@ function initDonutChart() {
     Morris.Donut({
         element: 'donut_chart',
         data: [{
-                label: 'Chrome',
-                value: 37
-            }, {
-                label: 'Firefox',
-                value: 30
-            }, {
-                label: 'Safari',
-                value: 18
-            }, {
-                label: 'Opera',
-                value: 12
-            },
-            {
-                label: 'Other',
-                value: 3
-            }],
+            label: 'Chrome',
+            value: 37
+        }, {
+            label: 'Firefox',
+            value: 30
+        }, {
+            label: 'Safari',
+            value: 18
+        }, {
+            label: 'Opera',
+            value: 12
+        },
+        {
+            label: 'Other',
+            value: 3
+        }],
         colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)', 'rgb(96, 125, 139)'],
         formatter: function (y) {
             return y + '%'
@@ -115,36 +115,36 @@ function getRandomData() {
 }
 
 var myNewChart
-var dataT 
+var dataT
 function SlaMonthlyChart(mems) {
     let aData = mems;
     let aLabels = aData.result[0];
     let aDatasetnegatif = aData.result[2];
     let aDatasetpozitif = aData.result[1];
-    dataT= {
+    dataT = {
         //labels: aLabels,
         labels: aLabels,
         datasets: [
-        {
-            label: "Sla sağlayanlar (%)",
-            data: aDatasetpozitif,
-            stack: 'Stack 0',
-            fill: false,
-           backgroundColor: "rgba(54, 162, 235, 0.2)",
-            borderColor: "rgb(54, 162, 235)",
-            borderWidth: 1
-        },
-{
-            label: "Sla geçenler (%)",
-            data: aDatasetnegatif,
-            stack: 'Stack 0',
-            fill: false,
- backgroundColor: "rgba(255, 99, 132, 0.2)",
-           
-            borderColor: "rgb(255, 99, 132)",
-            borderWidth: 1
-        }
-        
+            {
+                label: "Sla sağlayanlar (%)",
+                data: aDatasetpozitif,
+                stack: 'Stack 0',
+                fill: false,
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgb(54, 162, 235)",
+                borderWidth: 1
+            },
+            {
+                label: "Sla geçenler (%)",
+                data: aDatasetnegatif,
+                stack: 'Stack 0',
+                fill: false,
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+
+                borderColor: "rgb(255, 99, 132)",
+                borderWidth: 1
+            }
+
 
         ]
     };
@@ -162,12 +162,12 @@ function SlaMonthlyChart(mems) {
             },
         }
     });
-    
+
 }
 function initSlaMonthlyChart() {
     $.ajax({
         type: "POST",
-        url: "/Home/SlaMonthlyChart?projects=" + 0,
+        url: "/Home/SlaMonthlyChart?projectsName=" + 0,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (mems) {
@@ -189,7 +189,7 @@ function initSlaMonthlyChart() {
                         borderWidth: 1
                     }, {
                         label: "Sla sağlayanlar (%)",
-                        data: aDatasetpozitif ,
+                        data: aDatasetpozitif,
                         stack: 'Stack 0',
                         fill: false,
                         backgroundColor: "rgba(54, 162, 235, 0.2)",//mavi
@@ -214,10 +214,10 @@ function initSlaMonthlyChart() {
                 }
             });
 
-         
+
         }
     });
-    
+
 
 }
 
@@ -225,7 +225,7 @@ function initSlaDetay3() {
 
     $('.dataTables_filter input').attr('placeholder', 'Search...').hide();
 
-    
+
     var table = $("#myTable").DataTable({
         "processing": true, // for show progress bar
         "serverSide": true, // for process server side
@@ -245,14 +245,14 @@ function initSlaDetay3() {
         },
         "columns": [
             { "data": "firstname", "name": "firstname", "autoWidth": true },
- 
+
             { "data": "lastname", "name": "lastname", "autoWidth": true },
             { "data": "login", "name": "login", "autoWidth": true },
-         
+
         ]
-       
+
     });
-  
+
 
     $('.search-input').on('keyup change', function () {
         var index = $(this).attr('data-column'),
@@ -303,12 +303,12 @@ function initSlaDetay22() {
 function initSlaDetay2() {
 
     $('.dataTables_filter input').attr('placeholder', 'Search...').hide();
-        $.ajax({
+    $.ajax({
         url: "/Home/getPeople",
-            type: 'POST',
-            dataType: 'json',
-            success: function (data) {
-             var exampleTable  = $('#peopleTable')
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            var exampleTable = $('#peopleTable')
                 .DataTable({
                     data: data.result,
                     //'aaSorting': [[1, 'asc']],
@@ -328,7 +328,7 @@ function initSlaDetay2() {
                         { "data": "firstname", "name": "firstname", "autoWidth": true },
                         { "data": "lastname", "name": "lastname", "autoWidth": true },
                         { "data": "login", "name": "login", "autoWidth": true },
-                       
+
                     ]
                 });
         }
@@ -341,55 +341,78 @@ function initSlaDetay2() {
 
 }
 function initSlaDetay() {
-            $.ajax({
-                url: 'https://jsonplaceholder.typicode.com/users',
-                method: 'get',
-                dataType: 'json',
-                success: function (data) {
-                    var exampleTable = $('#example')
-                        .DataTable({
-                            data: data,
-                            'aaSorting': [[1, 'asc']],
-                            dom: "<'row'<'col-md-6 text-left'T><'col-md-6 text-right'f>>" +
-                                "<'row'<'col-md-12't>>" +
-                                "<'row'<'col-md-6'i><'col-md-6'p>>",
-                            'columnDefs': [
-                                { 'width': '25px', 'targets': [0] },
-                                { 'sortable': false, 'targets': [0] }
-                            ],
-                            'columns': [
-                                {
-                                    'data': 'id',
-                                    'render': function (data, type, full, meta) {
-                                        return '<button class="btn btn-primary btn-xs" id="btnOne"><i class="fa fa-edit"></i></button>';
-                                    }
-                                },
-                                { 'data': 'name' },
-                                { 'data': 'username' },
-                                {
-                                    //'data': 'email',
-                                    'render': function (data, type, full, meta) {
-                                        return '<a href="mailto:' + full.email + '?">E-Mail</a>';
-                                    }
-                                },
-                                { 'data': 'phone' },
-                                {
-                                    //'data': 'email',
-                                    'render': function (data, type, full, meta) {
-                                        return '<a href="http://' + full.website + '"target=_blank">Website</a>';
-                                    }
-                                },
-                            ]
-                        });
-                }
-            });
+    $.ajax({
+        url: 'https://jsonplaceholder.typicode.com/users',
+        method: 'get',
+        dataType: 'json',
+        success: function (data) {
+            var exampleTable = $('#example')
+                .DataTable({
+                    data: data,
+                    'aaSorting': [[1, 'asc']],
+                    dom: "<'row'<'col-md-6 text-left'T><'col-md-6 text-right'f>>" +
+                        "<'row'<'col-md-12't>>" +
+                        "<'row'<'col-md-6'i><'col-md-6'p>>",
+                    'columnDefs': [
+                        { 'width': '25px', 'targets': [0] },
+                        { 'sortable': false, 'targets': [0] }
+                    ],
+                    'columns': [
+                        {
+                            'data': 'id',
+                            'render': function (data, type, full, meta) {
+                                return '<button class="btn btn-primary btn-xs" id="btnOne"><i class="fa fa-edit"></i></button>';
+                            }
+                        },
+                        { 'data': 'name' },
+                        { 'data': 'username' },
+                        {
+                            //'data': 'email',
+                            'render': function (data, type, full, meta) {
+                                return '<a href="mailto:' + full.email + '?">E-Mail</a>';
+                            }
+                        },
+                        { 'data': 'phone' },
+                        {
+                            //'data': 'email',
+                            'render': function (data, type, full, meta) {
+                                return '<a href="http://' + full.website + '"target=_blank">Website</a>';
+                            }
+                        },
+                    ]
+                });
+        }
+    });
 
 }
-      
+function getProjects() {
+    var projectsName = [];
+    var project = $('#app');
+    var innerHTML = project[0].childNodes[0].childNodes[1].innerHTML;
+    var indexStart = innerHTML.indexOf("vue-treeselect__multi-value-label");
+    while (parseInt(indexStart) !== -1) {
+        innerHTML = innerHTML.substring(indexStart + 35);
+        indexEnd = innerHTML.indexOf("</span>");
+        projectsName.push(innerHTML.substring(0, indexEnd));
+        indexStart = innerHTML.indexOf("vue-treeselect__multi-value-label");
+    }
+    console.log(projectsName);
+    var projects = "";
+    for (var i = 0; i < projectsName.length; i++) {
+        projects += projectsName[i] + ",";
+    }
+
+    if (projects.length > 0) {
+        projects = projects.substring(0, projects.length - 1);
+    }
+
+    console.log(projects);
+    return projects;
+}
+
 $(document).ready(function () {
     $(function () {// Loading projects into combobox
-
-        AjaxCall('/Home/GetProjetsTreeList', null).done(function (response) {
+        AjaxCall('/Home/GetProjectsTreeList', null).done(function (response) {
             Vue.component('treeselect', VueTreeselect.Treeselect);
             new Vue({
                 //name: 'app',   // sonradan eklendi
@@ -401,20 +424,14 @@ $(document).ready(function () {
         });
 
         $('#showValue').click(function () {// update chart when project selection
-
-            //var dropDown = document.getElementById("dropDownList");
-            //project.getElementsByTagName("treeselect")[1];
-
-            //var project = $('#dropDownList');
-            var project = $('#app');
-            console.log(project);
+            
             myNewChart.destroy();
             $.ajax({
-                url: "/Home/SlaMonthlyChart?projects=" + project,
+                url: "/Home/SlaMonthlyChart?projectsName=" + getProjects(),
                 dataType: 'json',
                 type: 'post',
                 success: function (data) {
-                    SlaMonthlyChart(data);
+                    SlaMonthlyChart(data)
                 }
             }).done(function (response) {
 
@@ -447,16 +464,16 @@ $(document).ready(function () {
 
         let negetifSlaValue = myNewChart.data.datasets[negetifSla._datasetIndex].data[negetifSla._index];
         let pozitifSlaValue = myNewChart.data.datasets[pozitifSla._datasetIndex].data[pozitifSla._index];
-        
+
         var filterValues = {};
 
 
         let project = $('#projectsDropDownList').val();
         var table = $('#slaMonthlyDetailTable').DataTable();
-     
+
         $('#slaMonthlyDetailTable').dataTable().fnClearTable();
         $.ajax({
-            url: "/Home/SlaMonthlyChartDetailTable?projects=" + project + " &month=" + month + " &year=" + year,
+            url: "/Home/SlaMonthlyChartDetailTable?projects=" + getProjects() + " &month=" + month + " &year=" + year,
             dataType: 'json',
             type: 'post',
             success: function (data) {
