@@ -26,9 +26,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
     [AbpMvcAuthorize]
     public class HomeController : ItsmReportingControllerBase
     {
-        //PersonService personService = new PersonService();
-        //ProjectsListService projectsListService = new ProjectsListService();
-
         ProjetsTreeList projetsTreeList = new ProjetsTreeList();
         private static Dictionary<int, string> months = new Dictionary<int, string>(){{1,"Ocak"},{2, "Şubat"}, {3,"Mart"},
                                                                         {4,"Nisan"},  {5,"Mayıs"},{6,"Haziran"},
@@ -44,28 +41,18 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
             return View();
         }
-        //[HttpPost]
-        //[System.Web.Mvc.Route("ItsmReport/Home/GetProjectsTreeList")]
+
         public JsonResult GetProjectsTreeList()
         {
-            //var projects = projectsListService.GetProjects().ToList();
             var currentUserId = User.Identity.GetUserId();
             GetProjectsAndSub aa = new GetProjectsAndSub();
             var treeList = aa.getProjects((int)currentUserId);
-            //var aaaaaaaa = projetsTreeList.PopulateTreeView((int)currentUserId);
-            //return Json(projetsTreeList.PopulateTreeView((int)currentUserId), JsonRequestBehavior.AllowGet);
-            //treeList = "{value: null, options: [ { id: 'a', label: 'a', children: [ { id: 'aa', label: 'aa', }, { id: 'ab', label: 'ab', } ], }, { id: 'b', label: 'b', }, { id: 'c', label: 'c', } ],}";
-            //JObject json = JObject.Parse(treeList);
-
-            //treeList = treeList.Substring(14, treeList.Length - 15);
-
+           
             dynamic json = JsonConvert.DeserializeObject(treeList);
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        //[HttpPost]
-        //[System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChart")]
         public JsonResult SlaMonthlyChart(string projectsName)
         {
             SlaReport sr = new SlaReport();
@@ -161,7 +148,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
             List<int> projectsIdList = new List<int>();
             projectsIdList = projects.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
 
-
             SlaReport sr = new SlaReport();
             List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
 
@@ -245,30 +231,19 @@ namespace Iksap.ItsmReporting.Web.Controllers
             return Json(iData, JsonRequestBehavior.AllowGet);
         }
 
-
         public string CheckNull(double item)
         {
             if (!Double.IsNaN(item))
             {
                 return item.ToString();
-
             }
             else return "0";
-
-
         }
 
-
-
-        //[HttpPost]
-        //[System.Web.Mvc.Route("ItsmReport/Home/SlaMonthlyChartDetailTable")]
         public JsonResult SlaMonthlyChartDetailTable(string projects, string month, string year)
         {
-
-
             SlaReport slaReport = new SlaReport();
             SlaDetailTable dataTable = new SlaDetailTable();
-            //dataTable.draw = int.Parse(Request.QueryString["draw"]);
 
             GetProjectsAndSub calculate = new GetProjectsAndSub();
             string selectedProjectNumbers = calculate.getProjects(projects);
@@ -276,7 +251,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
             List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
 
             singleSla = slaReport.getSingleSlaTables("close", monthsNumber[month.Trim()], Convert.ToInt32(year.Trim()), selectedProjectNumbers);
-            //singleSla = slaReport.getSingleSlaTablesPaging("close", monthsNumber[month], year, projects, 0, 10);
 
             string filterTicketId = Request.QueryString["ticketId"];
             string filterCreatedOn = Request.QueryString["created_on"];
@@ -288,12 +262,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
                          && (string.IsNullOrEmpty(filterClosedOn) || s.success_rate.Equals(filterClosedOn))
                          && (string.IsNullOrEmpty(filterRate) || s.success_rate.Equals(filterRate))
                          select s;
-            //select new
-            //{
-            //    s.id,
-            //    s.closed_on,
-            //    s.success_rate
-            //};
 
             dataTable.data = result.ToArray();
             dataTable.recordsTotal = singleSla.Count;
@@ -308,79 +276,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
             return Json(dataTable, JsonRequestBehavior.AllowGet);
         }
 
-        //[HttpPost]
-        //public JsonResult getPeople() 
-        //{
-        //    var draw = Request.Form.GetValues("draw").FirstOrDefault();
-        //    var start = Request.Form.GetValues("start").FirstOrDefault();
-        //    var length = Request.Form.GetValues("length").FirstOrDefault();
-
-
-        //    //Global search field
-        //    var search = Request.Form.GetValues("search[value]").FirstOrDefault();
-
-        //    //Custom column search fields
-        //    //var firstName = Request.Form.GetValues("columns[1][search][value]").FirstOrDefault();
-        //    //var lastName = Request.Form.GetValues("columns[2][search][value]").FirstOrDefault();
-        //    //var login = Request.Form.GetValues("columns[3][search][value]").FirstOrDefault();
-
-        //    string sortColumnName = Request["columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]"];//Sıralama yapılacak column adı
-        //    string sortDirection = Request["order[0][dir]"];//sıralama türü
-
-        //    int pageSize = length != null ? Convert.ToInt32(length) : 0;
-        //    int skip = start != null ? Convert.ToInt32(start) : 0;
-        //    int recordsTotal = 0;
-
-        //    //var people = personService.GetPeople(); // Get People IQueryble
-        //    var people = personService.GetPeople();
-
-
-        //    ////Start search
-        //    //if (!string.IsNullOrWhiteSpace(firstName))
-        //    //{
-        //    //    people = people.Where(x => x.firstname.ToLower().Contains(firstName.ToLower()));
-
-        //    //}
-
-
-
-        //    //if (!string.IsNullOrWhiteSpace(lastName))
-        //    //{
-        //    //    people = people.Where(x => x.lastname.ToLower().Contains(lastName.ToLower()));
-        //    //}
-
-        //    //if (!string.IsNullOrWhiteSpace(login))
-        //    //{
-        //    //    people = people.Where(x => x.login.ToLower().Contains(login.ToLower()));
-        //    //}
-
-
-
-        //    if (!string.IsNullOrEmpty(search))
-        //    {
-        //        people = people.Where(x => x.login.ToLower().Contains(search.ToLower())
-        //          || x.firstname.ToLower().Contains(search.ToLower())
-        //          || x.lastname.ToLower().Contains(search.ToLower())
-        //          || x.login.ToLower().Contains(search.ToLower()));
-        //    }
-
-        //    recordsTotal = people.Count();
-        //    var data = people.OrderBy(x => x.firstname).Skip(skip).Take(pageSize).ToList();
-        //    int FiltrelenmisKayitSayisi = data.Count;
-        //    //return Json(new { data = data, draw = Request["draw"], recordsTotal = recordsTotal, recordsFiltered = FiltrelenmisKayitSayisi });
-
-
-
-        //    return Json(data, JsonRequestBehavior.AllowGet);
-        //    //return Json(data, JsonRequestBehavior.AllowGet);
-        //    //return Json(new
-        //    //{
-        //    //    draw = draw,
-        //    //    recordsFiltered = FiltrelenmisKayitSayisi,
-        //    //    recordsTotal = recordsTotal,
-        //    //    data = data
-        //    //}, JsonRequestBehavior.AllowGet);
-        //}
         public partial class isler
         {
             [Required]
@@ -394,9 +289,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
             [Required]
             [StringLength(75)]
             public string login { get; set; }
-
-            //[Column(TypeName = "date")]
-            //public DateTime Tarih { get; set; }
         }
 
     }
