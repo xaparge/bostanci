@@ -124,84 +124,6 @@ function initSlaMonthlyChart() {
     });
 }
 
-//function initSlaDetay3() {
-//    $('.dataTables_filter input').attr('placeholder', 'Search...').hide();
-//    var table = $("#myTable").DataTable({
-//        "processing": true, // for show progress bar
-//        "serverSide": true, // for process server side
-//        "filter": true, // this is for disable filter (search box)
-//        "orderMulti": false, // for disable multiple column at once
-//        "language": {
-//            "processing": "Yükleniyor... Lütfen Bekleyin",
-//            "url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Turkish.json"
-//        },
-//        "ajax": {
-//            "url": "/Home/getPeople",
-//            "type": "GET",
-//            "dataType": "json",
-//            "data": data.result,
-//            "success": function (veri) {
-//            }
-//        },
-//        "columns": [
-//            { "data": "firstname", "name": "firstname", "autoWidth": true },
-
-//            { "data": "lastname", "name": "lastname", "autoWidth": true },
-//            { "data": "login", "name": "login", "autoWidth": true },
-//        ]
-//    });
-//    $('.search-input').on('keyup change', function () {
-//        var index = $(this).attr('data-column'),
-//            val = $(this).val();
-//        table.columns(index).search(val.trim()).draw();
-//    });
-//}
-
-//function initSlaDetay() {
-//    $.ajax({
-//        url: 'https://jsonplaceholder.typicode.com/users',
-//        method: 'get',
-//        dataType: 'json',
-//        success: function (data) {
-//            var exampleTable = $('#example')
-//                .DataTable({
-//                    data: data,
-//                    'aaSorting': [[1, 'asc']],
-//                    dom: "<'row'<'col-md-6 text-left'T><'col-md-6 text-right'f>>" +
-//                        "<'row'<'col-md-12't>>" +
-//                        "<'row'<'col-md-6'i><'col-md-6'p>>",
-//                    'columnDefs': [
-//                        { 'width': '25px', 'targets': [0] },
-//                        { 'sortable': false, 'targets': [0] }
-//                    ],
-//                    'columns': [
-//                        {
-//                            'data': 'id',
-//                            'render': function (data, type, full, meta) {
-//                                return '<button class="btn btn-primary btn-xs" id="btnOne"><i class="fa fa-edit"></i></button>';
-//                            }
-//                        },
-//                        { 'data': 'name' },
-//                        { 'data': 'username' },
-//                        {
-//                            //'data': 'email',
-//                            'render': function (data, type, full, meta) {
-//                                return '<a href="mailto:' + full.email + '?">E-Mail</a>';
-//                            }
-//                        },
-//                        { 'data': 'phone' },
-//                        {
-//                            //'data': 'email',
-//                            'render': function (data, type, full, meta) {
-//                                return '<a href="http://' + full.website + '"target=_blank">Website</a>';
-//                            }
-//                        },
-//                    ]
-//                });
-//        }
-//    });
-//}
-
 function getProjects() {
     var projectsName = [];
     var project = $('#app');
@@ -295,8 +217,4 @@ $(document).ready(function () {
             alert(error.StatusText);
         });
     };
-
-    function myTrim(x) {
-        return x.replace(/^\s+|\s+$/gm, '');
-    }
 });
