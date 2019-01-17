@@ -167,7 +167,7 @@ $(document).ready(function () {
                 dataType: 'json',
                 type: 'post',
                 success: function (data) {
-                    SlaMonthlyChart(data)
+                    SlaMonthlyChart(data);
                 }
             }).done(function (response) {
 
