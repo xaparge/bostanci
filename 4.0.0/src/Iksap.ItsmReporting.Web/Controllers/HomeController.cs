@@ -8,17 +8,9 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System;
 using Iksap.ItsmReporting.Web.Models;
-using Iksap.ItsmReporting.Web.Models.DataModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Iksap.ItsmReporting.Web.Scheduling;
-using Iksap.ItsmReporting.Web.Models.Home;
-using static Iksap.ItsmReporting.Web.Models.Home.ProjetsTreeList;
-using Microsoft.Ajax.Utilities;
 using Abp.Runtime.Security;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using MySql.Data.MySqlClient;
 
 namespace Iksap.ItsmReporting.Web.Controllers
 
@@ -26,7 +18,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
     [AbpMvcAuthorize]
     public class HomeController : ItsmReportingControllerBase
     {
-        ProjetsTreeList projetsTreeList = new ProjetsTreeList();
         private static Dictionary<int, string> months = new Dictionary<int, string>(){{1,"Ocak"},{2, "Şubat"}, {3,"Mart"},
                                                                         {4,"Nisan"},  {5,"Mayıs"},{6,"Haziran"},
                                                                         {7,"Temmuz"}, {8,"Ağustos"},{9,"Eylül"},
@@ -49,7 +40,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
             var treeList = aa.getProjects((int)currentUserId);
            
             dynamic json = JsonConvert.DeserializeObject(treeList);
-
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 

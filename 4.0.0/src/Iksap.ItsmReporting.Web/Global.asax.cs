@@ -2,7 +2,6 @@
 using Abp.Castle.Logging.Log4Net;
 using Abp.Web;
 using Castle.Facilities.Logging;
-using Iksap.ItsmReporting.Web.Scheduling;
 
 namespace Iksap.ItsmReporting.Web
 {
@@ -15,8 +14,6 @@ namespace Iksap.ItsmReporting.Web
             );
             
             base.Application_Start(sender, e);
-            //SchedulerWrapper sw = new SchedulerWrapper();
-            //SchedulerWrapper.RunJob();
         }
     }
 }

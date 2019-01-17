@@ -3124,10 +3124,8 @@
       <DependentUpon>bitnami_redmineModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProjectsAndSub.cs" />
-    <Compile Include="Models\Home\Category.cs" />
     <Compile Include="Models\Home\ITreeNode.cs" />
     <Compile Include="Models\Home\ProjectsListService.cs" />
-    <Compile Include="Models\Home\ProjetsTreeList.cs" />
     <Compile Include="Models\Layout\RightSideBarViewModel.cs" />
     <Compile Include="Models\Account\LoginFormViewModel.cs" />
     <Compile Include="Models\Account\LoginViewModel.cs" />
@@ -3156,8 +3154,6 @@
     <Compile Include="Models\Users\EditUserModalViewModel.cs" />
     <Compile Include="Models\Users\UserListViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scheduling\SchedulerWrapper.cs" />
-    <Compile Include="Scheduling\SendMail.cs" />
     <Compile Include="Views\ItsmReportingWebViewPageBase.cs" />
     <Compile Include="Views\UrlChecker.cs" />
   </ItemGroup>
