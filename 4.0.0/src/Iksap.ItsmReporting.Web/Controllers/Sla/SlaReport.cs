@@ -1,34 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Iksap.ItsmReporting.Web.Models.Sla;
 using MySql.Data.MySqlClient;
 using System.Data;
-using Iksap.ItsmReporting.Web.Models.DataModel;
 
 namespace Iksap.ItsmReporting.Web.Controllers.Sla
 {
     public class SlaReport
     {
-        MySqlConnection dbConn = new MySqlConnection("server = 127.0.0.1; uid=root;pwd=" + System.Configuration.ConfigurationManager.AppSettings["DbPassword"].ToString() + "; database=itsmreporting_operations");
+        MySqlConnection dbConn = new MySqlConnection("server=" + System.Configuration.ConfigurationManager.AppSettings["DbPath"].ToString() + "; uid=root;pwd=" + System.Configuration.ConfigurationManager.AppSettings["DbPassword"].ToString() + "; database=itsmreporting_operations");
 
-        public List<int> getProjectsByTenant(int tenant_id)
-        {
-            MySqlCommand cmd = new MySqlCommand("Select PercentYear, PercentMonth, SuccessfulPercentage, FailedPercentage From sla_percentage_bydate", dbConn);
-            DataTable dt = new DataTable();
-            dbConn.Open();
-            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-            da.Fill(dt);
-            dbConn.Close();
+        //public List<int> getProjectsByTenant(int tenant_id)   // KULLANILMIYOR
+        //{
+        //    MySqlCommand cmd = new MySqlCommand("Select PercentYear, PercentMonth, SuccessfulPercentage, FailedPercentage From sla_percentage_bydate", dbConn);
+        //    List<int> project_id = new List<int>();
+        //    try
+        //    {
+        //        DataTable dt = new DataTable();
+        //        dbConn.Open();
+        //        MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+        //        da.Fill(dt);
+        //        dbConn.Close();
 
-            List<int> project_id = new List<int>();
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                project_id.Add(Convert.ToInt32(dt.Rows[i][2]));
-            }
-            return project_id;
-        }
+        //        for (int i = 0; i < dt.Rows.Count; i++)
+        //        {
+        //            project_id.Add(Convert.ToInt32(dt.Rows[i][2]));
+        //        }
+        //    }
+        //    catch { }
+        //    return project_id;
+        //}
 
         public List<SingleSlaTable> getSingleSlaTables(string project_state, int month, int year, string projectList)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.
         {
@@ -65,208 +66,189 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
             return singleSla;
         }
 
-        public List<slaPercentageByDate> getSlaPercentageByDate()
-        {
-            MySqlCommand dbComm = new MySqlCommand("Select PercentYear, PercentMonth, SuccessfulPercentage, FailedPercentage From sla_percentage_bydate", dbConn);
-            DataTable dt = new DataTable();
-            dbConn.Open();
-            MySqlDataAdapter da = new MySqlDataAdapter(dbComm);
-            da.Fill(dt);
-            dbConn.Close();
+        //public List<slaPercentageByDate> getSlaPercentageByDate()
+        //{
+        //    MySqlCommand dbComm = new MySqlCommand("Select PercentYear, PercentMonth, SuccessfulPercentage, FailedPercentage From sla_percentage_bydate", dbConn);
+        //    DataTable dt = new DataTable();
+        //    dbConn.Open();
+        //    MySqlDataAdapter da = new MySqlDataAdapter(dbComm);
+        //    da.Fill(dt);
+        //    dbConn.Close();
 
-            List<slaPercentageByDate> old_percentage = new List<slaPercentageByDate>();
+        //    List<slaPercentageByDate> old_percentage = new List<slaPercentageByDate>();
 
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                slaPercentageByDate temp = new slaPercentageByDate();
-                temp.PercentYear = Convert.ToInt32(dt.Rows[i][0]);
-                temp.PercentMonth = Convert.ToInt32(dt.Rows[i][1]);
-                temp.SuccessfulPercentage = dt.Rows[i][2].ToString();
-                temp.FailedPercentage = dt.Rows[i][3].ToString();
-                old_percentage.Add(temp);
-            }
-            return old_percentage;
-        }
+        //    for (int i = 0; i < dt.Rows.Count; i++)
+        //    {
+        //        slaPercentageByDate temp = new slaPercentageByDate();
+        //        temp.PercentYear = Convert.ToInt32(dt.Rows[i][0]);
+        //        temp.PercentMonth = Convert.ToInt32(dt.Rows[i][1]);
+        //        temp.SuccessfulPercentage = dt.Rows[i][2].ToString();
+        //        temp.FailedPercentage = dt.Rows[i][3].ToString();
+        //        old_percentage.Add(temp);
+        //    }
+        //    return old_percentage;
+        //}
 
-        public void insertSlaPercentageByDate(slaPercentageByDate old_percentage)
-        {
-            try
-            {
-                MySqlCommand dbComm = new MySqlCommand("Insert Into sla_percentage_bydate(PercentYear, PercentMonth, SuccessfulPercentage, FailedPercentage) Values('" + old_percentage.PercentYear + "', '" + old_percentage.PercentMonth + "', '" + old_percentage.SuccessfulPercentage + "', '" + old_percentage.FailedPercentage + "')", dbConn);
-                dbConn.Open();
-                dbComm.ExecuteNonQuery();
-                dbConn.Close();
-            }
-            catch (Exception ex) { }
-        }
+        //public void insertSlaPercentageByDate(slaPercentageByDate old_percentage)
+        //{
+        //    try
+        //    {
+        //        MySqlCommand dbComm = new MySqlCommand("Insert Into sla_percentage_bydate(PercentYear, PercentMonth, SuccessfulPercentage, FailedPercentage) Values('" + old_percentage.PercentYear + "', '" + old_percentage.PercentMonth + "', '" + old_percentage.SuccessfulPercentage + "', '" + old_percentage.FailedPercentage + "')", dbConn);
+        //        dbConn.Open();
+        //        dbComm.ExecuteNonQuery();
+        //        dbConn.Close();
+        //    }
+        //    catch (Exception ex) { }
+        //}
 
-        public void updateSlaPercentageByDate(slaPercentageByDate old_percentage)
-        {
-            #region ayların sözlüğe eklenmesi
-            Dictionary<int, string> months = new Dictionary<int, string>();
-            months.Add(1, "january");
-            months.Add(2, "february");
-            months.Add(3, "march");
-            months.Add(4, "april");
-            months.Add(5, "may");
-            months.Add(6, "june");
-            months.Add(7, "july");
-            months.Add(8, "august");
-            months.Add(9, "september");
-            months.Add(10, "october");
-            months.Add(11, "november");
-            months.Add(12, "december");
-            #endregion
+        //public void updateSlaPercentageByDate(slaPercentageByDate old_percentage)
+        //{
+        //    #region ayların sözlüğe eklenmesi
+        //    Dictionary<int, string> months = new Dictionary<int, string>();
+        //    months.Add(1, "january");
+        //    months.Add(2, "february");
+        //    months.Add(3, "march");
+        //    months.Add(4, "april");
+        //    months.Add(5, "may");
+        //    months.Add(6, "june");
+        //    months.Add(7, "july");
+        //    months.Add(8, "august");
+        //    months.Add(9, "september");
+        //    months.Add(10, "october");
+        //    months.Add(11, "november");
+        //    months.Add(12, "december");
+        //    #endregion
 
-            try
-            {
-                MySqlCommand dbComm = new MySqlCommand("Update sla_percentage_bydate Set SuccessfulPercentage = " + old_percentage.SuccessfulPercentage + ", FailedPercentage = " + old_percentage.FailedPercentage + " Where PercentYear = " + old_percentage.PercentYear + " and PercentMonth = " + old_percentage.PercentMonth, dbConn);
-                dbConn.Open();
-                dbComm.ExecuteNonQuery();
-                dbConn.Close();
-            }
-            catch (Exception ex)
-            {
+        //    try
+        //    {
+        //        MySqlCommand dbComm = new MySqlCommand("Update sla_percentage_bydate Set SuccessfulPercentage = " + old_percentage.SuccessfulPercentage + ", FailedPercentage = " + old_percentage.FailedPercentage + " Where PercentYear = " + old_percentage.PercentYear + " and PercentMonth = " + old_percentage.PercentMonth, dbConn);
+        //        dbConn.Open();
+        //        dbComm.ExecuteNonQuery();
+        //        dbConn.Close();
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
         private List<SlaTable> slaList(MySqlCommand cmd)
         {
-            dbConn.Open();
-            DataTable dt = new DataTable();
-            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-            da.Fill(dt);
-            dbConn.Close();
-
             List<SlaTable> slaList = new List<SlaTable>();
-
-            for (int i = 0; i < dt.Rows.Count; i++)
+            try
             {
-                SlaTable temp = new SlaTable();
-                temp.id = Convert.ToInt32(dt.Rows[i][0]);
-                try
-                {
-                    temp.changed_on = Convert.ToDateTime(dt.Rows[i][1].ToString());
-                }
-                catch
-                {
-                    temp.changed_on = Convert.ToDateTime("1000-01-01");
-                }
-                try
-                {
-                    temp.old_value = Convert.ToInt32(dt.Rows[i][3]);
-                }
-                catch
-                {
-                    temp.old_value = 0;     // null değerler yerine 0 atandı
-                }
-                try
-                {
-                    temp.value = Convert.ToInt32(dt.Rows[i][4]);
-                }
-                catch
-                {
-                    temp.value = 0;     // null değerler yerine 0 atandı
-                }
-                if (dt.Rows[i][5].ToString() != "")
-                {
-                    temp.value_name = dt.Rows[i][5].ToString();
-                }
-                else { temp.value_name = "----------"; }
-                temp.subject = dt.Rows[i][6].ToString();
-                try
-                {
-                    temp.created_on = Convert.ToDateTime(dt.Rows[i][7].ToString());
-                }
-                catch
-                {
-                    temp.created_on = Convert.ToDateTime("1000-01-01");
-                }
-                try
-                {
-                    temp.closed_on = Convert.ToDateTime(dt.Rows[i][8].ToString());
-                }
-                catch
-                {
-                    temp.closed_on = Convert.ToDateTime("1000-01-01");
-                }
-                temp.project_id = Convert.ToInt32(dt.Rows[i][10]);
-                if (dt.Rows[i][2].ToString() == "Immediate" || dt.Rows[i][2].ToString() == "Urgent")
-                {
-                    Rate r = new Rate();
-                    r.id = 1;
-                    r.name = "Urgent";
-                    temp.rate = r;
-                }
-                else if (dt.Rows[i][2].ToString() == "High")
-                {
-                    Rate r = new Rate();
-                    r.id = 2;
-                    r.name = dt.Rows[i][2].ToString();
-                    temp.rate = r;
-                }
-                else if (dt.Rows[i][2].ToString() == "Normal")
-                {
-                    Rate r = new Rate();
-                    r.id = 3;
-                    r.name = dt.Rows[i][2].ToString();
-                    temp.rate = r;
-                }
-                else if (dt.Rows[i][2].ToString() == "Low")
-                {
-                    Rate r = new Rate();
-                    r.id = 4;
-                    r.name = dt.Rows[i][2].ToString();
-                    temp.rate = r;
-                }
+                dbConn.Open();
+                DataTable dt = new DataTable();
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                da.Fill(dt);
+                dbConn.Close();
 
-                slaList.Add(temp);
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    SlaTable temp = new SlaTable();
+                    temp.id = Convert.ToInt32(dt.Rows[i][0]);
+                    try
+                    {
+                        temp.changed_on = Convert.ToDateTime(dt.Rows[i][1].ToString());
+                    }
+                    catch
+                    {
+                        temp.changed_on = Convert.ToDateTime("1000-01-01");
+                    }
+                    try
+                    {
+                        temp.old_value = Convert.ToInt32(dt.Rows[i][3]);
+                    }
+                    catch
+                    {
+                        temp.old_value = 0;     // null değerler yerine 0 atandı
+                    }
+                    try
+                    {
+                        temp.value = Convert.ToInt32(dt.Rows[i][4]);
+                    }
+                    catch
+                    {
+                        temp.value = 0;     // null değerler yerine 0 atandı
+                    }
+                    if (dt.Rows[i][5].ToString() != "")
+                    {
+                        temp.value_name = dt.Rows[i][5].ToString();
+                    }
+                    else { temp.value_name = "----------"; }
+                    temp.subject = dt.Rows[i][6].ToString();
+                    try
+                    {
+                        temp.created_on = Convert.ToDateTime(dt.Rows[i][7].ToString());
+                    }
+                    catch
+                    {
+                        temp.created_on = Convert.ToDateTime("1000-01-01");
+                    }
+                    try
+                    {
+                        temp.closed_on = Convert.ToDateTime(dt.Rows[i][8].ToString());
+                    }
+                    catch
+                    {
+                        temp.closed_on = Convert.ToDateTime("1000-01-01");
+                    }
+                    temp.project_id = Convert.ToInt32(dt.Rows[i][10]);
+                    if (dt.Rows[i][2].ToString() == "Immediate" || dt.Rows[i][2].ToString() == "Urgent")
+                    {
+                        Rate r = new Rate();
+                        r.id = 1;
+                        r.name = "Urgent";
+                        temp.rate = r;
+                    }
+                    else if (dt.Rows[i][2].ToString() == "High")
+                    {
+                        Rate r = new Rate();
+                        r.id = 2;
+                        r.name = dt.Rows[i][2].ToString();
+                        temp.rate = r;
+                    }
+                    else if (dt.Rows[i][2].ToString() == "Normal")
+                    {
+                        Rate r = new Rate();
+                        r.id = 3;
+                        r.name = dt.Rows[i][2].ToString();
+                        temp.rate = r;
+                    }
+                    else if (dt.Rows[i][2].ToString() == "Low")
+                    {
+                        Rate r = new Rate();
+                        r.id = 4;
+                        r.name = dt.Rows[i][2].ToString();
+                        temp.rate = r;
+                    }
+
+                    slaList.Add(temp);
+                }
+                slaList = getSlaRateInfos(slaList);
             }
-            slaList = getSlaRateInfos(slaList);
+            catch { }
             return slaList;
         }
 
         private List<SlaTable> getSlaRateInfos(List<SlaTable> slaList)
         {
-            MySqlCommand dbComm = new MySqlCommand("SELECT * FROM sla_rate_list", dbConn);
-            dbConn.Open();
-            DataTable dt = new DataTable();
-            MySqlDataAdapter da = new MySqlDataAdapter(dbComm);
-            da.Fill(dt);
-            dbConn.Close();
-
-            for (int i = 0; i < slaList.Count; i++)
+            try
             {
-                bool assign_control = false;
-                for (int j = 4; j < dt.Rows.Count - 4; j++)     // sla_rate_list'te ilk 4 değer default veriler olduğu için döngü 4'ten başlatıldı.
+                MySqlCommand dbComm = new MySqlCommand("SELECT * FROM sla_rate_list", dbConn);
+                dbConn.Open();
+                DataTable dt = new DataTable();
+                MySqlDataAdapter da = new MySqlDataAdapter(dbComm);
+                da.Fill(dt);
+                dbConn.Close();
+
+                for (int i = 0; i < slaList.Count; i++)
                 {
-                    if (slaList[i].project_id == Convert.ToInt32(dt.Rows[j][2]) && slaList[i].rate.name == dt.Rows[j][1].ToString())
+                    bool assign_control = false;
+                    for (int j = 4; j < dt.Rows.Count - 4; j++)     // sla_rate_list'te ilk 4 değer default veriler olduğu için döngü 4'ten başlatıldı.
                     {
-                        TimeSpan tsWorkStart = TimeSpan.Parse(dt.Rows[j][4].ToString());
-                        slaList[i].rate.work_start_time = new DateTime(0001, 01, 01, tsWorkStart.Hours, tsWorkStart.Minutes, 0);
-
-                        TimeSpan tsWorkEnd = TimeSpan.Parse(dt.Rows[j][5].ToString());
-                        slaList[i].rate.work_end_time = new DateTime(0001, 01, 01, tsWorkEnd.Hours, tsWorkEnd.Minutes, 0);
-                        slaList[i].rate.time_limit = Convert.ToInt32(dt.Rows[j][3]);
-
-                        TimeSpan tsLunchStart = TimeSpan.Parse(dt.Rows[j][6].ToString());
-                        slaList[i].rate.lunch_start_time = new DateTime(0001, 01, 01, tsLunchStart.Hours, tsLunchStart.Minutes, 0);      // Şimdilik kullanılmıyor, ileriki sürümlerde kullanılabilir diye ataması yapılmıştır.
-
-                        TimeSpan tsLunchEnd = TimeSpan.Parse(dt.Rows[j][7].ToString());
-                        slaList[i].rate.lunch_end_time = new DateTime(0001, 01, 01, tsLunchEnd.Hours, tsLunchEnd.Minutes, 0);      // Şimdilik kullanılmıyor, ileriki sürümlerde kullanılabilir diye ataması yapılmıştır.
-
-                        TimeSpan ts = slaList[i].rate.work_end_time - slaList[i].rate.work_start_time;
-                        slaList[i].rate.total_time = ts.Hours;
-                        assign_control = true;
-                        break;
-                    }
-                }
-                if (!assign_control)     // bu koşul şirket için özel atanmış değerler yoksa default değer atamasını sağlar.
-                {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        if (slaList[i].rate.name == dt.Rows[j][1].ToString())
+                        if (slaList[i].project_id == Convert.ToInt32(dt.Rows[j][2]) && slaList[i].rate.name == dt.Rows[j][1].ToString())
                         {
                             TimeSpan tsWorkStart = TimeSpan.Parse(dt.Rows[j][4].ToString());
                             slaList[i].rate.work_start_time = new DateTime(0001, 01, 01, tsWorkStart.Hours, tsWorkStart.Minutes, 0);
@@ -283,11 +265,38 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
 
                             TimeSpan ts = slaList[i].rate.work_end_time - slaList[i].rate.work_start_time;
                             slaList[i].rate.total_time = ts.Hours;
+                            assign_control = true;
                             break;
+                        }
+                    }
+                    if (!assign_control)     // bu koşul şirket için özel atanmış değerler yoksa default değer atamasını sağlar.
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (slaList[i].rate.name == dt.Rows[j][1].ToString())
+                            {
+                                TimeSpan tsWorkStart = TimeSpan.Parse(dt.Rows[j][4].ToString());
+                                slaList[i].rate.work_start_time = new DateTime(0001, 01, 01, tsWorkStart.Hours, tsWorkStart.Minutes, 0);
+
+                                TimeSpan tsWorkEnd = TimeSpan.Parse(dt.Rows[j][5].ToString());
+                                slaList[i].rate.work_end_time = new DateTime(0001, 01, 01, tsWorkEnd.Hours, tsWorkEnd.Minutes, 0);
+                                slaList[i].rate.time_limit = Convert.ToInt32(dt.Rows[j][3]);
+
+                                TimeSpan tsLunchStart = TimeSpan.Parse(dt.Rows[j][6].ToString());
+                                slaList[i].rate.lunch_start_time = new DateTime(0001, 01, 01, tsLunchStart.Hours, tsLunchStart.Minutes, 0);      // Şimdilik kullanılmıyor, ileriki sürümlerde kullanılabilir diye ataması yapılmıştır.
+
+                                TimeSpan tsLunchEnd = TimeSpan.Parse(dt.Rows[j][7].ToString());
+                                slaList[i].rate.lunch_end_time = new DateTime(0001, 01, 01, tsLunchEnd.Hours, tsLunchEnd.Minutes, 0);      // Şimdilik kullanılmıyor, ileriki sürümlerde kullanılabilir diye ataması yapılmıştır.
+
+                                TimeSpan ts = slaList[i].rate.work_end_time - slaList[i].rate.work_start_time;
+                                slaList[i].rate.total_time = ts.Hours;
+                                break;
+                            }
                         }
                     }
                 }
             }
+            catch { }
             return slaList;
         }
 
@@ -323,17 +332,13 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
             for (int i = 0; i < slaTable.Count; i++)   // slaTable'daki en üstteki aynı id'li veri sayısını bulur.
             {
                 if (slaTable[i].id == singleSlaTable.id)
-                {
                     slaIdCount++;
-                }
                 else
                 { break; }
             }
 
             singleSlaTable.rate = slaTable[0].rate;
-
             List<int> slaActiveTime = new List<int> { 0, 1, 2, 7, 10 };   // 0-null 1-yeni 2-çalışılıyor 7-efor bekleniyor 10-değişiklik bekleniyor
-
             bool start_time = false;
 
             if (slaActiveTime.Contains(slaTable[0].old_value))
@@ -417,7 +422,6 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                         {
                             ts = sla.rate.work_end_time.TimeOfDay - sla.start_time.TimeOfDay;  // sla_time eklenecek saat hesaplaması, elde işlemleri
                         }
-
                         SingleSlaTable temp = new SingleSlaTable();
                         temp = AddTime_Normal(sla, ts);
                         sla.sla_time_hour = temp.sla_time_hour;
@@ -479,7 +483,6 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 info.sla_time_minute -= 60;
                 info.sla_time_hour += 1;
             }
-
             info.sla_time_hour += ts.Hours;
             return info;
         }
@@ -497,20 +500,15 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                     info.sla_time_hour += 1;
                 }
             }
-
             info.sla_time_minute += ts.Minutes;
             if (info.sla_time_minute > 59)
             {
                 info.sla_time_minute -= 60;
                 info.sla_time_hour += 1;
             }
-
             info.sla_time_hour += ts.Hours;
-
             info.sla_time_hour += ts.Days * 24;
-
             return info;
         }
-
     }
 }

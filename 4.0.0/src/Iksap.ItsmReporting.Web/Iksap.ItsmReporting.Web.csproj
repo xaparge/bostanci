@@ -2875,7 +2875,6 @@
     <Compile Include="Controllers\MailScheduledTaskController.cs" />
     <Compile Include="Controllers\Results\ChallengeResult.cs" />
     <Compile Include="Controllers\RolesController.cs" />
-    <Compile Include="Controllers\Sla\SendMail.cs" />
     <Compile Include="Controllers\Sla\SlaReport.cs" />
     <Compile Include="Controllers\TenantsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />

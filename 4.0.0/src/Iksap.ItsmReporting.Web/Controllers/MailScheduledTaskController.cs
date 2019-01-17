@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Iksap.ItsmReporting.Web.Controllers.Sla;
-using Iksap.ItsmReporting.Web.Models.Sla;
-
+﻿using System.Web.Mvc;
 using Abp.Application.Services.Dto;
 using Abp.Web.Mvc.Authorization;
 using Iksap.ItsmReporting.Authorization;
@@ -51,30 +44,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 Roles = roles
             };
             return View("_EditUserModal", model);
-        }
-
-        //public ActionResult Index()
-        //{
-        //    //sendMail();
-        //    return View();
-        //}
-        public bool sendMail()
-        {
-            try
-            {
-                SlaReport sr = new SlaReport();
-                List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
-
-                singleSla = sr.getSingleSlaTables("open", 0, 0,"");
-
-                SendMail sm = new SendMail();
-                sm.SendMailToUsers(singleSla);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
         }
     }
 }
