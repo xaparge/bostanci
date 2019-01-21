@@ -10,27 +10,6 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
     {
         MySqlConnection dbConn = new MySqlConnection("server=" + System.Configuration.ConfigurationManager.AppSettings["DbPath"].ToString() + "; uid=root;pwd=" + System.Configuration.ConfigurationManager.AppSettings["DbPassword"].ToString() + "; database=itsmreporting_operations");
 
-        //public List<int> getProjectsByTenant(int tenant_id)   // KULLANILMIYOR
-        //{
-        //    MySqlCommand cmd = new MySqlCommand("Select PercentYear, PercentMonth, SuccessfulPercentage, FailedPercentage From sla_percentage_bydate", dbConn);
-        //    List<int> project_id = new List<int>();
-        //    try
-        //    {
-        //        DataTable dt = new DataTable();
-        //        dbConn.Open();
-        //        MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-        //        da.Fill(dt);
-        //        dbConn.Close();
-
-        //        for (int i = 0; i < dt.Rows.Count; i++)
-        //        {
-        //            project_id.Add(Convert.ToInt32(dt.Rows[i][2]));
-        //        }
-        //    }
-        //    catch { }
-        //    return project_id;
-        //}
-
         public List<SingleSlaTable> getSingleSlaTables(string project_state, int month, int year, string projectList)   // Açık projelerde month ve year parametreleri kullanılmadığı için rastgele int değer verilebilir.
         {
             MySqlCommand dbComm;
@@ -245,7 +224,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 for (int i = 0; i < slaList.Count; i++)
                 {
                     bool assign_control = false;
-                    for (int j = 4; j < dt.Rows.Count - 4; j++)     // sla_rate_list'te ilk 4 değer default veriler olduğu için döngü 4'ten başlatıldı.
+                    for (int j = 4; j < dt.Rows.Count; j++)     // sla_rate_list'te ilk 4 değer default veriler olduğu için döngü 4'ten başlatıldı.
                     {
                         if (slaList[i].project_id == Convert.ToInt32(dt.Rows[j][2]) && slaList[i].rate.name == dt.Rows[j][1].ToString())
                         {
@@ -413,14 +392,12 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                     {
                         TimeSpan ts;
                         sla.rate.work_end_time = new DateTime(sla.start_time.Year, sla.start_time.Month, sla.start_time.Day, sla.rate.work_end_time.Hour, sla.rate.work_end_time.Minute, sla.rate.work_end_time.Second);  // Amaç sadece work_and time'ın date kısmını başlangıç tarihi yapmak.
+
                         if (sla.end_time < sla.rate.work_end_time)      // bitiş saati mesai saatinden önceyse son zaman olarak bitiş saatini alır.
-                        {
                             ts = sla.end_time.TimeOfDay - sla.start_time.TimeOfDay;
-                        }
                         else
-                        {
                             ts = sla.rate.work_end_time.TimeOfDay - sla.start_time.TimeOfDay;  // sla_time eklenecek saat hesaplaması, elde işlemleri
-                        }
+
                         SingleSlaTable temp = new SingleSlaTable();
                         temp = AddTime_Normal(sla, ts);
                         sla.sla_time_hour = temp.sla_time_hour;
@@ -446,9 +423,8 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                         }
                     }
                     else
-                    {
                         sla.sla_time_hour += sla.rate.total_time;
-                    }
+
                 }
                 temp_date = temp_date.AddDays(1);
             }

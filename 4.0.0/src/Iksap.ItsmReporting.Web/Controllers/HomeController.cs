@@ -27,7 +27,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
             months = new Dictionary<int, string>(){{1, L("January")},{2, L("February")}, {3, L("March")},
                                                                         {4, L("April")},  {5, L("May")},{6, L("June")},
                                                                         {7, L("July")}, {8, L("August")},{9, L("September")},
-                                                                        {10, L("October")}, {11, "November"}, {12, L("December")}};
+                                                                        {10, L("October")}, {11, L("November")}, {12, L("December")}};
             monthsNumber = new Dictionary<string, int>(){{L("January"), 1},{L("February"), 2}, {L("March"), 3},
                                                                         {L("April"), 4},  {L("May"), 5},{L("June"), 6},
                                                                         {L("July"), 7}, {L("August"), 8},{L("September"), 9},
@@ -245,7 +245,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
             string selectedProjectNumbers = calculate.getProjects(projects);
 
             List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
-
             singleSla = slaReport.getSingleSlaTables("close", monthsNumber[month.Trim()], Convert.ToInt32(year.Trim()), selectedProjectNumbers);
 
             string filterTicketId = Request.QueryString["ticketId"];

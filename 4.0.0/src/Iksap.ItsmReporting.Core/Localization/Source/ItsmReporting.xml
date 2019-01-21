@@ -77,7 +77,6 @@
     <text name="Edit">Edit</text>
     <text name="Delete">Delete</text>
 
-    <!--<text name=""></text>-->
     <text name="SettingsMenu">Settings Menu</text>
     <text name="mailScheduledTask">Mail Scheduled Tasks</text>
     <text name="TaskName">Task Name</text>
@@ -87,7 +86,7 @@
     <text name="TicketSuccess(%)">Ticket Success(%)</text>
     <text name="TicketCountThisMonth">Ticket Count</text>
     <text name="SuccessTicketCount">Success Ticket Count</text>
-    <text name="UnsuccessTicketCount">Excited Ticket Count</text>
+    <text name="UnsuccessTicketCount">Exprired Ticket Count</text>
 
     <text name="SlaMontlyReporting">Sla Montly Reporting</text>
     <text name="SelectProject...">Select project...</text>
