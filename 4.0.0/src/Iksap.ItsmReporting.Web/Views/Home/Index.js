@@ -33,11 +33,13 @@ function SlaMonthlyChart(mems) {
     let aLabels = aData.result[0];
     let aDatasetnegatif = aData.result[2];
     let aDatasetpozitif = aData.result[1];
+    let aLabelsDown = aData.result[3];
+    let aLabelTop = aData.result[3][2];
     dataT = {
         labels: aLabels,
         datasets: [
             {
-                label: "Sla sağlayanlar (%)",
+                label: aLabelsDown[0],
                 data: aDatasetpozitif,
                 stack: 'Stack 0',
                 fill: false,
@@ -46,7 +48,7 @@ function SlaMonthlyChart(mems) {
                 borderWidth: 1
             },
             {
-                label: "Sla geçenler (%)",
+                label: aLabelsDown[1],
                 data: aDatasetnegatif,
                 stack: 'Stack 0',
                 fill: false,
@@ -63,7 +65,7 @@ function SlaMonthlyChart(mems) {
         data: dataT,
         options: {
             responsive: true,
-            title: { display: true, text: 'Aylık Sla Yüzdesi' },
+            title: { display: true, text: aLabelTop },
             legend: { position: 'bottom' },
             scales: {
                 xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' } }],
@@ -84,24 +86,30 @@ function initSlaMonthlyChart() {
             let aLabels = aData.result[0];
             let aDatasetnegatif = aData.result[1];
             let aDatasetpozitif = aData.result[2];
+            let aLabelsDown = aData.result[3];
+            let aLabelTop = aData.result[3][2];
             let dataT = {
                 labels: aLabels,
                 datasets: [
                     {
-                        label: "Sla geçenler (%)",
-                        data: aDatasetnegatif,
-                        stack: 'Stack 0',
-                        fill: false,
-                        backgroundColor: "rgba(255, 99, 132, 0.2)",//kırmızı
-                        borderColor: "rgb(255, 99, 132)",
-                        borderWidth: 1
-                    }, {
-                        label: "Sla sağlayanlar (%)",
+                        //label: "Sla sağlayanlar (%)",
+                        label: aLabelsDown[0],
                         data: aDatasetpozitif,
                         stack: 'Stack 0',
                         fill: false,
-                        backgroundColor: "rgba(54, 162, 235, 0.2)",//mavi
+                        backgroundColor: "rgba(54, 162, 235, 0.2)",
                         borderColor: "rgb(54, 162, 235)",
+                        borderWidth: 1
+                    },
+                    {
+                        //label: "Sla geçenler (%)",
+                        label: aLabelsDown[1],
+                        data: aDatasetnegatif,
+                        stack: 'Stack 0',
+                        fill: false,
+                        backgroundColor: "rgba(255, 99, 132, 0.2)",
+
+                        borderColor: "rgb(255, 99, 132)",
                         borderWidth: 1
                     }
                 ]
@@ -112,7 +120,7 @@ function initSlaMonthlyChart() {
                 data: dataT,
                 options: {
                     responsive: true,
-                    title: { display: true, text: 'Aylık Sla Yüzdesi' },
+                    title: { display: true, text: aLabelTop },
                     legend: { position: 'bottom' },
                     scales: {
                         xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' } }],
@@ -135,7 +143,6 @@ function getProjects() {
         projectsName.push(innerHTML.substring(0, indexEnd));
         indexStart = innerHTML.indexOf("vue-treeselect__multi-value-label");
     }
-    console.log(projectsName);
     var projects = "";
     for (var i = 0; i < projectsName.length; i++) {
         projects += projectsName[i] + ",";
@@ -146,12 +153,28 @@ function getProjects() {
     return projects;
 }
 
+function setLanguage(language_url) {
+    $('#slaMonthlyDetailTable').DataTable({
+        "language": {
+            "url": language_url
+        }
+    });
+}
+
 $(document).ready(function () {
+
+    let language_url;
+    AjaxCall('/Home/getCurrentLanguage', null).done(function (response) {
+        language_url = response;
+        setLanguage(language_url);
+    }).fail(function (error) {
+        setLanguage("//cdn.datatables.net/plug-ins/1.10.19/i18n/English.json");
+    });
+
     $(function () {// Loading projects into combobox
         AjaxCall('/Home/GetProjectsTreeList', null).done(function (response) {
             Vue.component('treeselect', VueTreeselect.Treeselect);
             new Vue({
-                //name: 'app',   // sonradan eklendi
                 el: '#app',
                 data: response.result
             });

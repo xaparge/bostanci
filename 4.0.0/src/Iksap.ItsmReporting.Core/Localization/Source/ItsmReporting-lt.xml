@@ -76,5 +76,42 @@
     <text name="EditUser">Keisti vartotoją</text>
     <text name="Edit">Keisti</text>
     <text name="Delete">Trinti</text>
+
+    <text name="TicketSuccess(%)">Bilietų Sėkmė(%)</text>
+    <text name="TicketCountThisMonth">Šį Mėnesį Bilietas</text>
+    <text name="SuccessTicketCount">Sėkmingų Bilietų Skaičius</text>
+    <text name="UnsuccessTicketCount">Nepavykusių Bilietų Skaičius</text>
+    
+    <text name="SettingsMenu">Nustatymai</text>
+    <text name="mailScheduledTask">Planuojamos Užduotys</text>
+    <text name="TaskName">Užduoties Pavadinimas</text>
+    <text name="CC">CC</text>
+    <text name="Period">Laikotarpis</text>
+
+    <text name="SlaMontlyReporting">Sla Mėnesio Ataskaitos</text>
+    <text name="SelectProject...">Pasirinkite Projektą...</text>
+    <text name="Ok">Gerai</text>
+    <text name="SlaDetail">Sla informacija</text>
+    <text name="TicketNumber">Bilieto Numeris</text>
+    <text name="OpeningDate">Atidarymo Data</text>
+    <text name="ClosingDate">Uždarymo Data</text>
+    <text name="SlaPercent">Sla Procentinė Dalis</text>
+
+    <text name="SlaProviders">Bilietų Teikėjai</text>
+    <text name="SlaPassed">Bilietų Galiojimo Pabaiga</text>
+    <text name="SlaMontlyPercent">Mėnesinių Bilietų Procentas</text>
+
+    <text name="January">Sausis</text>
+    <text name="February">Vasaris</text>
+    <text name="March">Kovas</text>
+    <text name="April">Balandis</text>
+    <text name="May">Gegužės</text>
+    <text name="June">Birželis</text>
+    <text name="July">Liepa</text>
+    <text name="August">Rugpjūtis</text>
+    <text name="September">Rugsėjis</text>
+    <text name="October">Spalis</text>
+    <text name="November">Lapkritis</text>
+    <text name="December">Gruodis</text>
   </texts>
 </localizationDictionary>

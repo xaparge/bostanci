@@ -23,7 +23,7 @@
 
     <text name="LoginFailed" value="Giriş başarısız!" />
 
-    <text name="NameSurname" value="Ad soyad" />
+    <text name="NameSurname" value="Ad Soyad" />
     <text name="UserName" value="Kullanıcı adı" />
     <text name="Name" value="İsim" />
     <text name="Surname" value="Soyisim" />
@@ -56,7 +56,7 @@
     <text name="No" value="Hayır" />
     <text name="Optional" value="Opsiyonel" />
     <text name="LeaveEmptyToSwitchToHost">Üst kullanıcıya geçiş için boş değer girin.</text>
-    
+
     <text name="CurrentTenant">Geçerli müşteri</text>
     <text name="NotSelected">Seçilmemiş</text>
     <text name="Change">Değiştir</text>
@@ -67,7 +67,7 @@
     <text name="SuccessfullyRegistered">Başarıyla kayıt olundu</text>
     <text name="WaitingForEmailActivation">E-posta adresiniz etkinleştirilmeli.</text>
     <text name="Roles">Roller</text>
-    
+
     <text name="Actions">İşlemler</text>
     <text name="RoleName">Rol Adı</text>
     <text name="DisplayName">Görünen Ad</text>
@@ -77,13 +77,42 @@
     <text name="Edit">Düzenle</text>
     <text name="Delete">Sil</text>
 
-
     <text name="SettingsMenu">Ayarlar</text>
-    <text name="mailScheduledTask">Zamanlanmış Görev</text>
-    <text name="TaskName" value="Görev Adı" />
-    <text name="CC" value="CC" />
-    <text name="Period" value="Periyot" />
+    <text name="mailScheduledTask">Zamanlanmış Görevler</text>
+    <text name="TaskName">Görev Adı</text>
+    <text name="CC">CC</text>
+    <text name="Period">Periyot</text>
+
+    <text name="TicketSuccess(%)">Ticket Başarısı(%)</text>
+    <text name="TicketCountThisMonth">Bu Ayki Ticket Sayısı</text>
+    <text name="SuccessTicketCount">Başarılı Ticket Sayısı</text>
+    <text name="UnsuccessTicketCount">Başarısız Ticket Sayısı</text>
     
+    <text name="SlaMontlyReporting">Sla Aylık Raporlama</text>
+    <text name="SelectProject...">Proje seçin...</text>
+    <text name="Ok">Tamam</text>
+    <text name="SlaDetail">Sla Detay</text>
+    <text name="TicketNumber">Ticket No</text>
+    <text name="OpeningDate">Açılış Tarihi</text>
+    <text name="ClosingDate">Kapanış Tarihi</text>
+    <text name="SlaPercent">Sla Yüzdesi</text>
+
+    <text name="SlaProviders">Sla Sağlayanlar</text>
+    <text name="SlaPassed">Sla Geçenler</text>
+    <text name="SlaMontlyPercent">Aylık Sla Yüzdesi</text>
+
+    <text name="January">Ocak</text>
+    <text name="February">Şubat</text>
+    <text name="March">Mart</text>
+    <text name="April">Nisan</text>
+    <text name="May">Mayıs</text>
+    <text name="June">Haziran</text>
+    <text name="July">Temmuz</text>
+    <text name="August">Ağustos</text>
+    <text name="September">Eylül</text>
+    <text name="October">Ekim</text>
+    <text name="November">Kasım</text>
+    <text name="December">Aralık</text>
     
   </texts>
 </localizationDictionary>

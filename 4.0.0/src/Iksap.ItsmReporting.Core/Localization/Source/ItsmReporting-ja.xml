@@ -53,5 +53,42 @@
     <text name="Yes" value="はい" />
     <text name="No" value="いいえ" />
     <text name="Optional" value="オプション" />
+
+    <text name="SettingsMenu">設定</text>
+    <text name="mailScheduledTask">メールスケジュールタスク</text>
+    <text name="TaskName">タスク名</text>
+    <text name="CC">カーボンコピー</text>
+    <text name="Period">期間</text>
+
+    <text name="TicketSuccess(%)">チケット成功(%)</text>
+    <text name="TicketCountThisMonth">今月のチケット</text>
+    <text name="SuccessTicketCount">成功したチケットの数</text>
+    <text name="UnsuccessTicketCount">失敗したチケットの数</text>
+
+    <text name="SlaMontlyReporting">チケット月次報告</text>
+    <text name="SelectProject...">プロジェクトを選択...</text>
+    <text name="Ok">オーケー</text>
+    <text name="SlaDetail">チケット詳細</text>
+    <text name="TicketNumber">チケット番号</text>
+    <text name="OpeningDate">開会日</text>
+    <text name="ClosingDate">締め切り日</text>
+    <text name="SlaPercent">チケットの割合</text>
+
+    <text name="SlaProviders">チケットプロバイダ</text>
+    <text name="SlaPassed">チケットの有効期限</text>
+    <text name="SlaMontlyPercent">毎月のチケットの割合</text>
+
+    <text name="January">囲炉裏</text>
+    <text name="February">二月</text>
+    <text name="March">三月</text>
+    <text name="April">四月</text>
+    <text name="May">かもしれません</text>
+    <text name="June">六月</text>
+    <text name="July">七月</text>
+    <text name="August">八月</text>
+    <text name="September">九月</text>
+    <text name="October">十月</text>
+    <text name="November">十一月</text>
+    <text name="December">インターバル</text>
   </texts>
 </localizationDictionary>

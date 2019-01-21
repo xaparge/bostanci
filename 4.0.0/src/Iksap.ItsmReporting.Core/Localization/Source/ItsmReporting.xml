@@ -23,7 +23,7 @@
 
     <text name="LoginFailed" value="Login failed!" />
 
-    <text name="NameSurname" value="Name surname" />
+    <text name="NameSurname" value="Name Surname" />
     <text name="UserName" value="User name" />
     <text name="Name" value="Name" />
     <text name="Surname" value="Surname" />
@@ -77,6 +77,43 @@
     <text name="Edit">Edit</text>
     <text name="Delete">Delete</text>
 
+    <!--<text name=""></text>-->
+    <text name="SettingsMenu">Settings Menu</text>
+    <text name="mailScheduledTask">Mail Scheduled Tasks</text>
+    <text name="TaskName">Task Name</text>
+    <text name="CC">CC</text>
+    <text name="Period">Period</text>
+
+    <text name="TicketSuccess(%)">Ticket Success(%)</text>
+    <text name="TicketCountThisMonth">Ticket Count</text>
+    <text name="SuccessTicketCount">Success Ticket Count</text>
+    <text name="UnsuccessTicketCount">Excited Ticket Count</text>
+
+    <text name="SlaMontlyReporting">Sla Montly Reporting</text>
+    <text name="SelectProject...">Select project...</text>
+    <text name="Ok">Ok</text>
+    <text name="SlaDetail">Sla Detail</text>
+    <text name="TicketNumber">Ticket Number</text>
+    <text name="OpeningDate">Opening Date</text>
+    <text name="ClosingDate">Closing Date</text>
+    <text name="SlaPercent">Sla Percent</text>
+
+    <text name="SlaProviders">Sla Providers</text>
+    <text name="SlaPassed">Sla Passed</text>
+    <text name="SlaMontlyPercent">Sla Montly Percent</text>
+
+    <text name="January">January</text>
+    <text name="February">February</text>
+    <text name="March">March</text>
+    <text name="April">April</text>
+    <text name="May">May</text>
+    <text name="June">June</text>
+    <text name="July">July</text>
+    <text name="August">August</text>
+    <text name="September">September</text>
+    <text name="October">October</text>
+    <text name="November">November</text>
+    <text name="December">December</text>
 
   </texts>
 </localizationDictionary>

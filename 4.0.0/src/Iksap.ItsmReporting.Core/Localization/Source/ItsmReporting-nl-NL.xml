@@ -53,5 +53,42 @@
     <text name="Yes" value="Ja" />
     <text name="No" value="Nee" />
     <text name="Optional" value="Optioneel" />
+
+    <text name="SettingsMenu">Instellingen</text>
+    <text name="mailScheduledTask">Geplande Taak</text>
+    <text name="TaskName">Taak Naam</text>
+    <text name="CC">CC</text>
+    <text name="Period">Periode</text>
+
+    <text name="TicketSuccess(%)">Ticket Succes(%)</text>
+    <text name="TicketCountThisMonth">Ticket Van Deze Maand</text>
+    <text name="SuccessTicketCount">Aantal Succesvolle Tickets</text>
+    <text name="UnsuccessTicketCount">Aantal Mislukte Tickets</text>
+
+    <text name="SlaMontlyReporting">Sla Maandelijkse Rapportage</text>
+    <text name="SelectProject...">Selecteer een project...</text>
+    <text name="Ok">Okay</text>
+    <text name="SlaDetail">Sla-details</text>
+    <text name="TicketNumber">Ticket Nummer</text>
+    <text name="OpeningDate">Openingsdatum</text>
+    <text name="ClosingDate">Sluitingsdatum</text>
+    <text name="SlaPercent">Sla procent</text>
+
+    <text name="SlaProviders">Sla-Aanbieders</text>
+    <text name="SlaPassed">Sla Duur</text>
+    <text name="SlaMontlyPercent">Maandelijks Sla Percentage</text>
+
+    <text name="January">Januari</text>
+    <text name="February">Februari</text>
+    <text name="March">Maart</text>
+    <text name="April">April</text>
+    <text name="May">Mei</text>
+    <text name="June">Juni</text>
+    <text name="July">Juli</text>
+    <text name="August">Augustus</text>
+    <text name="September">September</text>
+    <text name="October">Oktober</text>
+    <text name="November">November</text>
+    <text name="December">December</text>
   </texts>
 </localizationDictionary>

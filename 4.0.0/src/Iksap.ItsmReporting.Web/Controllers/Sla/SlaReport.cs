@@ -142,8 +142,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 da.Fill(dt);
                 dbConn.Close();
-
-
+                
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     SlaTable temp = new SlaTable();

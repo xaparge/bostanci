@@ -53,5 +53,42 @@
     <text name="Yes" value="Sì" />
     <text name="No" value="No" />
     <text name="Optional" value="Opzionale" />
+
+    <text name="SettingsMenu">Impostazioni</text>
+    <text name="mailScheduledTask">Attività Pianificata</text>
+    <text name="TaskName">Nome Dell'Attività</text>
+    <text name="CC">CC</text>
+    <text name="Period">Periodo</text>
+
+    <text name="TicketSuccess(%)">Successo Del Biglietto(%)</text>
+    <text name="TicketCountThisMonth">Questo Biglietto Mensile</text>
+    <text name="SuccessTicketCount">Numero Di Biglietti Riusciti</text>
+    <text name="UnsuccessTicketCount">Numero Di Biglietti Falliti</text>
+
+    <text name="SlaMontlyReporting">Segnalazione Mensile Sla</text>
+    <text name="SelectProject...">Seleziona Progetto...</text>
+    <text name="Ok">Va Bene</text>
+    <text name="SlaDetail">Dettagli Sla</text>
+    <text name="TicketNumber">Numero Del Biglietto</text>
+    <text name="OpeningDate">Data Di Apertura</text>
+    <text name="ClosingDate">Data Di Chiusura</text>
+    <text name="SlaPercent">Sla Percentuale</text>
+
+    <text name="SlaProviders">Provider Sla</text>
+    <text name="SlaPassed">Sla È Scaduto</text>
+    <text name="SlaMontlyPercent">Percentuale Sla Mensile</text>
+
+    <text name="January">Gennaio</text>
+    <text name="February">Febbraio</text>
+    <text name="March">Marzo</text>
+    <text name="April">Aprile</text>
+    <text name="May">Maggio</text>
+    <text name="June">Giugno</text>
+    <text name="July">Luglio</text>
+    <text name="August">Agosto</text>
+    <text name="September">Settembre</text>
+    <text name="October">Ottobre</text>
+    <text name="November">Novembre</text>
+    <text name="December">Dicembre</text>
   </texts>
 </localizationDictionary>

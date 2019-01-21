@@ -10,7 +10,6 @@ using Iksap.ItsmReporting.Api.Models;
 using Iksap.ItsmReporting.Authorization;
 using Iksap.ItsmReporting.Authorization.Users;
 using Iksap.ItsmReporting.MultiTenancy;
-using Iksap.ItsmReporting.Users;
 using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;

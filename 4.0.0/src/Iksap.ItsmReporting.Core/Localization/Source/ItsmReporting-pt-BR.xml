@@ -43,5 +43,41 @@
     <text name="TenantSelection_Detail" value="Por favor selecione um dos seguintes tenants." />
     <text name="Logout" value="Sair" />
 
+    <text name="SettingsMenu">Configurações</text>
+    <text name="mailScheduledTask">Tarefas Agendadas</text>
+    <text name="TaskName">Nome da Tarefa</text>
+    <text name="CC">CC</text>
+    <text name="Period">Período</text>
+
+    <text name="TicketSuccess(%)">Sucesso do Bilhete(%)</text>
+    <text name="TicketCountThisMonth">Número Deste Mês</text>
+    <text name="SuccessTicketCount">Número de Bilhetes Bem Sucedidos</text>
+    <text name="UnsuccessTicketCount">Número de Tickets Com Falha</text>
+
+    <text name="SlaMontlyReporting">Relatório Mensal Sla</text>
+    <text name="SelectProject...">Selecione O Projeto...</text>
+    <text name="Ok">Okay</text>
+    <text name="SlaDetail">Sla Detalhes</text>
+    <text name="TicketNumber">Número do Bilhete</text>
+    <text name="OpeningDate">Data de Abertura</text>
+    <text name="ClosingDate">Data de Fechamento</text>
+    <text name="SlaPercent">Sla Percent</text>
+
+    <text name="SlaProviders">Provedores de Sla</text>
+    <text name="SlaPassed">Sla Passers</text>
+    <text name="SlaMontlyPercent">Porcentagem Mensal de Sla</text>
+
+    <text name="January">Janeiro</text>
+    <text name="February">Fevereiro</text>
+    <text name="March">Março</text>
+    <text name="April">Abril</text>
+    <text name="May">Maio</text>
+    <text name="June">Junho</text>
+    <text name="July">Julho</text>
+    <text name="August">Agosto</text>
+    <text name="September">setembro</text>
+    <text name="October">Outubro</text>
+    <text name="November">Novembro</text>
+    <text name="December">Dezembro</text>
   </texts>
 </localizationDictionary>

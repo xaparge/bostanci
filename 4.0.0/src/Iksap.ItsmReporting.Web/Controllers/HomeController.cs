@@ -11,6 +11,7 @@ using Iksap.ItsmReporting.Web.Models;
 using System.ComponentModel.DataAnnotations;
 using Abp.Runtime.Security;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Iksap.ItsmReporting.Web.Controllers
 
@@ -18,27 +19,28 @@ namespace Iksap.ItsmReporting.Web.Controllers
     [AbpMvcAuthorize]
     public class HomeController : ItsmReportingControllerBase
     {
-        private static Dictionary<int, string> months = new Dictionary<int, string>(){{1,"Ocak"},{2, "Şubat"}, {3,"Mart"},
-                                                                        {4,"Nisan"},  {5,"Mayıs"},{6,"Haziran"},
-                                                                        {7,"Temmuz"}, {8,"Ağustos"},{9,"Eylül"},
-                                                                        {10,"Ekim"}, {11,"Kasım"}, {12,"Aralık"}};
-        private static Dictionary<string, int> monthsNumber = new Dictionary<string, int>(){{"Ocak",1},{"Şubat",2}, {"Mart",3},
-                                                                        {"Nisan",4},  {"Mayıs",5},{"Haziran",6},
-                                                                        {"Temmuz",7}, {"Ağustos",8},{"Eylül",9},
-                                                                        {"Ekim",10}, {"Kasım",11}, {"Aralık",12}};
+        private static Dictionary<int, string> months;
+        private static Dictionary<string, int> monthsNumber;
 
         public ActionResult Index()
         {
-
+            months = new Dictionary<int, string>(){{1, L("January")},{2, L("February")}, {3, L("March")},
+                                                                        {4, L("April")},  {5, L("May")},{6, L("June")},
+                                                                        {7, L("July")}, {8, L("August")},{9, L("September")},
+                                                                        {10, L("October")}, {11, "November"}, {12, L("December")}};
+            monthsNumber = new Dictionary<string, int>(){{L("January"), 1},{L("February"), 2}, {L("March"), 3},
+                                                                        {L("April"), 4},  {L("May"), 5},{L("June"), 6},
+                                                                        {L("July"), 7}, {L("August"), 8},{L("September"), 9},
+                                                                        {L("October"), 10}, {L("November"), 11}, {L("December"), 12}};
             return View();
         }
 
         public JsonResult GetProjectsTreeList()
         {
             var currentUserId = User.Identity.GetUserId();
-            GetProjectsAndSub aa = new GetProjectsAndSub();
-            var treeList = aa.getProjects((int)currentUserId);
-           
+
+            GetProjectsAndSub createJson = new GetProjectsAndSub();
+            var treeList = createJson.getProjects((int)currentUserId);
             dynamic json = JsonConvert.DeserializeObject(treeList);
             return Json(json, JsonRequestBehavior.AllowGet);
         }
@@ -127,6 +129,12 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 y = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
                 iData.Add(y);
             }
+
+            List<string> slaLable = new List<string>();
+            slaLable.Add(L("SlaProviders"));
+            slaLable.Add(L("SlaPassed"));
+            slaLable.Add(L("SlaMontlyPercent"));
+            iData.Add(slaLable);
             //Source data returned as JSON
             return Json(iData, JsonRequestBehavior.AllowGet);
         }
@@ -156,13 +164,9 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 for (int j = 0; j < singleSla.Count; j++)
                 {
                     if (singleSla[j].success_rate < 100)
-                    {
                         success_count++;
-                    }
                     else if (singleSla[j].success_rate >= 100)
-                    {
                         fail_count++;
-                    }
                 }
                 double success_rate = Math.Round((success_count * 100) / (success_count + fail_count), 2);
                 double fail_rate = Math.Round((fail_count * 100) / (success_count + fail_count), 2);
@@ -200,9 +204,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 dt.Rows.Add(dr);
 
                 if (month_count < 12)
-                {
                     month_count++;
-                }
                 else
                 {
                     month_count = 1;
@@ -217,6 +219,12 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 y = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
                 iData.Add(y);
             }
+
+            List<string> slaLable = new List<string>();
+            slaLable.Add(L("SlaProviders"));
+            slaLable.Add(L("SlaPassed"));
+            slaLable.Add(L("SlaMontlyPercent"));
+            iData.Add(slaLable);
             //Source data returned as JSON
             return Json(iData, JsonRequestBehavior.AllowGet);
         }
@@ -224,9 +232,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
         public string CheckNull(double item)
         {
             if (!Double.IsNaN(item))
-            {
                 return item.ToString();
-            }
             else return "0";
         }
 
@@ -266,6 +272,35 @@ namespace Iksap.ItsmReporting.Web.Controllers
             return Json(dataTable, JsonRequestBehavior.AllowGet);
         }
 
+        public string getCurrentLanguage()
+        {
+            var currentCulture = CultureInfo.CurrentCulture.ToString();
+            string language_url;
+            if (currentCulture == "tr")
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/Turkish.json";
+            else if (currentCulture == "en")
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/English.json";
+            else if (currentCulture == "es")
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json";
+            else if (currentCulture == "fr")
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/French.json";
+            else if (currentCulture == "it")
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/Italian.json";
+            else if (currentCulture == "lt")
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/Lithuanian.json";
+            else if (currentCulture == "nl-NL")
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/Dutch.json";
+            else if (currentCulture == "pt-BR")
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json";
+            else if (currentCulture == "ja")
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/Japanese.json";
+            else if (currentCulture == "zh-CN")
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/Chinese.json";
+            else     // en
+                language_url = "//cdn.datatables.net/plug-ins/1.10.19/i18n/English.json";
+            return language_url;
+        }
+
         public partial class isler
         {
             [Required]
@@ -280,6 +315,5 @@ namespace Iksap.ItsmReporting.Web.Controllers
             [StringLength(75)]
             public string login { get; set; }
         }
-
     }
 }

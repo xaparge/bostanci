@@ -40,19 +40,56 @@
     <text name="Register" value="Đăng ký" />
     <text name="OrLoginWith" value="Or login with" />
     <text name="WaitingForActivationMessage" value="Tài khoản của bạn đang đợi kích hoạt." />
-    <text name="TenantSelection" value="Tenant Selection" />
+    <text name="TenantSelection" value="Lựa Chọn Người Thuê Nhà" />
     <text name="TenantSelection_Detail" value="Vui lòng chọn một tenant." />
-    <text name="Logout" value="Logout" />
+    <text name="Logout" value="Đăng xuất" />
 
-    <text name="RegisterFormUserNameInvalidMessage">Please dont enter an email address for username.</text>
+    <text name="RegisterFormUserNameInvalidMessage">Vui lòng không nhập địa chỉ email cho tên người dùng.</text>
 
-    <text name="DatabaseConnectionString" value="Database connection string" />
-    <text name="Users" value="Users" />
-    <text name="IsActive" value="Is active" />
+    <text name="DatabaseConnectionString" value="Chuỗi kết nối cơ sở dữ liệu" />
+    <text name="Users" value="Người dùng" />
+    <text name="IsActive" value="Đang hoạt động" />
     <text name="FullName" value="Tên đầy đủ" />
     <text name="CreateNewUser" value="Tạo mới người dùng" />
-    <text name="Yes" value="Yes" />
-    <text name="No" value="No" />
-    <text name="Optional" value="Optional" />
+    <text name="Yes" value="Vâng" />
+    <text name="No" value="Không" />
+    <text name="Optional" value="Không bắt buộc" />
+
+    <text name="SettingsMenu">Cài đặt</text>
+    <text name="mailScheduledTask">Nhiệm vụ theo lịch trình</text>
+    <text name="TaskName">Tên tác vụ</text>
+    <text name="CC">CC</text>
+    <text name="Period">Thời gian</text>
+
+    <text name="TicketSuccess(%)">Vé thành công(%)</text>
+    <text name="TicketCountThisMonth">Vé tháng này</text>
+    <text name="SuccessTicketCount">Số lượng vé thành công</text>
+    <text name="UnsuccessTicketCount">Số lượng vé không thành công</text>
+
+    <text name="SlaMontlyReporting">Báo cáo hàng tháng của Sla</text>
+    <text name="SelectProject...">Chọn dự án...</text>
+    <text name="Ok">đồng ý</text>
+    <text name="SlaDetail">Chi tiết Sla</text>
+    <text name="TicketNumber">Số vé</text>
+    <text name="OpeningDate">Ngày khai trương</text>
+    <text name="ClosingDate">Ngày kết thúc</text>
+    <text name="SlaPercent">Phần trăm Sla</text>
+
+    <text name="SlaProviders">Nhà cung cấp Sla</text>
+    <text name="SlaPassed">Thời gian Sla</text>
+    <text name="SlaMontlyPercent">Phần trăm Sla hàng tháng</text>
+
+    <text name="January">tháng giêng</text>
+    <text name="February">tháng hai</text>
+    <text name="March">tháng ba</text>
+    <text name="April">tháng tư</text>
+    <text name="May">có thể</text>
+    <text name="June">tháng sáu</text>
+    <text name="July">tháng bảy</text>
+    <text name="August">tháng tám</text>
+    <text name="September">tháng chín</text>
+    <text name="October">tháng mười</text>
+    <text name="November">tháng mười một</text>
+    <text name="December">tháng mười hai</text>
   </texts>
 </localizationDictionary>

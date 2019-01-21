@@ -28,7 +28,7 @@
                 <i class="material-icons">playlist_add_check</i>
             </div>
             <div class="content">
-                <div class="text">Ticket başarısı(%)</div>
+                <div class="text">@L("TicketSuccess(%)")</div>
                 <div class="number count-to" data-from="0" data-to="85" data-speed="1000" data-fresh-interval="20"></div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                 <i class="material-icons">mood</i>
             </div>
             <div class="content">
-                <div class="text">Bu ayki ticket sayısı</div>
+                <div class="text">@L("TicketCountThisMonth")</div>
                 <div class="number count-to" data-from="0" data-to="17" data-speed="1000" data-fresh-interval="20"></div>
             </div>
         </div>
@@ -50,7 +50,7 @@
                 <i class="material-icons">thumb_up</i>
             </div>
             <div class="content">
-                <div class="text">Başarılı ticket sayısı</div>
+                <div class="text">@L("SuccessTicketCount")</div>
                 <div class="number count-to" data-from="0" data-to="1225" data-speed="1000" data-fresh-interval="20"></div>
             </div>
         </div>
@@ -61,7 +61,7 @@
                 <i class="material-icons">thumb_down</i>
             </div>
             <div class="content">
-                <div class="text">Başarısız ticket sayısı</div>
+                <div class="text">@L("UnsuccessTicketCount")</div>
                 <div class="number count-to" data-from="0" data-to="243" data-speed="1000" data-fresh-interval="20"></div>
             </div>
         </div>
@@ -73,8 +73,7 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card">
             <div class="header">
-                <h2>Sla Aylık Rapor</h2>
-
+                <h2>@L("SlaMontlyReporting")</h2>
             </div>
             <div class="body">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -82,7 +81,7 @@
                         <div id="app" class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
                             <treeselect :multiple="true"
                                         :options="options"
-                                        placeholder="Proje seçin..."
+                                        placeholder="@L("SelectProject...")"
                                         v-model="value"
                                         id="dropDownList" />
                         </div>
@@ -91,7 +90,7 @@
                             <span class="input-group-btn">
                                 <button type="button" id="showValue" class="btn btn-info  waves-effect">
                                     <i class="material-icons">save</i>
-                                    <span>Tamam</span>
+                                    <span>@L("Ok")</span>
                                 </button>
 
                             </span>
@@ -99,25 +98,23 @@
                  
                 </div>
 
-
                 <canvas id="bar_chart" height="90"></canvas>
                 <hr>
                 <div class="header">
                     <h2>
-                        Sla Detayları
+                        @L("SlaDetail")
                     </h2>
-
                 </div>
 
                 <div class="table-responsive">
                     <table id="slaMonthlyDetailTable" class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr>
-                                <td>Ticket No</td>
-                                <td>İsim Soyisim</td>
-                                <td>Açılış Tarihi</td>
-                                <td>Kapanış Tarihi</td>
-                                <td>Sla Yüzdesi</td>
+                                <td>@L("TicketNumber")</td>
+                                <td>@L("NameSurname")</td>
+                                <td>@L("OpeningDate")</td>
+                                <td>@L("ClosingDate")</td>
+                                <td>@L("SlaPercent")</td>
                             </tr>
                         </thead>
                     </table>

@@ -55,5 +55,42 @@
     <text name="Yes" value="是" />
     <text name="No" value="否" />
     <text name="Optional" value="可选的" />
+
+    <text name="SettingsMenu">设置</text>
+    <text name="mailScheduledTask">计划任务</text>
+    <text name="TaskName">任务名称</text>
+    <text name="CC">抄送</text>
+    <text name="Period">期</text>
+
+    <text name="TicketSuccess(%)">门票成功(%)</text>
+    <text name="TicketCountThisMonth">本月票</text>
+    <text name="SuccessTicketCount">成功门票数量</text>
+    <text name="UnsuccessTicketCount">失败的票数</text>
+
+    <text name="SlaMontlyReporting">门票月报</text>
+    <text name="SelectProject...">选择项目...</text>
+    <text name="Ok">行</text>
+    <text name="SlaDetail">机票明细</text>
+    <text name="TicketNumber">门票号码</text>
+    <text name="OpeningDate">开幕日期</text>
+    <text name="ClosingDate">截止日期</text>
+    <text name="SlaPercent">门票百分比</text>
+
+    <text name="SlaProviders">票务提供商</text>
+    <text name="SlaPassed">门票截止日期</text>
+    <text name="SlaMontlyPercent">月票的百分比</text>
+
+    <text name="January">一月</text>
+    <text name="February">二月</text>
+    <text name="March">三月</text>
+    <text name="April">四月</text>
+    <text name="May">五月</text>
+    <text name="June">六月</text>
+    <text name="July">七月</text>
+    <text name="August">八月</text>
+    <text name="September">九月</text>
+    <text name="October">十月</text>
+    <text name="November">十一月</text>
+    <text name="December">十二月</text>
   </texts>
 </localizationDictionary>
