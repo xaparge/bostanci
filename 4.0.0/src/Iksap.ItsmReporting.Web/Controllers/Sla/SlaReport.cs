@@ -201,7 +201,6 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                         r.name = dt.Rows[i][2].ToString();
                         temp.rate = r;
                     }
-
                     slaList.Add(temp);
                 }
                 slaList = getSlaRateInfos(slaList);

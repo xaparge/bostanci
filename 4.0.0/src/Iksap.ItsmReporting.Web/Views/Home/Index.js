@@ -162,7 +162,6 @@ function setLanguage(language_url) {
 }
 
 $(document).ready(function () {
-
     let language_url;
     AjaxCall('/Home/getCurrentLanguage', null).done(function (response) {
         language_url = response;
@@ -171,12 +170,33 @@ $(document).ready(function () {
         setLanguage("//cdn.datatables.net/plug-ins/1.10.19/i18n/English.json");
     });
 
+
+    //var example2 = new Vue({
+    //    el: '#app',
+    //    // define methods under the `methods` object
+    //    methods: {
+    //        open: function (event) {
+    //            alert('Hello ' + this.name + '!');
+    //        }
+    //    }
+    //});
+
+    // you can invoke methods in JavaScript too
+    //example2.open();
+
+
+
     $(function () {// Loading projects into combobox
         AjaxCall('/Home/GetProjectsTreeList', null).done(function (response) {
             Vue.component('treeselect', VueTreeselect.Treeselect);
             new Vue({
                 el: '#app',
-                data: response.result
+                data: response.result,
+                //methods: {
+                //    greet: function () {
+                //        //alert('Hello ' + this.name + '!');
+                //    }
+                //}
             });
         }).fail(function (error) {
             alert(error.StatusText + ' Projeler yüklenemedi');
@@ -215,6 +235,7 @@ $(document).ready(function () {
         let activePoints = myNewChart.getElementsAtEvent(evt);
         let negetifSla = activePoints[0];
         let secilenAy = myNewChart.data.labels[negetifSla._index];
+        console.log(secilenAy);
         let year = secilenAy.split("-")[0];
         let month = secilenAy.split("-")[1];
 
