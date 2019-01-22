@@ -235,7 +235,6 @@ $(document).ready(function () {
         let activePoints = myNewChart.getElementsAtEvent(evt);
         let negetifSla = activePoints[0];
         let secilenAy = myNewChart.data.labels[negetifSla._index];
-        console.log(secilenAy);
         let year = secilenAy.split("-")[0];
         let month = secilenAy.split("-")[1];
 
