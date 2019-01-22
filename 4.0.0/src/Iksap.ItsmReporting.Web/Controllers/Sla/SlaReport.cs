@@ -354,7 +354,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
             {
                 singleSlaTable.end_time = DateTime.Now;
 
-                if (singleSlaTable.rate.id == 1)
+                if (singleSlaTable.rate.Is_7_24 == 1)
                     singleSlaTable = CalculateSlaTime_Immediate(singleSlaTable);
                 else
                     singleSlaTable = CalculateSlaTime_Normal(singleSlaTable);
