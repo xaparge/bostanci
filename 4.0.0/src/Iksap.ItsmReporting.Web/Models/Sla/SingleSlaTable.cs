@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Iksap.ItsmReporting.Web.Models.Sla
 {
     public class SingleSlaTable
     {
         public int id { get; set; }
+        public int project_id { get; set; }
 
         public string created_on_str { get; set; }
         public DateTime created_on { get; set; }    // sonuçları kontrol etmek için eklendi

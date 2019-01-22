@@ -33,6 +33,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
 
             var sla = slaList(dbComm);
             var singleSla = NormalizedSla(sla);
+            singleSla = getSlaRateInfos(singleSla);
 
             for (int i = 0; i < singleSla.Count; i++)
             {
@@ -121,7 +122,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 da.Fill(dt);
                 dbConn.Close();
-                
+
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     SlaTable temp = new SlaTable();
@@ -203,13 +204,12 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                     }
                     slaList.Add(temp);
                 }
-                slaList = getSlaRateInfos(slaList);
             }
             catch { }
             return slaList;
         }
 
-        private List<SlaTable> getSlaRateInfos(List<SlaTable> slaList)
+        private List<SingleSlaTable> getSlaRateInfos(List<SingleSlaTable> slaList)
         {
             try
             {
@@ -225,14 +225,16 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                     bool assign_control = false;
                     for (int j = 4; j < dt.Rows.Count; j++)     // sla_rate_list'te ilk 4 değer default veriler olduğu için döngü 4'ten başlatıldı.
                     {
-                        if (slaList[i].project_id == Convert.ToInt32(dt.Rows[j][2]) && slaList[i].rate.name == dt.Rows[j][1].ToString())
+                        if (slaList[i].project_id == (int)dt.Rows[j][2] && slaList[i].rate.name == dt.Rows[j][1].ToString())
                         {
                             TimeSpan tsWorkStart = TimeSpan.Parse(dt.Rows[j][4].ToString());
                             slaList[i].rate.work_start_time = new DateTime(0001, 01, 01, tsWorkStart.Hours, tsWorkStart.Minutes, 0);
 
                             TimeSpan tsWorkEnd = TimeSpan.Parse(dt.Rows[j][5].ToString());
                             slaList[i].rate.work_end_time = new DateTime(0001, 01, 01, tsWorkEnd.Hours, tsWorkEnd.Minutes, 0);
-                            slaList[i].rate.time_limit = Convert.ToInt32(dt.Rows[j][3]);
+                            slaList[i].rate.time_limit = (int)dt.Rows[j][3];
+
+                            slaList[i].rate.Is_7_24 = (int)dt.Rows[j][8];
 
                             TimeSpan tsLunchStart = TimeSpan.Parse(dt.Rows[j][6].ToString());
                             slaList[i].rate.lunch_start_time = new DateTime(0001, 01, 01, tsLunchStart.Hours, tsLunchStart.Minutes, 0);      // Şimdilik kullanılmıyor, ileriki sürümlerde kullanılabilir diye ataması yapılmıştır.
@@ -257,7 +259,9 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
 
                                 TimeSpan tsWorkEnd = TimeSpan.Parse(dt.Rows[j][5].ToString());
                                 slaList[i].rate.work_end_time = new DateTime(0001, 01, 01, tsWorkEnd.Hours, tsWorkEnd.Minutes, 0);
-                                slaList[i].rate.time_limit = Convert.ToInt32(dt.Rows[j][3]);
+                                slaList[i].rate.time_limit = (int)dt.Rows[j][3];
+
+                                slaList[i].rate.Is_7_24 = (int)dt.Rows[j][8];
 
                                 TimeSpan tsLunchStart = TimeSpan.Parse(dt.Rows[j][6].ToString());
                                 slaList[i].rate.lunch_start_time = new DateTime(0001, 01, 01, tsLunchStart.Hours, tsLunchStart.Minutes, 0);      // Şimdilik kullanılmıyor, ileriki sürümlerde kullanılabilir diye ataması yapılmıştır.
@@ -295,8 +299,10 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 {
                     SingleSlaTable temp = new SingleSlaTable();
                     temp.id = slaList[i].id;
+                    temp.project_id = slaList[i].project_id;
                     temp.created_on = slaList[i].created_on;
                     temp.closed_on = slaList[i].closed_on;
+                    temp.rate = slaList[i].rate;
                     singleSla.Add(temp);
                 }
             }
@@ -311,7 +317,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 if (slaTable[i].id == singleSlaTable.id)
                     slaIdCount++;
                 else
-                { break; }
+                    break;
             }
 
             singleSlaTable.rate = slaTable[0].rate;
@@ -335,7 +341,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 {
                     singleSlaTable.end_time = slaTable[i].changed_on;
 
-                    if (singleSlaTable.rate.id == 1)
+                    if (singleSlaTable.rate.Is_7_24 == 1)
                         singleSlaTable = CalculateSlaTime_Immediate(singleSlaTable);
                     else
                         singleSlaTable = CalculateSlaTime_Normal(singleSlaTable);
