@@ -68,13 +68,9 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 for (int j = 0; j < singleSla.Count; j++)
                 {
                     if (singleSla[j].success_rate < 100)
-                    {
                         success_count++;
-                    }
                     else if (singleSla[j].success_rate >= 100)
-                    {
                         fail_count++;
-                    }
                 }
                 double success_rate = Math.Round((success_count * 100) / (success_count + fail_count), 2);
                 double fail_rate = Math.Round((fail_count * 100) / (success_count + fail_count), 2);
