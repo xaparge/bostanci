@@ -3150,6 +3150,7 @@
     <Compile Include="Models\Sla\slaPercentageByDate.cs" />
     <Compile Include="Models\Sla\Slas.cs" />
     <Compile Include="Models\Sla\SlaTable.cs" />
+    <Compile Include="Models\Sla\userInfo.cs" />
     <Compile Include="Models\Users\EditUserModalViewModel.cs" />
     <Compile Include="Models\Users\UserListViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

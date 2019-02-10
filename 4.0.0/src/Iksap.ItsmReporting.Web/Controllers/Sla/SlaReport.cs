@@ -19,7 +19,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
             }
             else if (project_state == "close")
             {
-                dbComm = new MySqlCommand("itsmreporting_operations.slaClosedProjectByDateByProjects", dbConn);
+                dbComm = new MySqlCommand("itsmreporting_operations.slaClosedProject_assigned", dbConn);
                 dbComm.Parameters.AddWithValue("@monthvalue", month);
                 dbComm.Parameters.AddWithValue("@yearvalue", year);
                 dbComm.Parameters.AddWithValue("@projects_id", projectList);
@@ -41,171 +41,217 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 temp = MainReport(sla, singleSla[i]);
                 singleSla[i] = temp.singleSlaTable;
                 sla = temp.slaTable;
+
+                singleSla[i] = NormalizedUsers(singleSla[i]);
             }
 
             return singleSla;
         }
 
-        //public List<slaPercentageByDate> getSlaPercentageByDate()
-        //{
-        //    MySqlCommand dbComm = new MySqlCommand("Select PercentYear, PercentMonth, SuccessfulPercentage, FailedPercentage From sla_percentage_bydate", dbConn);
-        //    DataTable dt = new DataTable();
-        //    dbConn.Open();
-        //    MySqlDataAdapter da = new MySqlDataAdapter(dbComm);
-        //    da.Fill(dt);
-        //    dbConn.Close();
+        public SingleSlaTable NormalizedUsers(SingleSlaTable singleSlaTable)
+        {
+            for (int i = 0; i < singleSlaTable.users.Count; i++)
+            {
+                bool repeat_control = false;
+                for (int j = 0; j < singleSlaTable.singleUsers.Count; j++)
+                {
+                    if (singleSlaTable.users[i].id == singleSlaTable.singleUsers[j].id)
+                    {
+                        repeat_control = true;
 
-        //    List<slaPercentageByDate> old_percentage = new List<slaPercentageByDate>();
+                        userInfo user = new userInfo();
 
-        //    for (int i = 0; i < dt.Rows.Count; i++)
-        //    {
-        //        slaPercentageByDate temp = new slaPercentageByDate();
-        //        temp.PercentYear = Convert.ToInt32(dt.Rows[i][0]);
-        //        temp.PercentMonth = Convert.ToInt32(dt.Rows[i][1]);
-        //        temp.SuccessfulPercentage = dt.Rows[i][2].ToString();
-        //        temp.FailedPercentage = dt.Rows[i][3].ToString();
-        //        old_percentage.Add(temp);
-        //    }
-        //    return old_percentage;
-        //}
+                        user.id = singleSlaTable.users[i].id;
+                        user.firstname = singleSlaTable.users[i].firstname;
+                        user.lastname = singleSlaTable.users[i].lastname;
+                        user.iksapUser = singleSlaTable.users[i].iksapUser;
+                        user.sla_time_hour = singleSlaTable.users[i].sla_time_hour;
+                        user.sla_time_minute = singleSlaTable.users[i].sla_time_minute;
+                        user.sla_time_second = singleSlaTable.users[i].sla_time_second;
+                        //user = singleSlaTable.users[i];   // bu şekilde yapınca users değerleri değişiyor
 
-        //public void insertSlaPercentageByDate(slaPercentageByDate old_percentage)
-        //{
-        //    try
-        //    {
-        //        MySqlCommand dbComm = new MySqlCommand("Insert Into sla_percentage_bydate(PercentYear, PercentMonth, SuccessfulPercentage, FailedPercentage) Values('" + old_percentage.PercentYear + "', '" + old_percentage.PercentMonth + "', '" + old_percentage.SuccessfulPercentage + "', '" + old_percentage.FailedPercentage + "')", dbConn);
-        //        dbConn.Open();
-        //        dbComm.ExecuteNonQuery();
-        //        dbConn.Close();
-        //    }
-        //    catch (Exception ex) { }
-        //}
+                        singleSlaTable.singleUsers[j] = AddTime_Direct(user, singleSlaTable.singleUsers[j]);
 
-        //public void updateSlaPercentageByDate(slaPercentageByDate old_percentage)
-        //{
-        //    #region ayların sözlüğe eklenmesi
-        //    Dictionary<int, string> months = new Dictionary<int, string>();
-        //    months.Add(1, "january");
-        //    months.Add(2, "february");
-        //    months.Add(3, "march");
-        //    months.Add(4, "april");
-        //    months.Add(5, "may");
-        //    months.Add(6, "june");
-        //    months.Add(7, "july");
-        //    months.Add(8, "august");
-        //    months.Add(9, "september");
-        //    months.Add(10, "october");
-        //    months.Add(11, "november");
-        //    months.Add(12, "december");
-        //    #endregion
+                        //singleSlaTable.singleUsers[j] = user;   // singleSlaUser'da bir kişiden başkası varsa süreleri birleştirilip değiştiriliyor
+                        break;    // ? (singleUsers'da zaten her bir kullanıcı benzersizdir. Birine atama yapıldıktan sonra başka atama yapılmayacağı için j döngüsünden çıkılabilir)
+                    }
+                }
+                if (!repeat_control)
+                {
+                    userInfo user = new userInfo();
 
-        //    try
-        //    {
-        //        MySqlCommand dbComm = new MySqlCommand("Update sla_percentage_bydate Set SuccessfulPercentage = " + old_percentage.SuccessfulPercentage + ", FailedPercentage = " + old_percentage.FailedPercentage + " Where PercentYear = " + old_percentage.PercentYear + " and PercentMonth = " + old_percentage.PercentMonth, dbConn);
-        //        dbConn.Open();
-        //        dbComm.ExecuteNonQuery();
-        //        dbConn.Close();
-        //    }
-        //    catch (Exception ex)
-        //    {
+                    user.id = singleSlaTable.users[i].id;
+                    user.firstname = singleSlaTable.users[i].firstname;
+                    user.lastname = singleSlaTable.users[i].lastname;
+                    user.mail_address = singleSlaTable.users[i].mail_address;
+                    user.iksapUser = singleSlaTable.users[i].iksapUser;
+                    user.sla_time_hour = singleSlaTable.users[i].sla_time_hour;
+                    user.sla_time_minute = singleSlaTable.users[i].sla_time_minute;
+                    user.sla_time_second = singleSlaTable.users[i].sla_time_second;
+                    user.start_time = singleSlaTable.created_on;
+                    user.start_time = singleSlaTable.closed_on;
 
-        //    }
-        //}
+                    //user = AddTime_Direct(user, singleSlaTable.users[i]);
+                    singleSlaTable.singleUsers.Add(user);
+                }
+            }
+
+            //if (singleSlaTable.id == 322)
+            //{ }   // debug'ta kontrol için kullanılıyor
+
+            //bool find_customer = false;
+            for (int i = 0; i < singleSlaTable.singleUsers.Count; i++)
+            {
+                if (singleSlaTable.singleUsers[i].iksapUser == 1)
+                {
+                    singleSlaTable = AddTime_Direct(singleSlaTable, singleSlaTable.singleUsers[i]);
+                }
+                //if (!find_customer && singleSlaTable.singleUsers[i].iksapUser == 0)
+                //{
+                //    singleSlaTable.customer_firstname = singleSlaTable.singleUsers[i].firstname;
+                //    singleSlaTable.customer_lastname = singleSlaTable.singleUsers[i].lastname;
+                //    find_customer = true;
+                //}
+            }
+
+            //for (int i = 0; i < singleSlaTable.users.Count; i++)
+            //{
+            //    if (!find_customer && singleSlaTable.users[i].iksapUser == 0)
+            //    {
+            //        singleSlaTable.customer_firstname = singleSlaTable.users[i].firstname;
+            //        singleSlaTable.customer_lastname = singleSlaTable.users[i].lastname;
+            //        find_customer = true;
+            //    }
+            //}
+
+            //if (singleSlaTable.id == 322)
+            //{ }   // debug'ta kontrol için kullanılıyor
+
+            //if ( (singleSlaTable.customer_firstname == null || singleSlaTable.customer_firstname == "" || singleSlaTable.customer_firstname == "Anonymous") && (singleSlaTable.customer_lastname == null || singleSlaTable.customer_lastname == "" || singleSlaTable.customer_lastname == "Anonymous") )
+            //{
+            //    singleSlaTable.customer_firstname = "-----";
+            //    singleSlaTable.customer_lastname = "";
+            //}
+
+            // success_rate hesaplaması:
+            double tempsecond_past = (singleSlaTable.sla_time_hour * 3600) + (singleSlaTable.sla_time_minute * 60) + singleSlaTable.sla_time_second;   // yüzde hesaplama saniye üzerinden yapılması için gerekli dönüşüm yapıldı
+            double tempsecond_time_limit = singleSlaTable.rate.time_limit * 3600;   // yüzde hesaplama saniye üzerinden yapılması için gerekli dönüşüm yapıldı
+            singleSlaTable.success_rate = Math.Round((100 * tempsecond_past) / tempsecond_time_limit, 2);
+
+
+            if (singleSlaTable.singleUsers.Count == 0)
+            {
+                singleSlaTable.singleUsers.Add(singleSlaTable.users[0]);
+            }
+
+            return singleSlaTable;
+        }
 
         private List<SlaTable> slaList(MySqlCommand cmd)
         {
-            List<SlaTable> slaList = new List<SlaTable>();
-            try
-            {
-                dbConn.Open();
-                DataTable dt = new DataTable();
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-                da.Fill(dt);
-                dbConn.Close();
+            dbConn.Open();
+            DataTable dt = new DataTable();
+            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+            da.Fill(dt);
+            dbConn.Close();
 
-                for (int i = 0; i < dt.Rows.Count; i++)
+            List<SlaTable> slaList = new List<SlaTable>();
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                SlaTable temp = new SlaTable();
+                temp.id = Convert.ToInt32(dt.Rows[i][0]);
+                try
                 {
-                    SlaTable temp = new SlaTable();
-                    temp.id = Convert.ToInt32(dt.Rows[i][0]);
-                    try
-                    {
-                        temp.changed_on = Convert.ToDateTime(dt.Rows[i][1].ToString());
-                    }
-                    catch
-                    {
-                        temp.changed_on = Convert.ToDateTime("1000-01-01");
-                    }
-                    try
-                    {
-                        temp.old_value = Convert.ToInt32(dt.Rows[i][3]);
-                    }
-                    catch
-                    {
-                        temp.old_value = 0;     // null değerler yerine 0 atandı
-                    }
-                    try
-                    {
-                        temp.value = Convert.ToInt32(dt.Rows[i][4]);
-                    }
-                    catch
-                    {
-                        temp.value = 0;     // null değerler yerine 0 atandı
-                    }
-                    if (dt.Rows[i][5].ToString() != "")
-                    {
-                        temp.value_name = dt.Rows[i][5].ToString();
-                    }
-                    else { temp.value_name = "----------"; }
-                    temp.subject = dt.Rows[i][6].ToString();
-                    try
-                    {
-                        temp.created_on = Convert.ToDateTime(dt.Rows[i][7].ToString());
-                    }
-                    catch
-                    {
-                        temp.created_on = Convert.ToDateTime("1000-01-01");
-                    }
-                    try
-                    {
-                        temp.closed_on = Convert.ToDateTime(dt.Rows[i][8].ToString());
-                    }
-                    catch
-                    {
-                        temp.closed_on = Convert.ToDateTime("1000-01-01");
-                    }
-                    temp.project_id = Convert.ToInt32(dt.Rows[i][10]);
-                    if (dt.Rows[i][2].ToString() == "Immediate" || dt.Rows[i][2].ToString() == "Urgent")
-                    {
-                        Rate r = new Rate();
-                        r.id = 1;
-                        r.name = "Urgent";
-                        temp.rate = r;
-                    }
-                    else if (dt.Rows[i][2].ToString() == "High")
-                    {
-                        Rate r = new Rate();
-                        r.id = 2;
-                        r.name = dt.Rows[i][2].ToString();
-                        temp.rate = r;
-                    }
-                    else if (dt.Rows[i][2].ToString() == "Normal")
-                    {
-                        Rate r = new Rate();
-                        r.id = 3;
-                        r.name = dt.Rows[i][2].ToString();
-                        temp.rate = r;
-                    }
-                    else if (dt.Rows[i][2].ToString() == "Low")
-                    {
-                        Rate r = new Rate();
-                        r.id = 4;
-                        r.name = dt.Rows[i][2].ToString();
-                        temp.rate = r;
-                    }
-                    slaList.Add(temp);
+                    temp.changed_on = Convert.ToDateTime(dt.Rows[i][1].ToString());
                 }
+                catch
+                {
+                    temp.changed_on = Convert.ToDateTime("1000-01-01");
+                }
+                try
+                {
+                    temp.old_value = Convert.ToInt32(dt.Rows[i][3]);
+                }
+                catch
+                {
+                    temp.old_value = 0;     // null değerler yerine 0 atandı
+                }
+                try
+                {
+                    temp.value = Convert.ToInt32(dt.Rows[i][4]);
+                }
+                catch
+                {
+                    temp.value = 0;     // null değerler yerine 0 atandı
+                }
+                if (dt.Rows[i][5].ToString() != "")
+                {
+                    temp.value_name = dt.Rows[i][5].ToString();
+                }
+                else { temp.value_name = "----------"; }
+                temp.subject = dt.Rows[i][6].ToString();
+                try
+                {
+                    temp.created_on = Convert.ToDateTime(dt.Rows[i][7].ToString());
+                }
+                catch
+                {
+                    temp.created_on = Convert.ToDateTime("1000-01-01");
+                }
+                try
+                {
+                    temp.closed_on = Convert.ToDateTime(dt.Rows[i][8].ToString());
+                }
+                catch
+                {
+                    temp.closed_on = Convert.ToDateTime("1000-01-01");
+                }
+                temp.prop_key = dt.Rows[i][9].ToString();
+                temp.project_id = Convert.ToInt32(dt.Rows[i][10]);
+                temp.assigns_firstname = dt.Rows[i][11].ToString();
+                temp.assigns_lastname = dt.Rows[i][12].ToString();
+                temp.assigns_mail_address = dt.Rows[i][13].ToString();
+                temp.assigned_firstname = dt.Rows[i][14].ToString();
+                temp.assigned_lastname = dt.Rows[i][15].ToString();
+                temp.assigned_mail_address = dt.Rows[i][16].ToString();
+                temp.iksapUser = Convert.ToInt32(dt.Rows[i][17]);
+                temp.action_user_id = Convert.ToInt32(dt.Rows[i][18]);
+                temp.action_firstname = dt.Rows[i][19].ToString();
+                temp.action_lastname = dt.Rows[i][20].ToString();
+                temp.action_mail_address = dt.Rows[i][21].ToString();
+
+                if (dt.Rows[i][2].ToString() == "Immediate" || dt.Rows[i][2].ToString() == "Urgent")
+                {
+                    Rate r = new Rate();
+                    r.id = 1;
+                    r.name = "Urgent";
+                    temp.rate = r;
+                }
+                else if (dt.Rows[i][2].ToString() == "High")
+                {
+                    Rate r = new Rate();
+                    r.id = 2;
+                    r.name = dt.Rows[i][2].ToString();
+                    temp.rate = r;
+                }
+                else if (dt.Rows[i][2].ToString() == "Normal")
+                {
+                    Rate r = new Rate();
+                    r.id = 3;
+                    r.name = dt.Rows[i][2].ToString();
+                    temp.rate = r;
+                }
+                else if (dt.Rows[i][2].ToString() == "Low")
+                {
+                    Rate r = new Rate();
+                    r.id = 4;
+                    r.name = dt.Rows[i][2].ToString();
+                    temp.rate = r;
+                }
+
+                slaList.Add(temp);
             }
-            catch { }
             return slaList;
         }
 
@@ -303,6 +349,9 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                     temp.created_on = slaList[i].created_on;
                     temp.closed_on = slaList[i].closed_on;
                     temp.rate = slaList[i].rate;
+                    //temp.id = slaList[i].user_id;
+                    //temp.firstname = slaList[i].user_firstname;
+                    //temp.lastname = slaList[i].user_lastname;
                     singleSla.Add(temp);
                 }
             }
@@ -315,55 +364,186 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
             for (int i = 0; i < slaTable.Count; i++)   // slaTable'daki en üstteki aynı id'li veri sayısını bulur.
             {
                 if (slaTable[i].id == singleSlaTable.id)
+                {
                     slaIdCount++;
+                }
                 else
-                    break;
+                { break; }
             }
 
-            singleSlaTable.rate = slaTable[0].rate;
             List<int> slaActiveTime = new List<int> { 0, 1, 2, 7, 10 };   // 0-null 1-yeni 2-çalışılıyor 7-efor bekleniyor 10-değişiklik bekleniyor
-            bool start_time = false;
 
-            if (slaActiveTime.Contains(slaTable[0].old_value))
-            {
-                singleSlaTable.start_time = slaTable[0].created_on;
-                start_time = true;
-            }
+            //if (singleSlaTable.id == 322)
+            //{ }   // debug'ta kontrol için kullanılıyor
 
-            for (int i = 0; i < slaIdCount; i++)
+            userInfo user_temp_first = new userInfo();
+            if (slaTable[0].prop_key == "assigned_to_id")   //  && slaTable[0].iksapUser == 1
             {
-                if (slaActiveTime.Contains(slaTable[i].value) && !start_time)
+                if (slaTable[0].old_value != 0)
                 {
-                    singleSlaTable.start_time = slaTable[i].changed_on;
-                    start_time = true;
+                    user_temp_first.id = slaTable[0].old_value;
+                    user_temp_first.firstname = slaTable[0].assigns_firstname;
+                    user_temp_first.lastname = slaTable[0].assigns_lastname;
+                    user_temp_first.mail_address = slaTable[0].assigns_mail_address;
                 }
-                else if (!slaActiveTime.Contains(slaTable[i].value) && start_time)
+                else       // ilk atananın olmadığı durum
                 {
-                    singleSlaTable.end_time = slaTable[i].changed_on;
-
-                    if (singleSlaTable.rate.Is_7_24 == 1)
-                        singleSlaTable = CalculateSlaTime_Immediate(singleSlaTable);
-                    else
-                        singleSlaTable = CalculateSlaTime_Normal(singleSlaTable);
-
-                    start_time = false;
+                    user_temp_first.id = slaTable[0].action_user_id;
+                    user_temp_first.firstname = slaTable[0].action_firstname;
+                    user_temp_first.lastname = slaTable[0].action_lastname;
+                    user_temp_first.mail_address = slaTable[0].action_mail_address;
                 }
+
+                user_temp_first.prop_key = "assigned_to_id";
+                user_temp_first.value = 0;
             }
-
-            if (start_time)
+            else if (slaTable[0].prop_key == "status_id")
             {
-                singleSlaTable.end_time = DateTime.Now;
+                user_temp_first.id = slaTable[0].action_user_id;
+                user_temp_first.firstname = slaTable[0].action_firstname;
+                user_temp_first.lastname = slaTable[0].action_lastname;
+                user_temp_first.mail_address = slaTable[0].action_mail_address;
+                user_temp_first.prop_key = "status_id";
+                user_temp_first.value = 0;
+            }
+            user_temp_first.iksapUser = 1;
+            user_temp_first.value_name = "Yeni";
 
-                if (singleSlaTable.rate.Is_7_24 == 1)
-                    singleSlaTable = CalculateSlaTime_Immediate(singleSlaTable);
+            user_temp_first.start_time = slaTable[0].created_on;
+            user_temp_first.end_time = slaTable[0].changed_on;
+            if (slaTable[0].rate.Is_7_24 == 1)
+                user_temp_first = CalculateSlaTime_Immediate(user_temp_first);
+            else
+                user_temp_first = CalculateSlaTime_Normal(user_temp_first, singleSlaTable.rate);
+            singleSlaTable.users.Add(user_temp_first);
+
+            int previous_id;
+            string previous_firstname;
+            string previous_lastname;
+            string previous_mail_address;
+            int previous_value;
+            string previous_value_name;
+            string previous_prop_key;
+            int previous_iksapUser;
+            if (user_temp_first.prop_key == "assigned_to_id")
+            {
+                previous_id = slaTable[0].value;
+                previous_firstname = slaTable[0].assigned_firstname;
+                previous_lastname = slaTable[0].assigned_lastname;
+                previous_mail_address = slaTable[0].assigned_mail_address;
+                previous_value = 0;
+                previous_value_name = "Yeni";
+                previous_iksapUser = slaTable[0].iksapUser;
+            }
+            else //if (user_temp_first.prop_key == "status_id")
+            {
+                previous_id = slaTable[0].action_user_id;
+                previous_firstname = slaTable[0].action_firstname;
+                previous_lastname = slaTable[0].action_lastname;
+                previous_mail_address = slaTable[0].action_mail_address;
+                previous_value = slaTable[0].value;
+                previous_value_name = slaTable[0].value_name;
+                previous_iksapUser = 1;
+            }
+            //previous_prop_key = slaTable[0].prop_key;
+            previous_prop_key = slaTable[0].prop_key;
+
+
+            // previous değişkenler hep bir önceki değeri tutar
+            for (int i = 1; i < slaIdCount; i++)
+            {
+                userInfo user_temp = new userInfo();
+                if (previous_iksapUser == 1)
+                {
+                    user_temp.id = previous_id;
+                    user_temp.firstname = previous_firstname;
+                    user_temp.lastname = previous_lastname;
+                    user_temp.mail_address = previous_mail_address;
+                    user_temp.value = previous_value;
+                    user_temp.value_name = previous_value_name;
+                    user_temp.prop_key = previous_prop_key;
+
+                    user_temp.start_time = singleSlaTable.users[singleSlaTable.users.Count - 1].end_time;   // en sonki kullanıcının bitiş zamanı (change_on) bir sonrakinin başlangıç zamanı oluyor
+                    user_temp.end_time = slaTable[i].changed_on;
+                }
                 else
-                    singleSlaTable = CalculateSlaTime_Normal(singleSlaTable);
-            }
+                {
+                    user_temp.id = previous_id;
+                    user_temp.firstname = previous_firstname;
+                    user_temp.lastname = previous_lastname;
+                    user_temp.mail_address = previous_mail_address;
+                    user_temp.value = -1;
+                    user_temp.value_name = previous_value_name;
+                    user_temp.start_time = singleSlaTable.users[singleSlaTable.users.Count - 1].end_time;
+                    user_temp.end_time = slaTable[i].changed_on;
+                    user_temp.prop_key = previous_prop_key;
 
-            // success_rate hesaplaması:
-            double tempSecond_past = (singleSlaTable.sla_time_hour * 3600) + (singleSlaTable.sla_time_minute * 60) + singleSlaTable.sla_time_second;   // yüzde hesaplama saniye üzerinden yapılması için gerekli dönüşüm yapıldı
-            double tempSecond_time_limit = singleSlaTable.rate.time_limit * 3600;   // yüzde hesaplama saniye üzerinden yapılması için gerekli dönüşüm yapıldı
-            singleSlaTable.success_rate = Math.Round((100 * tempSecond_past) / tempSecond_time_limit, 2);
+                    //}
+                }
+                if (slaTable[i].rate.Is_7_24 == 1)
+                    user_temp = CalculateSlaTime_Immediate(user_temp);
+                else
+                    user_temp = CalculateSlaTime_Normal(user_temp, singleSlaTable.rate);
+
+                user_temp.iksapUser = previous_iksapUser;
+                singleSlaTable.users.Add(user_temp);
+
+
+                if (slaTable[i].prop_key == "assigned_to_id")     // bu durum, ticket iksap'taymış ve müşteriye geçmiş durumudur.
+                {
+                    previous_id = slaTable[i].value;
+                    previous_firstname = slaTable[i].assigned_firstname;
+                    previous_lastname = slaTable[i].assigned_lastname;
+                    previous_mail_address = slaTable[i].assigned_mail_address;
+                    previous_value = -1;
+                    previous_iksapUser = slaTable[i].iksapUser;
+                }
+                else if (slaTable[i].prop_key == "status_id")
+                {
+                    previous_value = slaTable[i].value;
+                    previous_value_name = slaTable[i].value_name;
+                    previous_iksapUser = user_temp.iksapUser;
+                }
+                previous_prop_key = slaTable[i].prop_key;
+            }
+            userInfo u = new userInfo();
+            if (previous_iksapUser == 1)
+            {
+                u.id = previous_id;
+                u.firstname = previous_firstname;
+                u.lastname = previous_lastname;
+                u.mail_address = previous_mail_address;
+                u.value = previous_value;
+                u.value_name = previous_value_name;
+                u.start_time = singleSlaTable.users[singleSlaTable.users.Count - 1].end_time;   // en sonki kullanıcının bitiş zamanı (change_on) bir sonrakinin başlangıç zamanı oluyor
+                u.end_time = DateTime.Now;
+                u.prop_key = previous_prop_key;
+            }
+            else
+            {
+                u.id = previous_id;
+                u.firstname = previous_firstname;
+                u.lastname = previous_lastname;
+                u.mail_address = previous_mail_address;
+                u.value = -1;
+                //u.value_name = "Süre Müşteride";
+                u.value_name = "----";
+                u.start_time = singleSlaTable.users[singleSlaTable.users.Count - 1].end_time;
+                u.end_time = slaTable[0].closed_on;
+                u.prop_key = previous_prop_key;
+            }
+            if (slaTable[slaIdCount - 1].rate.Is_7_24 == 1)     // bir önceki rate'e bakıyor çünkü bir sonraki sla'lere geçti
+                u = CalculateSlaTime_Immediate(u);
+            else
+                u = CalculateSlaTime_Normal(u, singleSlaTable.rate);
+
+            u.iksapUser = previous_iksapUser;
+            singleSlaTable.users.Add(u);
+
+            //// success_rate hesaplaması:
+            //double tempSecond_past = (singleSlaTable.sla_time_hour * 3600) + (singleSlaTable.sla_time_minute * 60) + singleSlaTable.sla_time_second;   // yüzde hesaplama saniye üzerinden yapılması için gerekli dönüşüm yapıldı
+            //double tempSecond_time_limit = singleSlaTable.rate.time_limit * 3600;   // yüzde hesaplama saniye üzerinden yapılması için gerekli dönüşüm yapıldı
+            //singleSlaTable.success_rate = Math.Round((100 * tempSecond_past) / tempSecond_time_limit, 2);
 
             for (int i = 0; i < slaIdCount; i++)
             {
@@ -375,68 +555,68 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
             return all_of_them;
         }
 
-        private SingleSlaTable CalculateSlaTime_Immediate(SingleSlaTable sla)
+        private userInfo CalculateSlaTime_Immediate(userInfo user)
         {
             TimeSpan ts = new TimeSpan();
-            ts = sla.end_time - sla.start_time;
+            ts = user.end_time - user.start_time;
 
-            SingleSlaTable temp = new SingleSlaTable();
-            temp = AddTime_Immediate(sla, ts);
+            //userInfo temp = new userInfo();
+            //temp = AddTime_Immediate(user, ts);
 
-            return sla;
+            user.sla_time_hour = ts.Hours;
+            user.sla_time_minute = ts.Minutes;
+            user.sla_time_second = ts.Seconds;
+
+            return user;
         }
 
-        private SingleSlaTable CalculateSlaTime_Normal(SingleSlaTable sla)
+        private userInfo CalculateSlaTime_Normal(userInfo user, Rate rate)
         {
-            DateTime temp_date = sla.start_time;
-            while (temp_date.Date <= sla.end_time.Date)
+            DateTime temp_date = user.start_time;
+            while (temp_date.Date <= user.end_time.Date)
             {
                 if (temp_date.DayOfWeek.ToString() != "Saturday" && temp_date.DayOfWeek.ToString() != "Sunday")
                 {
-                    if (temp_date.Date == sla.start_time.Date && temp_date.Hour >= sla.rate.work_start_time.Hour && temp_date.Hour < sla.rate.work_end_time.Hour)   // oluşturulan tarih başlangıç tarihi ise, günlük 9 saat değil, request başlangıç saatinden itibaren günün bitiş saatine kadar hesaplar.
+                    if (temp_date.Date == user.start_time.Date && temp_date.Hour >= rate.work_start_time.Hour && temp_date.Hour < rate.work_end_time.Hour)   // oluşturulan tarih başlangıç tarihi ise, günlük 9 saat değil, request başlangıç saatinden itibaren günün bitiş saatine kadar hesaplar.
                     {
                         TimeSpan ts;
-                        sla.rate.work_end_time = new DateTime(sla.start_time.Year, sla.start_time.Month, sla.start_time.Day, sla.rate.work_end_time.Hour, sla.rate.work_end_time.Minute, sla.rate.work_end_time.Second);  // Amaç sadece work_and time'ın date kısmını başlangıç tarihi yapmak.
-
-                        if (sla.end_time < sla.rate.work_end_time)      // bitiş saati mesai saatinden önceyse son zaman olarak bitiş saatini alır.
-                            ts = sla.end_time.TimeOfDay - sla.start_time.TimeOfDay;
+                        rate.work_end_time = new DateTime(user.start_time.Year, user.start_time.Month, user.start_time.Day, rate.work_end_time.Hour, rate.work_end_time.Minute, rate.work_end_time.Second);  // Amaç sadece work_and time'ın date kısmını başlangıç tarihi yapmak.
+                        if (user.end_time < rate.work_end_time)      // bitiş saati mesai saatinden önceyse son zaman olarak bitiş saatini alır.
+                        {
+                            ts = user.end_time.TimeOfDay - user.start_time.TimeOfDay;
+                        }
                         else
-                            ts = sla.rate.work_end_time.TimeOfDay - sla.start_time.TimeOfDay;  // sla_time eklenecek saat hesaplaması, elde işlemleri
+                        {
+                            ts = rate.work_end_time.TimeOfDay - user.start_time.TimeOfDay;  // sla_time eklenecek saat hesaplaması, elde işlemleri
+                        }
 
-                        SingleSlaTable temp = new SingleSlaTable();
-                        temp = AddTime_Normal(sla, ts);
-                        sla.sla_time_hour = temp.sla_time_hour;
-                        sla.sla_time_minute = temp.sla_time_minute;
-                        sla.sla_time_second = temp.sla_time_second;
+                        user = AddTime_Normal(user, ts);
 
                     }
-                    else if (temp_date.Date == sla.start_time.Date && temp_date.Hour > sla.rate.work_end_time.Hour)
+                    else if (temp_date.Date == user.start_time.Date && temp_date.Hour >= rate.work_end_time.Hour)
                     {
                         // haftaiçi gün ama mesai saati geçmiş durumudur.
                     }
-                    else if (temp_date.Date == sla.end_time.Date)  // request bitiş tarihindeki son günün saatini hesaplar.
+                    else if (temp_date.Date == user.end_time.Date)  // request bitiş tarihindeki son günün saatini hesaplar.
                     {
-                        if (sla.end_time.Hour >= sla.rate.work_start_time.Hour)
+                        if (user.end_time.Hour >= rate.work_start_time.Hour)
                         {
-                            TimeSpan ts = sla.end_time.TimeOfDay - sla.rate.work_start_time.TimeOfDay;
+                            TimeSpan ts = user.end_time.TimeOfDay - rate.work_start_time.TimeOfDay;
 
-                            SingleSlaTable temp = new SingleSlaTable();
-                            temp = AddTime_Normal(sla, ts);
-                            sla.sla_time_hour = temp.sla_time_hour;
-                            sla.sla_time_minute = temp.sla_time_minute;
-                            sla.sla_time_second = temp.sla_time_second;
+                            user = AddTime_Normal(user, ts);
                         }
                     }
                     else
-                        sla.sla_time_hour += sla.rate.total_time;
-
+                    {
+                        user.sla_time_hour += rate.total_time;
+                    }
                 }
                 temp_date = temp_date.AddDays(1);
             }
-            return sla;
+            return user;
         }
 
-        private SingleSlaTable AddTime_Normal(SingleSlaTable info, TimeSpan ts)
+        private userInfo AddTime_Normal(userInfo user, TimeSpan ts)
         {
             if (ts.Hours > 8)
             {
@@ -445,50 +625,87 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 ts = dt1 - dt2;
             }
 
-            info.sla_time_second += ts.Seconds;
-            if (info.sla_time_second > 59)
+            user.sla_time_second += ts.Seconds;
+            if (user.sla_time_second > 59)
             {
-                info.sla_time_second -= 60;
-                info.sla_time_minute += 1;
-                if (info.sla_time_minute > 59)
+                user.sla_time_second -= 60;
+                user.sla_time_minute += 1;
+                if (user.sla_time_minute > 59)
                 {
-                    info.sla_time_minute -= 60;
-                    info.sla_time_hour += 1;
+                    user.sla_time_minute -= 60;
+                    user.sla_time_hour += 1;
                 }
             }
 
-            info.sla_time_minute += ts.Minutes;
-            if (info.sla_time_minute > 59)
+            user.sla_time_minute += ts.Minutes;
+            if (user.sla_time_minute > 59)
             {
-                info.sla_time_minute -= 60;
-                info.sla_time_hour += 1;
+                user.sla_time_minute -= 60;
+                user.sla_time_hour += 1;
             }
-            info.sla_time_hour += ts.Hours;
-            return info;
+
+            user.sla_time_hour += ts.Hours;
+            return user;
         }
 
-        private SingleSlaTable AddTime_Immediate(SingleSlaTable info, TimeSpan ts)
+        private SingleSlaTable AddTime_Direct(SingleSlaTable singleSla, userInfo u2)
         {
-            info.sla_time_second += ts.Seconds;
-            if (info.sla_time_second > 59)
+            singleSla.sla_time_second += u2.sla_time_second;
+            if (singleSla.sla_time_second > 59)
             {
-                info.sla_time_second -= 60;
-                info.sla_time_minute += 1;
-                if (info.sla_time_minute > 59)
+                singleSla.sla_time_second -= 60;
+                singleSla.sla_time_minute += 1;
+                if (singleSla.sla_time_minute > 59)
                 {
-                    info.sla_time_minute -= 60;
-                    info.sla_time_hour += 1;
+                    singleSla.sla_time_minute -= 60;
+                    singleSla.sla_time_hour += 1;
                 }
             }
-            info.sla_time_minute += ts.Minutes;
-            if (info.sla_time_minute > 59)
+
+            singleSla.sla_time_minute += u2.sla_time_minute;
+            if (singleSla.sla_time_minute > 59)
             {
-                info.sla_time_minute -= 60;
-                info.sla_time_hour += 1;
+                singleSla.sla_time_minute -= 60;
+                singleSla.sla_time_hour += 1;
             }
-            info.sla_time_hour += ts.Hours;
-            info.sla_time_hour += ts.Days * 24;
-            return info;
+
+            singleSla.sla_time_hour += u2.sla_time_hour;
+
+            return singleSla;
+        }
+
+        private userInfo AddTime_Direct(userInfo u1, userInfo u2)
+        {
+            u1.sla_time_second += u2.sla_time_second;
+            if (u1.sla_time_second > 59)
+            {
+                u1.sla_time_second -= 60;
+                u1.sla_time_minute += 1;
+                if (u1.sla_time_minute > 59)
+                {
+                    u1.sla_time_minute -= 60;
+                    u1.sla_time_hour += 1;
+                }
+            }
+
+            u1.sla_time_minute += u2.sla_time_minute;
+            if (u1.sla_time_minute > 59)
+            {
+                u1.sla_time_minute -= 60;
+                u1.sla_time_hour += 1;
+            }
+
+            u1.sla_time_hour += u2.sla_time_hour;
+
+            // yanlışlıkla sonradan kullanılmasın diye veriler temizlendi
+            u1.start_time = Convert.ToDateTime("1000-01-01");
+            u1.end_time = Convert.ToDateTime("1000-01-01");
+            u1.prop_key = "----";
+            u1.old_value = 0;
+            u1.value = 0;
+            u1.value_name = "----";
+
+            return u1;
         }
     }
 }

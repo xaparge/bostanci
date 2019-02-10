@@ -6,6 +6,8 @@
     <link href="~/lib/morris.js/morris.css" rel="stylesheet" />
     <link href="~/lib/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
     <link href="~/lib/vue/vue-treeselect.min.css" rel="stylesheet" />
+    <link href="/modal.css" rel="stylesheet"/>
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">*@
 
     @Styles.Render("~/Bundles/select2css")
 }
@@ -16,6 +18,8 @@
 
     <script src="~/lib/vue/vue.js"></script>
     <script src="~/lib/vue/vue-treeselect.min.js"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>*@
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>*@
 }
 <div class="block-header">
     <h2>DASHBOARD</h2>
@@ -77,25 +81,22 @@
             </div>
             <div class="body">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                   
-                        <div id="app" class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-                            <treeselect :multiple="true"
-                                        :options="options"
-                                        placeholder="@L("SelectProject...")"
-                                        v-model="value"
-                                        @*v-on:open="greet"*@ />
-                        </div>
+                    <div id="app" class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                        <treeselect :multiple="true"
+                                    :options="options"
+                                    placeholder="@L("SelectProject...")"
+                                    v-model="value"
+                                    @*v-on:open="greet"*@ />
+                    </div>
 
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                            <span class="input-group-btn">
-                                <button type="button" id="showValue" class="btn btn-info  waves-effect">
-                                    <i class="material-icons">save</i>
-                                    <span>@L("Ok")</span>
-                                </button>
-
-                            </span>
-                        </div>
-                 
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <span class="input-group-btn">
+                            <button type="button" id="showValue" class="btn btn-info  waves-effect">
+                                <i class="material-icons">save</i>
+                                <span>@L("Ok")</span>
+                            </button>
+                        </span>
+                    </div>
                 </div>
 
                 <canvas id="bar_chart" height="90"></canvas>
@@ -111,10 +112,11 @@
                         <thead>
                             <tr>
                                 <td>@L("TicketNumber")</td>
-                                <td>@L("NameSurname")</td>
+                                @*<td>@L("NameSurname")</td>*@
                                 <td>@L("OpeningDate")</td>
                                 <td>@L("ClosingDate")</td>
                                 <td>@L("SlaPercent")</td>
+                                <td>Detay</td>
                             </tr>
                         </thead>
                     </table>
@@ -123,6 +125,15 @@
         </div>
     </div>
 </div>
+
+@*<!-- The Modal -->
+<div id="detailInfo" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+    </div>
+</div>*@
+
 <!-- #END# Bar Chart -->
 <!-- Exportable Table -->
 @*<div class="row clearfix">

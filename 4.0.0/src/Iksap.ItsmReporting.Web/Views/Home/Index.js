@@ -161,6 +161,52 @@ function setLanguage(language_url) {
     });
 }
 
+function result_click(id) {
+    // burada veri çekilecek
+    $.ajax({
+        url: "/Home/TicketDetail?id=" + id,
+        dataType: 'json',
+        type: 'post',
+        success: function (data) {
+            message = "Ticket süresi: " + data.result.rate.time_limit + "\n";
+            message += "Başarı oranı: " + data.result.success_rate + "\n";
+            message += "------KİMİN ÜZERİNDE NE KADAR KALDI------\n";
+            for (i = 0; i < data.result.singleUsers.length; i++) {
+                message += data.result.singleUsers[i].firstname + " " + data.result.singleUsers[i].firstname + ": ";
+                message += data.result.singleUsers[i].sla_time_hour + "s " + data.result.singleUsers[i].sla_time_minute + "dk " + data.result.singleUsers[i].sla_time_second + "sn\n";
+            }
+            message += "------AYRINTILI SÜRE DAĞILIMI------\n";
+            for (i = 0; i < data.result.users.length; i++) {
+                message += data.result.users[i].firstname + " " + data.result.users[i].lastname + "\n";
+                message += "Başlangıç zamanı: " + data.result.users[i].start_time_str + "\n";
+                message += "Bitiş zamanı: " + data.result.users[i].end_time_str + "\n";
+                message += "SLA süresi: " + data.result.users[i].sla_time_hour + "s " + data.result.users[i].sla_time_minute + "dk " + data.result.users[i].sla_time_second + "sn\n";
+                message += "Ticket son durum: " + data.result.users[i].value_name + "\n";
+                message += "--------\n";
+            }
+            console.log(message);
+            alert(message);
+        }
+    }).fail(function (error) {
+        alert(error.StatusText);
+    });
+
+}
+
+//function hide_content() {
+//    var span = document.getElementsByClassName("close")[0];
+//    span.onclick = function () {
+//        modal.style.display = "none";
+//    };
+//    
+//}
+
+//window.onclick = function (event) {
+//    if (event.target === modal) {
+//        modal.style.display = "none";
+//    }
+//};
+
 $(document).ready(function () {
     let language_url;
     AjaxCall('/Home/getCurrentLanguage', null).done(function (response) {
@@ -169,7 +215,6 @@ $(document).ready(function () {
     }).fail(function (error) {
         setLanguage("//cdn.datatables.net/plug-ins/1.10.19/i18n/English.json");
     });
-
 
     //var example2 = new Vue({
     //    el: '#app',
@@ -183,7 +228,6 @@ $(document).ready(function () {
 
     // you can invoke methods in JavaScript too
     //example2.open();
-
 
 
     $(function () {// Loading projects into combobox
@@ -239,22 +283,57 @@ $(document).ready(function () {
         let month = secilenAy.split("-")[1];
 
         var table = $('#slaMonthlyDetailTable').DataTable();
-
         $('#slaMonthlyDetailTable').dataTable().fnClearTable();
         $.ajax({
             url: "/Home/SlaMonthlyChartDetailTable?projects=" + getProjects() + " &month=" + month + " &year=" + year,
             dataType: 'json',
             type: 'post',
             success: function (data) {
-                $.each(data.result.data, function (a, b) {
+                for (i = 0; i < data.result.data.length; i++) {
                     table.row.add([
-                        b.redmine_link,
-                        '---------------',
-                        b.created_on_str,
-                        b.closed_on_str,
-                        b.success_rate
+                        data.result.data[i].redmine_link,
+                        data.result.data[i].created_on_str,
+                        data.result.data[i].closed_on_str,
+                        data.result.data[i].success_rate,
+                        "<button id=\"" + data.result.data[i].id + "\" onClick=result_click(this.id)>Ticket Detayları</button>"
                     ]).draw(false);
-                });
+
+                    //console.log(data.result.data[i].users.length);
+                    //for (j = 0; j < data.result.data[i].users.length; j++) {
+                    //    table.row.add([
+                    //        data.result.data[i].users[j].firstname,
+                    //        data.result.data[i].users[j].start_time,
+                    //        data.result.data[i].users[j].end_time,
+                    //        data.result.data[i].users[j].sla_time_hour + "s " + data.result.data[i].users[j].sla_time_minute + "dk " + data.result.data[i].users[j].sla_time_second + "sn",
+                    //        data.result.data[i].users[j].iksapUser
+                    //    ]).draw(false);
+                    //}
+                }
+
+                //$.each(data.result.data, function (a, b) {
+                //    console.log(data.result);
+                //    console.log(b);
+                //    table.row.add([
+                //        b.redmine_link,
+                //        //b.customer_firstname + " " + b.customer_lastname,
+                //        b.created_on_str,
+                //        b.closed_on_str,
+                //        b.success_rate,
+                //        //"abc",
+                //        //<a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Link with href</a>,
+                //       "<button>Ticket Detayları</button>",
+                //    ]).draw(false);
+                //    console.log(b.users.length);
+                //    for (i = 0; i < b.users.length; i++){
+                //        table.row.add([
+                //            b.users[i].firstname,
+                //            b.users[i].start_time,
+                //            b.users[i].end_time,
+                //            b.users[i].sla_time_hour + "s " + b.users[i].sla_time_minute + "dk " + b.users[i].sla_time_second + "sn",
+                //            b.users[i].iksapUser,
+                //        ]).draw(false);
+                //    }
+                //});
             }
         }).fail(function (error) {
             alert(error.StatusText);

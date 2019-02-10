@@ -57,8 +57,20 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
             double success_count;
             double fail_count;
-            int month = DateTime.Now.Month;
-            int year = DateTime.Now.Year;
+            //int month = DateTime.Now.Month;
+            //int year = DateTime.Now.Year;
+            int month, year;
+            if (DateTime.Now.Month != 1)
+            {
+                month = DateTime.Now.Month - 1;
+                year = DateTime.Now.Year;
+            }
+            else
+            {
+                month = 12;
+                year = DateTime.Now.Year - 1;
+            }
+
             for (int i = 0; i < 12; i++)
             {
                 success_count = 0;
@@ -96,7 +108,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
             dt.Columns.Add("pozitif", System.Type.GetType("System.Double"));
             dt.Columns.Add("negatif", System.Type.GetType("System.Double"));
 
-            int month_count = DateTime.Now.Month + 1;
+            int month_count = DateTime.Now.Month;
             int yearlabel = DateTime.Now.Year - 1;
             for (int i = 0; i < dictionary.Count; i++)
             {
@@ -150,6 +162,10 @@ namespace Iksap.ItsmReporting.Web.Controllers
             double success_count;
             double fail_count;
             int month = DateTime.Now.Month;
+            //if (DateTime.Now.Month != 1)
+            //    month = DateTime.Now.Month - 1;
+            //else
+            //    month = 12;
             int year = DateTime.Now.Year;
             for (int i = 0; i < 12; i++)
             {
@@ -232,7 +248,7 @@ namespace Iksap.ItsmReporting.Web.Controllers
             else return "0";
         }
 
-        public JsonResult SlaMonthlyChartDetailTable(string projects, string month, string year)
+        public JsonResult SlaMonthlyChartDetailTable_(string projects, string month, string year)
         {
             SlaReport slaReport = new SlaReport();
             SlaDetailTable dataTable = new SlaDetailTable();
@@ -265,6 +281,75 @@ namespace Iksap.ItsmReporting.Web.Controllers
                 singleSla[i].closed_on_str = singleSla[i].closed_on.ToString("dd/MM/yyyy HH:mm:ss");
             }
             return Json(dataTable, JsonRequestBehavior.AllowGet);
+        }
+
+        //public JsonResult SlaMonthlyChartDetailWithStaff(string projects, string month, string year)
+        public JsonResult SlaMonthlyChartDetailTable(string projects, string month, string year)
+        {
+            SlaReport slaReport = new SlaReport();
+            SlaDetailTable dataTable = new SlaDetailTable();
+
+            GetProjectsAndSub calculate = new GetProjectsAndSub();
+            string selectedProjectNumbers = calculate.getProjects(projects);
+
+            List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
+            singleSla = slaReport.getSingleSlaTables("close", monthsNumber[month.Trim()], Convert.ToInt32(year.Trim()), selectedProjectNumbers);
+
+            string filterTicketId = Request.QueryString["ticketId"];
+            string filterCreatedOn = Request.QueryString["created_on"];
+            string filterClosedOn = Request.QueryString["closed_on"];
+            string filterRate = Request.QueryString["rate"];
+            var result = from s in singleSla
+                         where (string.IsNullOrEmpty(filterTicketId) || s.id.Equals(filterTicketId))
+                         && (string.IsNullOrEmpty(filterCreatedOn) || s.closed_on.Equals(filterCreatedOn))
+                         && (string.IsNullOrEmpty(filterClosedOn) || s.success_rate.Equals(filterClosedOn))
+                         && (string.IsNullOrEmpty(filterRate) || s.success_rate.Equals(filterRate))
+                         select s;
+
+            dataTable.data = result.ToArray();
+            dataTable.recordsTotal = singleSla.Count;
+            dataTable.recordsFiltered = result.Count();
+            string link = "http://89.106.1.162/redmine/issues/";
+            for (int i = 0; i < singleSla.Count; i++)
+            {
+                singleSla[i].redmine_link = "<a href=" + link + singleSla[i].id + " target =\"_blank\">" + singleSla[i].id + "</a>";
+                singleSla[i].created_on_str = singleSla[i].created_on.ToString("dd MMM yyyy, ddd HH:mm:ss");
+                singleSla[i].closed_on_str = singleSla[i].closed_on.ToString("dd MMM yyyy, ddd HH:mm:ss");
+            }
+            singleSlaGlobal.Clear();
+            for (int i = 0; i < dataTable.data.Length; i++)
+            {
+                singleSlaGlobal.Add(dataTable.data[i]);
+            }
+            return Json(dataTable, JsonRequestBehavior.AllowGet);
+        }
+        static List<SingleSlaTable> singleSlaGlobal = new List<SingleSlaTable>();
+
+        public JsonResult TicketDetail(int id)
+        {
+            SingleSlaTable search = new SingleSlaTable();
+            for (int i = 0; i < singleSlaGlobal.Count; i++)
+            {
+                if (singleSlaGlobal[i].id == id)
+                {
+                    search = singleSlaGlobal[i];
+                    break;
+                    //return (singleSlaGlobal[i], JsonRequestBehavior.AllowGet);
+                }
+            }
+            for (int i = 0; i < search.users.Count; i++)
+            {
+                if (search.users[i].sla_time_hour == 0 && search.users[i].sla_time_minute == 0 && search.users[i].sla_time_second == 0)
+                {
+                    search.users.RemoveAt(i);
+                }
+            }
+            for (int i = 0; i < search.users.Count; i++)
+            {
+                search.users[i].start_time_str = search.users[i].start_time.ToString("dd MMM yyyy, ddd HH:mm:ss");
+                search.users[i].end_time_str = search.users[i].end_time.ToString("dd MMM yyyy, ddd HH:mm:ss");
+            }
+            return Json(search, JsonRequestBehavior.AllowGet);
         }
 
         public string getCurrentLanguage()
