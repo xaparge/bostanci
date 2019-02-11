@@ -2845,6 +2845,7 @@
     <Content Include="Views\Account\_TenantChange.js" />
     <Content Include="Views\Account\_TenantChangeModal.js" />
     <Content Include="Views\Home\Index.js" />
+    <Content Include="Views\Home\table_style.css" />
     <Content Include="Views\MailScheduledTask\Index.js" />
     <Content Include="Views\MailScheduledTask\_EditMailScheduledTaskModal.js" />
     <Content Include="Views\Roles\Index.js" />

@@ -168,29 +168,52 @@ function result_click(id) {
         dataType: 'json',
         type: 'post',
         success: function (data) {
-            message = "Ticket süresi: " + data.result.rate.time_limit + "\n";
-            message += "Başarı oranı: " + data.result.success_rate + "\n";
-            message += "------KİMİN ÜZERİNDE NE KADAR KALDI------\n";
+            body_message = "";
+            header_message = "<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>";
+            header_message += "<h2><u>TicNo: " + data.result.id + "</u></h2>";
+            //header_message = "<h2><u>TicNo: " + data.result.id + "</u> <u>SLA: <strong>%" + data.result.success_rate + "</strong></u> <u>süresi: <strong>" + data.result.rate.time_limit + "</strong></u></h2>";
+            body_message += "<h5>Ticket'ta kişiye özel toplam geçen süre</h5>";
+            //body_message += "<tr style=\"background-color: black; color: white;\"><th>İsim Soyisim</th><th>SLA Süresi</th><th>Ticketın Son Durumu</th><th>Başlangıç Zamanı</th><th>Bitiş Zamanı</th></tr>";
+            body_message = "<table>";
+            body_message += "<br/><h3>Kişiye özel süre dağılımı</h3><br/>";
+            body_message += "<tr style=\"background-color: black; color: white;\"><th>İsim Soyisim</th><th>Toplam SLA Süresi</th></tr>";
             for (i = 0; i < data.result.singleUsers.length; i++) {
-                message += data.result.singleUsers[i].firstname + " " + data.result.singleUsers[i].firstname + ": ";
-                message += data.result.singleUsers[i].sla_time_hour + "s " + data.result.singleUsers[i].sla_time_minute + "dk " + data.result.singleUsers[i].sla_time_second + "sn\n";
+                if (data.result.singleUsers[i].iksapUser === 0) {
+                    body_message += "<tr style=\"background-color: #eee; text-align: right;\">";
+                }
+                else {
+                    body_message += "<tr>";
+                }
+                body_message += "<td>" + data.result.singleUsers[i].firstname + " " + data.result.singleUsers[i].lastname + "</td>";
+                body_message += "<td>" + data.result.singleUsers[i].sla_time_hour + "s " + data.result.singleUsers[i].sla_time_minute + "dk " + data.result.singleUsers[i].sla_time_second + "sn" + "</td>";
+                body_message += "</tr>";
             }
-            message += "------AYRINTILI SÜRE DAĞILIMI------\n";
+            body_message += "</table>";
+            body_message += "<br/><h3>Ticket ayrıntılı süre dağılımı</h3><br/>";
+            body_message += "<table>";
+            body_message += "<tr style=\"background-color: black; color: white;\"><th>İsim Soyisim</th><th>SLA Süresi</th><th>Ticketın Son Durumu</th><th>Başlangıç Zamanı</th><th>Bitiş Zamanı</th></tr>";
             for (i = 0; i < data.result.users.length; i++) {
-                message += data.result.users[i].firstname + " " + data.result.users[i].lastname + "\n";
-                message += "Başlangıç zamanı: " + data.result.users[i].start_time_str + "\n";
-                message += "Bitiş zamanı: " + data.result.users[i].end_time_str + "\n";
-                message += "SLA süresi: " + data.result.users[i].sla_time_hour + "s " + data.result.users[i].sla_time_minute + "dk " + data.result.users[i].sla_time_second + "sn\n";
-                message += "Ticket son durum: " + data.result.users[i].value_name + "\n";
-                message += "--------\n";
+                if (data.result.users[i].iksapUser === 0) {
+                    body_message += "<tr style=\"background-color: #eee; text-align: right;\">";
+                }
+                else {
+                    body_message += "<tr>";
+                }
+                body_message += "<td>" + data.result.users[i].firstname + " " + data.result.users[i].lastname + "</td>";
+                body_message += "<td>" + data.result.users[i].sla_time_hour + "s " + data.result.users[i].sla_time_minute + "dk " + data.result.users[i].sla_time_second + "sn" + "</td>";
+                body_message += "<td>" + data.result.users[i].value_name + "</td>";
+                body_message += "<td>" + data.result.users[i].start_time_str + "</td>";
+                body_message += "<td>" + data.result.users[i].end_time_str + "</td>";
+                body_message += "</tr>";
             }
-            console.log(message);
-            alert(message);
+            modal_header = document.getElementById("modal_header");
+            modal_header.innerHTML = header_message;
+            modal_body = document.getElementById("modal_body");
+            modal_body.innerHTML = body_message;
         }
     }).fail(function (error) {
         alert(error.StatusText);
     });
-
 }
 
 //function hide_content() {
@@ -294,8 +317,9 @@ $(document).ready(function () {
                         data.result.data[i].redmine_link,
                         data.result.data[i].created_on_str,
                         data.result.data[i].closed_on_str,
-                        data.result.data[i].success_rate,
-                        "<button id=\"" + data.result.data[i].id + "\" onClick=result_click(this.id)>Ticket Detayları</button>"
+                        "%" + data.result.data[i].success_rate,
+                        "<button id=\"" + data.result.data[i].id + "\" onclick=\"result_click(this.id)\" type=\"button\" class=\"btn btn - info btn - lg\" data-toggle=\"modal\" data-target=\"#myModal\">Ticket Detayları</button>"
+                        //"<button id=\"" + data.result.data[i].id + "\" onClick=result_click(this.id)>Ticket Detayları</button>"
                     ]).draw(false);
 
                     //console.log(data.result.data[i].users.length);
