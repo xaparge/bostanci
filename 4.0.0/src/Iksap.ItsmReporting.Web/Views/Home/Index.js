@@ -172,9 +172,10 @@ function result_click(id) {
             header_message = "<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>";
             header_message += "<h2><u>TicNo: " + data.result.id + "</u></h2>";
             //header_message = "<h2><u>TicNo: " + data.result.id + "</u> <u>SLA: <strong>%" + data.result.success_rate + "</strong></u> <u>süresi: <strong>" + data.result.rate.time_limit + "</strong></u></h2>";
-            body_message += "<h5>Ticket'ta kişiye özel toplam geçen süre</h5>";
+            body_message = "<h5>" + data.result.project_name + " : " + data.result.subject + "</h5>";
+            //body_message += "<h5>Ticket'ta kişiye özel toplam geçen süre</h5>";
             //body_message += "<tr style=\"background-color: black; color: white;\"><th>İsim Soyisim</th><th>SLA Süresi</th><th>Ticketın Son Durumu</th><th>Başlangıç Zamanı</th><th>Bitiş Zamanı</th></tr>";
-            body_message = "<table>";
+            body_message += "<table>";
             body_message += "<br/><h3>Kişiye özel süre dağılımı</h3><br/>";
             body_message += "<tr style=\"background-color: black; color: white;\"><th>İsim Soyisim</th><th>Toplam SLA Süresi</th></tr>";
             for (i = 0; i < data.result.singleUsers.length; i++) {
@@ -210,25 +211,12 @@ function result_click(id) {
             modal_header.innerHTML = header_message;
             modal_body = document.getElementById("modal_body");
             modal_body.innerHTML = body_message;
+            console.log(body_message);
         }
     }).fail(function (error) {
         alert(error.StatusText);
     });
 }
-
-//function hide_content() {
-//    var span = document.getElementsByClassName("close")[0];
-//    span.onclick = function () {
-//        modal.style.display = "none";
-//    };
-//    
-//}
-
-//window.onclick = function (event) {
-//    if (event.target === modal) {
-//        modal.style.display = "none";
-//    }
-//};
 
 $(document).ready(function () {
     let language_url;
@@ -306,6 +294,7 @@ $(document).ready(function () {
         let month = secilenAy.split("-")[1];
 
         var table = $('#slaMonthlyDetailTable').DataTable();
+
         $('#slaMonthlyDetailTable').dataTable().fnClearTable();
         $.ajax({
             url: "/Home/SlaMonthlyChartDetailTable?projects=" + getProjects() + " &month=" + month + " &year=" + year,
@@ -318,10 +307,9 @@ $(document).ready(function () {
                         data.result.data[i].created_on_str,
                         data.result.data[i].closed_on_str,
                         "%" + data.result.data[i].success_rate,
-                        "<button id=\"" + data.result.data[i].id + "\" onclick=\"result_click(this.id)\" type=\"button\" class=\"btn btn - info btn - lg\" data-toggle=\"modal\" data-target=\"#myModal\">Ticket Detayları</button>"
+                        "<button id=\"" + data.result.data[i].id + "\" onclick=\"result_click(this.id)\" type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#myModal\">Ticket Detayları</button>"
                         //"<button id=\"" + data.result.data[i].id + "\" onClick=result_click(this.id)>Ticket Detayları</button>"
                     ]).draw(false);
-
                     //console.log(data.result.data[i].users.length);
                     //for (j = 0; j < data.result.data[i].users.length; j++) {
                     //    table.row.add([
@@ -362,5 +350,6 @@ $(document).ready(function () {
         }).fail(function (error) {
             alert(error.StatusText);
         });
+
     };
 });

@@ -1,4 +1,19 @@
-﻿/* Navbar ====================================== */
+﻿table.dataTable th:nth-child(1) {
+    width: 70px;
+    max-width: 70px;
+    word-break: break-all;
+    white-space: pre-line;
+}
+
+table.dataTable td:nth-child(1) {
+    width: 70px;
+    max-width: 70px;
+    word-break: break-all;
+    white-space: pre-line;
+}
+
+
+/* Navbar ====================================== */
 .navbar {
   font-family: "Roboto", sans-serif;
   -webkit-border-radius: 0;

@@ -209,17 +209,18 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 }
                 temp.prop_key = dt.Rows[i][9].ToString();
                 temp.project_id = Convert.ToInt32(dt.Rows[i][10]);
-                temp.assigns_firstname = dt.Rows[i][11].ToString();
-                temp.assigns_lastname = dt.Rows[i][12].ToString();
-                temp.assigns_mail_address = dt.Rows[i][13].ToString();
-                temp.assigned_firstname = dt.Rows[i][14].ToString();
-                temp.assigned_lastname = dt.Rows[i][15].ToString();
-                temp.assigned_mail_address = dt.Rows[i][16].ToString();
-                temp.iksapUser = Convert.ToInt32(dt.Rows[i][17]);
-                temp.action_user_id = Convert.ToInt32(dt.Rows[i][18]);
-                temp.action_firstname = dt.Rows[i][19].ToString();
-                temp.action_lastname = dt.Rows[i][20].ToString();
-                temp.action_mail_address = dt.Rows[i][21].ToString();
+                temp.project_name = dt.Rows[i][11].ToString();
+                temp.assigns_firstname = dt.Rows[i][12].ToString();
+                temp.assigns_lastname = dt.Rows[i][13].ToString();
+                temp.assigns_mail_address = dt.Rows[i][14].ToString();
+                temp.assigned_firstname = dt.Rows[i][15].ToString();
+                temp.assigned_lastname = dt.Rows[i][16].ToString();
+                temp.assigned_mail_address = dt.Rows[i][17].ToString();
+                temp.iksapUser = Convert.ToInt32(dt.Rows[i][18]);
+                temp.action_user_id = Convert.ToInt32(dt.Rows[i][19]);
+                temp.action_firstname = dt.Rows[i][20].ToString();
+                temp.action_lastname = dt.Rows[i][21].ToString();
+                temp.action_mail_address = dt.Rows[i][22].ToString();
 
                 if (dt.Rows[i][2].ToString() == "Immediate" || dt.Rows[i][2].ToString() == "Urgent")
                 {
@@ -348,6 +349,8 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                     temp.project_id = slaList[i].project_id;
                     temp.created_on = slaList[i].created_on;
                     temp.closed_on = slaList[i].closed_on;
+                    temp.project_name = slaList[i].project_name;
+                    temp.subject = slaList[i].subject;
                     temp.rate = slaList[i].rate;
                     //temp.id = slaList[i].user_id;
                     //temp.firstname = slaList[i].user_firstname;
