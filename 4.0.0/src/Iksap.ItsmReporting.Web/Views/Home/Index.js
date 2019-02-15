@@ -177,7 +177,12 @@ function result_click(id) {
             //body_message += "<tr style=\"background-color: black; color: white;\"><th>İsim Soyisim</th><th>SLA Süresi</th><th>Ticketın Son Durumu</th><th>Başlangıç Zamanı</th><th>Bitiş Zamanı</th></tr>";
             body_message += "<table>";
             body_message += "<br/><h3>Kişiye özel süre dağılımı</h3><br/>";
-            body_message += "<tr style=\"background-color: black; color: white;\"><th>İsim Soyisim</th><th>Toplam SLA Süresi</th></tr>";
+            if (data.result.success_rate >= 100) {
+                body_message += "<tr style=\"background-color: #fa6a86; color: white;\"><th>İsim Soyisim</th><th>Toplam SLA Süresi</th></tr>";
+            }
+            else {
+                body_message += "<tr style=\"background-color: #56aeed; color: white;\"><th>İsim Soyisim</th><th>Toplam SLA Süresi</th></tr>";
+            }
             for (i = 0; i < data.result.singleUsers.length; i++) {
                 if (data.result.singleUsers[i].iksapUser === 0) {
                     body_message += "<tr style=\"background-color: #eee; text-align: right;\">";
@@ -192,7 +197,12 @@ function result_click(id) {
             body_message += "</table>";
             body_message += "<br/><h3>Ticket ayrıntılı süre dağılımı</h3><br/>";
             body_message += "<table>";
-            body_message += "<tr style=\"background-color: black; color: white;\"><th>İsim Soyisim</th><th>SLA Süresi</th><th>Ticketın Son Durumu</th><th>Başlangıç Zamanı</th><th>Bitiş Zamanı</th></tr>";
+            if (data.result.success_rate >= 100) {
+                body_message += "<tr style=\"background-color: #fa6a86; color: white;\"><th>İsim Soyisim</th><th>SLA Süresi</th><th>Ticketın Son Durumu</th><th>Başlangıç Zamanı</th><th>Bitiş Zamanı</th></tr>";
+            }
+            else {
+                body_message += "<tr style=\"background-color: #56aeed; color: white;\"><th>İsim Soyisim</th><th>SLA Süresi</th><th>Ticketın Son Durumu</th><th>Başlangıç Zamanı</th><th>Bitiş Zamanı</th></tr>";
+            }
             for (i = 0; i < data.result.users.length; i++) {
                 if (data.result.users[i].iksapUser === 0) {
                     body_message += "<tr style=\"background-color: #eee; text-align: right;\">";
@@ -211,7 +221,6 @@ function result_click(id) {
             modal_header.innerHTML = header_message;
             modal_body = document.getElementById("modal_body");
             modal_body.innerHTML = body_message;
-            console.log(body_message);
         }
     }).fail(function (error) {
         alert(error.StatusText);
@@ -308,44 +317,8 @@ $(document).ready(function () {
                         data.result.data[i].closed_on_str,
                         "%" + data.result.data[i].success_rate,
                         "<button id=\"" + data.result.data[i].id + "\" onclick=\"result_click(this.id)\" type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#myModal\">Ticket Detayları</button>"
-                        //"<button id=\"" + data.result.data[i].id + "\" onClick=result_click(this.id)>Ticket Detayları</button>"
                     ]).draw(false);
-                    //console.log(data.result.data[i].users.length);
-                    //for (j = 0; j < data.result.data[i].users.length; j++) {
-                    //    table.row.add([
-                    //        data.result.data[i].users[j].firstname,
-                    //        data.result.data[i].users[j].start_time,
-                    //        data.result.data[i].users[j].end_time,
-                    //        data.result.data[i].users[j].sla_time_hour + "s " + data.result.data[i].users[j].sla_time_minute + "dk " + data.result.data[i].users[j].sla_time_second + "sn",
-                    //        data.result.data[i].users[j].iksapUser
-                    //    ]).draw(false);
-                    //}
                 }
-
-                //$.each(data.result.data, function (a, b) {
-                //    console.log(data.result);
-                //    console.log(b);
-                //    table.row.add([
-                //        b.redmine_link,
-                //        //b.customer_firstname + " " + b.customer_lastname,
-                //        b.created_on_str,
-                //        b.closed_on_str,
-                //        b.success_rate,
-                //        //"abc",
-                //        //<a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Link with href</a>,
-                //       "<button>Ticket Detayları</button>",
-                //    ]).draw(false);
-                //    console.log(b.users.length);
-                //    for (i = 0; i < b.users.length; i++){
-                //        table.row.add([
-                //            b.users[i].firstname,
-                //            b.users[i].start_time,
-                //            b.users[i].end_time,
-                //            b.users[i].sla_time_hour + "s " + b.users[i].sla_time_minute + "dk " + b.users[i].sla_time_second + "sn",
-                //            b.users[i].iksapUser,
-                //        ]).draw(false);
-                //    }
-                //});
             }
         }).fail(function (error) {
             alert(error.StatusText);
