@@ -414,7 +414,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
 
             user_temp_first.start_time = slaTable[0].created_on;
             user_temp_first.end_time = slaTable[0].changed_on;
-            if (slaTable[0].rate.Is_7_24 == 1)
+            if (singleSlaTable.rate.Is_7_24 == 1)
                 user_temp_first = CalculateSlaTime_Immediate(user_temp_first);
             else
                 user_temp_first = CalculateSlaTime_Normal(user_temp_first, singleSlaTable.rate);
@@ -483,7 +483,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
 
                     //}
                 }
-                if (slaTable[i].rate.Is_7_24 == 1)
+                if (singleSlaTable.rate.Is_7_24 == 1)
                     user_temp = CalculateSlaTime_Immediate(user_temp);
                 else
                     user_temp = CalculateSlaTime_Normal(user_temp, singleSlaTable.rate);
@@ -535,7 +535,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                 u.end_time = slaTable[0].closed_on;
                 u.prop_key = previous_prop_key;
             }
-            if (slaTable[slaIdCount - 1].rate.Is_7_24 == 1)     // bir önceki rate'e bakıyor çünkü bir sonraki sla'lere geçti
+            if (singleSlaTable.rate.Is_7_24 == 1)     // bir önceki rate'e bakıyor çünkü bir sonraki sla'lere geçti
                 u = CalculateSlaTime_Immediate(u);
             else
                 u = CalculateSlaTime_Normal(u, singleSlaTable.rate);
