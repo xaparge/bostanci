@@ -83,8 +83,8 @@
     <text name="CC">CC</text>
     <text name="Period">Periyot</text>
 
-    <text name="TicketSuccess(%)">Ticket Başarısı(%)</text>
-    <text name="TicketCountThisMonth">Bu Ayki Ticket Sayısı</text>
+    <text name="TicketSuccess(%)">Genel Ticket Başarısı (%)</text>
+    <text name="Success">Başarısı</text>
     <text name="SuccessTicketCount">Başarılı Ticket Sayısı</text>
     <text name="UnsuccessTicketCount">Başarısız Ticket Sayısı</text>
     

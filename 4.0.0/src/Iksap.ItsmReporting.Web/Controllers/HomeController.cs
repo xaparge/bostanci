@@ -45,6 +45,19 @@ namespace Iksap.ItsmReporting.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult GetLabelNames()
+        {
+            int month;
+            if (DateTime.Now.Month != 1)
+                month = DateTime.Now.Month - 1;
+            else
+                month = 12;
+            List<string> label_name = new List<string>();
+            label_name.Add(L("TicketSuccess(%)"));
+            label_name.Add(months[month] + " " + L("Success"));
+            return Json(label_name, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult SlaMonthlyChart(string projectsName)
         {
             SlaReport sr = new SlaReport();
@@ -57,8 +70,6 @@ namespace Iksap.ItsmReporting.Web.Controllers
 
             double success_count;
             double fail_count;
-            //int month = DateTime.Now.Month;
-            //int year = DateTime.Now.Year;
             int month, year;
             if (DateTime.Now.Month != 1)
             {
@@ -104,9 +115,9 @@ namespace Iksap.ItsmReporting.Web.Controllers
             List<object> iData = new List<object>();
             //Creating sample data
             DataTable dt = new DataTable();
-            dt.Columns.Add("ay", System.Type.GetType("System.String"));
-            dt.Columns.Add("pozitif", System.Type.GetType("System.Double"));
-            dt.Columns.Add("negatif", System.Type.GetType("System.Double"));
+            dt.Columns.Add("ay", Type.GetType("System.String"));
+            dt.Columns.Add("pozitif", Type.GetType("System.Double"));
+            dt.Columns.Add("negatif", Type.GetType("System.Double"));
 
             int month_count = DateTime.Now.Month;
             int yearlabel = DateTime.Now.Year - 1;
@@ -143,103 +154,117 @@ namespace Iksap.ItsmReporting.Web.Controllers
             slaLable.Add(L("SlaPassed"));
             slaLable.Add(L("SlaMontlyPercent"));
             iData.Add(slaLable);
+
+            double general_rate = 0;
+            double last_month_rate = 0;
+            //double last_month_success_ticket = 0;
+            //double last_month_fail_ticket = 0;
+
+            List<object> general_rate_list = new List<object>();
+            general_rate_list = (List<object>)iData[1];
+            for (int i = 0; i < general_rate_list.Count; i++)
+            {
+                general_rate += (double)general_rate_list[i];
+            }
+            general_rate = Math.Round((general_rate / general_rate_list.Count), 2);
+            last_month_rate = (double)general_rate_list[general_rate_list.Count - 1];
+
+            iData.Add(general_rate);
+            iData.Add(last_month_rate);
+
             //Source data returned as JSON
             return Json(iData, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult SlaMonthlyChartByProject(string projects)
-        {
-            if (projects == null)
-                projects = "1";
-            List<int> projectsIdList = new List<int>();
-            projectsIdList = projects.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+        //public JsonResult SlaMonthlyChartByProject(string projects)
+        //{
+        //    if (projects == null)
+        //        projects = "1";
+        //    List<int> projectsIdList = new List<int>();
+        //    projectsIdList = projects.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
 
-            SlaReport sr = new SlaReport();
-            List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
+        //    SlaReport sr = new SlaReport();
+        //    List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
 
-            Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
+        //    Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
 
-            double success_count;
-            double fail_count;
-            int month = DateTime.Now.Month;
-            //if (DateTime.Now.Month != 1)
-            //    month = DateTime.Now.Month - 1;
-            //else
-            //    month = 12;
-            int year = DateTime.Now.Year;
-            for (int i = 0; i < 12; i++)
-            {
-                success_count = 0;
-                fail_count = 0;
-                singleSla = sr.getSingleSlaTables("close", month, year, projects);
+        //    double success_count;
+        //    double fail_count;
+        //    int month = DateTime.Now.Month;
+        //    int year = DateTime.Now.Year;
+        //    for (int i = 0; i < 12; i++)
+        //    {
+        //        success_count = 0;
+        //        fail_count = 0;
+        //        singleSla = sr.getSingleSlaTables("close", month, year, projects);
 
-                for (int j = 0; j < singleSla.Count; j++)
-                {
-                    if (singleSla[j].success_rate < 100)
-                        success_count++;
-                    else if (singleSla[j].success_rate >= 100)
-                        fail_count++;
-                }
-                double success_rate = Math.Round((success_count * 100) / (success_count + fail_count), 2);
-                double fail_rate = Math.Round((fail_count * 100) / (success_count + fail_count), 2);
-                List<string> successAndFail2 = new List<string>();
-                successAndFail2.Add(CheckNull(success_rate));
-                successAndFail2.Add(CheckNull(fail_rate));
+        //        for (int j = 0; j < singleSla.Count; j++)
+        //        {
+        //            if (singleSla[j].success_rate < 100)
+        //                success_count++;
+        //            else if (singleSla[j].success_rate >= 100)
+        //                fail_count++;
+        //        }
+        //        double success_rate = Math.Round((success_count * 100) / (success_count + fail_count), 2);
+        //        double fail_rate = Math.Round((fail_count * 100) / (success_count + fail_count), 2);
+        //        List<string> successAndFail2 = new List<string>();
+        //        successAndFail2.Add(CheckNull(success_rate));
+        //        successAndFail2.Add(CheckNull(fail_rate));
 
-                dictionary[months[month]] = successAndFail2;
+        //        dictionary[months[month]] = successAndFail2;
 
-                if (month > 1)
-                    month--;
-                else
-                {
-                    month = 12;
-                    year -= 1;
-                }
-            }
+        //        if (month > 1)
+        //            month--;
+        //        else
+        //        {
+        //            month = 12;
+        //            year -= 1;
+        //        }
+        //    }
 
-            List<object> iData = new List<object>();
-            //Creating sample data
-            DataTable dt = new DataTable();
-            dt.Columns.Add("ay", System.Type.GetType("System.String"));
-            dt.Columns.Add("pozitif", System.Type.GetType("System.Double"));
-            dt.Columns.Add("negatif", System.Type.GetType("System.Double"));
+        //    List<object> iData = new List<object>();
+        //    //Creating sample data
+        //    DataTable dt = new DataTable();
+        //    dt.Columns.Add("ay", Type.GetType("System.String"));
+        //    dt.Columns.Add("pozitif", Type.GetType("System.Double"));
+        //    dt.Columns.Add("negatif", Type.GetType("System.Double"));
 
-            int month_count = DateTime.Now.Month + 1;
-            int yearlabel = DateTime.Now.Year - 1;
-            for (int i = 0; i < dictionary.Count; i++)
-            {
-                DataRow dr = dt.NewRow();
+        //    int month_count = DateTime.Now.Month + 1;
+        //    int yearlabel = DateTime.Now.Year - 1;
+        //    for (int i = 0; i < dictionary.Count; i++)
+        //    {
+        //        DataRow dr = dt.NewRow();
 
-                dr["ay"] = yearlabel + " - " + months[month_count];
-                dr["pozitif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][0]), 2);
-                dr["negatif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][1]), 2);
-                dt.Rows.Add(dr);
+        //        dr["ay"] = yearlabel + " - " + months[month_count];
+        //        dr["pozitif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][0]), 2);
+        //        dr["negatif"] = Math.Round(Convert.ToDouble(dictionary[months[month_count]][1]), 2);
+        //        dt.Rows.Add(dr);
 
-                if (month_count < 12)
-                    month_count++;
-                else
-                {
-                    month_count = 1;
-                    yearlabel = DateTime.Now.Year;
-                }
-            }
+        //        if (month_count < 12)
+        //            month_count++;
+        //        else
+        //        {
+        //            month_count = 1;
+        //            yearlabel = DateTime.Now.Year;
+        //        }
+        //    }
 
-            //Looping and extracting each DataColumn to List<Object>
-            foreach (DataColumn dc in dt.Columns)
-            {
-                List<object> y = new List<object>();
-                y = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
-                iData.Add(y);
-            }
+        //    //Looping and extracting each DataColumn to List<Object>
+        //    foreach (DataColumn dc in dt.Columns)
+        //    {
+        //        List<object> y = new List<object>();
+        //        y = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
+        //        iData.Add(y);
+        //    }
 
-            List<string> slaLable = new List<string>();
-            slaLable.Add(L("SlaProviders"));
-            slaLable.Add(L("SlaPassed"));
-            slaLable.Add(L("SlaMontlyPercent"));
-            iData.Add(slaLable);
-            //Source data returned as JSON
-            return Json(iData, JsonRequestBehavior.AllowGet);
-        }
+        //    List<string> slaLable = new List<string>();
+        //    slaLable.Add(L("SlaProviders"));
+        //    slaLable.Add(L("SlaPassed"));
+        //    slaLable.Add(L("SlaMontlyPercent"));
+        //    iData.Add(slaLable);
+        //    //Source data returned as JSON
+        //    return Json(iData, JsonRequestBehavior.AllowGet);
+        //}
 
         public string CheckNull(double item)
         {
@@ -248,40 +273,40 @@ namespace Iksap.ItsmReporting.Web.Controllers
             else return "0";
         }
 
-        public JsonResult SlaMonthlyChartDetailTable_(string projects, string month, string year)
-        {
-            SlaReport slaReport = new SlaReport();
-            SlaDetailTable dataTable = new SlaDetailTable();
+        //public JsonResult SlaMonthlyChartDetailTable_(string projects, string month, string year)
+        //{
+        //    SlaReport slaReport = new SlaReport();
+        //    SlaDetailTable dataTable = new SlaDetailTable();
 
-            GetProjectsAndSub calculate = new GetProjectsAndSub();
-            string selectedProjectNumbers = calculate.getProjects(projects);
+        //    GetProjectsAndSub calculate = new GetProjectsAndSub();
+        //    string selectedProjectNumbers = calculate.getProjects(projects);
 
-            List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
-            singleSla = slaReport.getSingleSlaTables("close", monthsNumber[month.Trim()], Convert.ToInt32(year.Trim()), selectedProjectNumbers);
+        //    List<SingleSlaTable> singleSla = new List<SingleSlaTable>();
+        //    singleSla = slaReport.getSingleSlaTables("close", monthsNumber[month.Trim()], Convert.ToInt32(year.Trim()), selectedProjectNumbers);
 
-            string filterTicketId = Request.QueryString["ticketId"];
-            string filterCreatedOn = Request.QueryString["created_on"];
-            string filterClosedOn = Request.QueryString["closed_on"];
-            string filterRate = Request.QueryString["rate"];
-            var result = from s in singleSla
-                         where (string.IsNullOrEmpty(filterTicketId) || s.id.Equals(filterTicketId))
-                         && (string.IsNullOrEmpty(filterCreatedOn) || s.closed_on.Equals(filterCreatedOn))
-                         && (string.IsNullOrEmpty(filterClosedOn) || s.success_rate.Equals(filterClosedOn))
-                         && (string.IsNullOrEmpty(filterRate) || s.success_rate.Equals(filterRate))
-                         select s;
+        //    string filterTicketId = Request.QueryString["ticketId"];
+        //    string filterCreatedOn = Request.QueryString["created_on"];
+        //    string filterClosedOn = Request.QueryString["closed_on"];
+        //    string filterRate = Request.QueryString["rate"];
+        //    var result = from s in singleSla
+        //                 where (string.IsNullOrEmpty(filterTicketId) || s.id.Equals(filterTicketId))
+        //                 && (string.IsNullOrEmpty(filterCreatedOn) || s.closed_on.Equals(filterCreatedOn))
+        //                 && (string.IsNullOrEmpty(filterClosedOn) || s.success_rate.Equals(filterClosedOn))
+        //                 && (string.IsNullOrEmpty(filterRate) || s.success_rate.Equals(filterRate))
+        //                 select s;
 
-            dataTable.data = result.ToArray();
-            dataTable.recordsTotal = singleSla.Count;
-            dataTable.recordsFiltered = result.Count();
-            string link = "http://89.106.1.162/redmine/issues/";
-            for (int i = 0; i < singleSla.Count; i++)
-            {
-                singleSla[i].redmine_link = "<a href=" + link + singleSla[i].id + " target =\"_blank\">" + singleSla[i].id + "</a>";
-                singleSla[i].created_on_str = singleSla[i].created_on.ToString("dd/MM/yyyy HH:mm:ss");
-                singleSla[i].closed_on_str = singleSla[i].closed_on.ToString("dd/MM/yyyy HH:mm:ss");
-            }
-            return Json(dataTable, JsonRequestBehavior.AllowGet);
-        }
+        //    dataTable.data = result.ToArray();
+        //    dataTable.recordsTotal = singleSla.Count;
+        //    dataTable.recordsFiltered = result.Count();
+        //    string link = "http://89.106.1.162/redmine/issues/";
+        //    for (int i = 0; i < singleSla.Count; i++)
+        //    {
+        //        singleSla[i].redmine_link = "<a href=" + link + singleSla[i].id + " target =\"_blank\">" + singleSla[i].id + "</a>";
+        //        singleSla[i].created_on_str = singleSla[i].created_on.ToString("dd/MM/yyyy HH:mm:ss");
+        //        singleSla[i].closed_on_str = singleSla[i].closed_on.ToString("dd/MM/yyyy HH:mm:ss");
+        //    }
+        //    return Json(dataTable, JsonRequestBehavior.AllowGet);
+        //}
 
         //public JsonResult SlaMonthlyChartDetailWithStaff(string projects, string month, string year)
         public JsonResult SlaMonthlyChartDetailTable(string projects, string month, string year)

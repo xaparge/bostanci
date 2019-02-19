@@ -83,8 +83,8 @@
     <text name="CC">CC</text>
     <text name="Period">Period</text>
 
-    <text name="TicketSuccess(%)">Ticket Success(%)</text>
-    <text name="TicketCountThisMonth">Ticket Count</text>
+    <text name="TicketSuccess(%)">General Ticket Success (%)</text>
+    <text name="Success">Success</text>
     <text name="SuccessTicketCount">Success Ticket Count</text>
     <text name="UnsuccessTicketCount">Exprired Ticket Count</text>
 

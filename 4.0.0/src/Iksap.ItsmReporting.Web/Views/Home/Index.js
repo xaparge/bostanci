@@ -9,6 +9,7 @@
         }
     });
     initSlaMonthlyChart();
+    get_label_name();
 });
 var realtime = 'on';
 
@@ -236,19 +237,6 @@ $(document).ready(function () {
         setLanguage("//cdn.datatables.net/plug-ins/1.10.19/i18n/English.json");
     });
 
-    //var example2 = new Vue({
-    //    el: '#app',
-    //    // define methods under the `methods` object
-    //    methods: {
-    //        open: function (event) {
-    //            alert('Hello ' + this.name + '!');
-    //        }
-    //    }
-    //});
-
-    // you can invoke methods in JavaScript too
-    //example2.open();
-
 
     $(function () {// Loading projects into combobox
         AjaxCall('/Home/GetProjectsTreeList', null).done(function (response) {
@@ -274,6 +262,7 @@ $(document).ready(function () {
                 dataType: 'json',
                 type: 'post',
                 success: function (data) {
+                    change_label_content(data.result[4], data.result[5]);
                     SlaMonthlyChart(data);
                 }
             }).done(function (response) {
@@ -326,3 +315,27 @@ $(document).ready(function () {
 
     };
 });
+
+function change_label_content(lbl1, lbl2) {
+    var lbl1_content = document.getElementById("lbl1_content");
+    lbl1_content.innerHTML = lbl1;
+    var lbl2_content = document.getElementById("lbl2_content");
+    lbl2_content.innerHTML = lbl2;
+}
+
+// form yüklenince üstteki label'ların ismini düzeltmek için kullanılıyor.
+function get_label_name() {
+    $.ajax({
+        url: "/Home/GetLabelNames",
+        dataType: 'json',
+        type: 'post',
+        success: function (data) {
+            var lbl1_name = document.getElementById("lbl1_name");
+            lbl1_name.innerHTML = data.result[0];
+            var lbl2_name = document.getElementById("lbl2_name");
+            lbl2_name.innerHTML = data.result[1];
+        }
+    }).fail(function (error) {
+        alert(error.StatusText);
+    });
+}

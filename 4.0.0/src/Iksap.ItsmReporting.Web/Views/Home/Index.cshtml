@@ -33,50 +33,52 @@
 </div>
 <!-- Widgets -->
 <div class="row clearfix">
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    @*<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">*@
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <div class="info-box bg-orange hover-expand-effect">
-            <div class="icon">
-                <i class="material-icons">playlist_add_check</i>
-            </div>
-            <div class="content">
-                <div class="text">@L("TicketSuccess(%)")</div>
-                <div class="number count-to" data-from="0" data-to="0" data-speed="1000" data-fresh-interval="20"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box bg-cyan hover-expand-effect">
             <div class="icon">
                 <i class="material-icons">mood</i>
             </div>
             <div class="content">
-                <div class="text">@L("TicketCountThisMonth")</div>
-                <div class="number count-to" data-from="0" data-to="0" data-speed="1000" data-fresh-interval="20"></div>
+                <div id="lbl1_name" class="text">@L("TicketSuccess(%)")</div>
+                <div id="lbl1_content" class="number count-to" data-from="0" data-to="0" data-speed="1000" data-fresh-interval="20"></div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box bg-light-green hover-expand-effect">
+    @*<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">*@
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <div class="info-box bg-cyan hover-expand-effect">
             <div class="icon">
-                <i class="material-icons">thumb_up</i>
+                <i class="material-icons">playlist_add_check</i>
             </div>
             <div class="content">
-                <div class="text">@L("SuccessTicketCount")</div>
-                <div class="number count-to" data-from="0" data-to="0" data-speed="1000" data-fresh-interval="20"></div>
+                <div id="lbl2_name" class="text">@L("Success")</div>
+                <div id="lbl2_content" class="number count-to" data-from="0" data-to="0" data-speed="1000" data-fresh-interval="20"></div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box bg-pink hover-expand-effect">
-            <div class="icon">
-                <i class="material-icons">thumb_down</i>
-            </div>
-            <div class="content">
-                <div class="text">@L("UnsuccessTicketCount")</div>
-                <div class="number count-to" data-from="0" data-to="0" data-speed="1000" data-fresh-interval="20"></div>
+    @*<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-light-green hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">thumb_up</i>
+                </div>
+                <div class="content">
+                    <div class="text">@L("SuccessTicketCount")</div>
+                    <div class="number count-to" data-from="0" data-to="0" data-speed="1000" data-fresh-interval="20"></div>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-pink hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">thumb_down</i>
+                </div>
+                <div class="content">
+                    <div class="text">@L("UnsuccessTicketCount")</div>
+                    <div class="number count-to" data-from="0" data-to="0" data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+        </div>*@
 </div>
 <!-- #END# Widgets -->
 <!-- Bar Chart -->
