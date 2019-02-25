@@ -48,10 +48,11 @@ namespace Iksap.ItsmReporting.Web.Controllers
         public JsonResult GetLabelNames()
         {
             int month;
-            if (DateTime.Now.Month != 1)
-                month = DateTime.Now.Month - 1;
-            else
-                month = 12;
+            month = DateTime.Now.Month;
+            //if (DateTime.Now.Month != 1)
+            //    month = DateTime.Now.Month - 1;
+            //else
+            //    month = 12;
             List<string> label_name = new List<string>();
             label_name.Add(L("TicketSuccess(%)"));
             label_name.Add(months[month] + " " + L("Success"));
@@ -71,16 +72,19 @@ namespace Iksap.ItsmReporting.Web.Controllers
             double success_count;
             double fail_count;
             int month, year;
-            if (DateTime.Now.Month != 1)
-            {
-                month = DateTime.Now.Month - 1;
-                year = DateTime.Now.Year;
-            }
-            else
-            {
-                month = 12;
-                year = DateTime.Now.Year - 1;
-            }
+            //if (DateTime.Now.Month != 1)
+            //{
+            //    month = DateTime.Now.Month - 1;
+            //    year = DateTime.Now.Year;
+            //}
+            //else
+            //{
+            //    month = 12;
+            //    year = DateTime.Now.Year - 1;
+            //}
+
+            month = DateTime.Now.Month;
+            year = DateTime.Now.Year;
 
             for (int i = 0; i < 12; i++)
             {
@@ -119,8 +123,19 @@ namespace Iksap.ItsmReporting.Web.Controllers
             dt.Columns.Add("pozitif", Type.GetType("System.Double"));
             dt.Columns.Add("negatif", Type.GetType("System.Double"));
 
-            int month_count = DateTime.Now.Month;
-            int yearlabel = DateTime.Now.Year - 1;
+            int month_count, yearlabel;
+            //int month_count = DateTime.Now.Month;
+            //int yearlabel = DateTime.Now.Year - 1;
+            if (DateTime.Now.Month != 12)
+            {
+                month_count = DateTime.Now.Month + 1;
+                yearlabel = DateTime.Now.Year - 1;
+            }
+            else
+            {
+                month_count = DateTime.Now.Month;
+                yearlabel = DateTime.Now.Year;
+            }
             for (int i = 0; i < dictionary.Count; i++)
             {
                 DataRow dr = dt.NewRow();
