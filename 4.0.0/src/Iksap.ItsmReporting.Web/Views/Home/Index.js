@@ -70,7 +70,7 @@ function SlaMonthlyChart(mems) {
             legend: { position: 'bottom' },
             scales: {
                 xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' } }],
-                yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' }, ticks: { stepSize: 50, beginAtZero: true } }]
+                yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: false, labelString: '' }, ticks: { stepSize: 10, beginAtZero: true } }]
             }
         }
     });
@@ -125,7 +125,7 @@ function initSlaMonthlyChart() {
                     legend: { position: 'bottom' },
                     scales: {
                         xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' } }],
-                        yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' }, ticks: { stepSize: 50, beginAtZero: true } }]
+                        yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' }, ticks: { stepSize: 100, beginAtZero: true } }]
                     }
                 }
             });
@@ -309,10 +309,12 @@ $(document).ready(function () {
                     ]).draw(false);
                 }
             }
+        }).done(function (response) {
+            location.href = "#sladetail";
         }).fail(function (error) {
             alert(error.StatusText);
         });
-
+       
     };
 });
 
