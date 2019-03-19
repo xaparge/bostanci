@@ -95,7 +95,7 @@
     <text name="TicketNumber">Bilieto Numeris</text>
     <text name="OpeningDate">Atidarymo Data</text>
     <text name="ClosingDate">Uždarymo Data</text>
-    <text name="SlaPercent">Sla Procentinė Dalis</text>
+    <text name="SlaPercent">Sla Procentinė Dalis (%)</text>
 
     <text name="SlaProviders">Bilietų Teikėjai</text>
     <text name="SlaPassed">Bilietų Galiojimo Pabaiga</text>

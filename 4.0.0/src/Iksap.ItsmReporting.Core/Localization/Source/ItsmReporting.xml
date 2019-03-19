@@ -99,7 +99,7 @@
 
     <text name="SlaProviders">Sla Providers</text>
     <text name="SlaPassed">Sla Passed</text>
-    <text name="SlaMontlyPercent">Sla Montly Percent</text>
+    <text name="SlaMontlyPercent">Sla Montly Percent (%)</text>
 
     <text name="January">January</text>
     <text name="February">February</text>

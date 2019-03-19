@@ -95,7 +95,7 @@
     <text name="TicketNumber">Ticket No</text>
     <text name="OpeningDate">Açılış Tarihi</text>
     <text name="ClosingDate">Kapanış Tarihi</text>
-    <text name="SlaPercent">Sla Yüzdesi</text>
+    <text name="SlaPercent">Sla Yüzdesi (%)</text>
 
     <text name="SlaProviders">Sla Sağlayanlar</text>
     <text name="SlaPassed">Sla Geçenler</text>

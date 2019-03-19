@@ -304,7 +304,8 @@ $(document).ready(function () {
                         data.result.data[i].redmine_link,
                         data.result.data[i].created_on_str,
                         data.result.data[i].closed_on_str,
-                        "%" + data.result.data[i].success_rate,
+                        //"%" + 
+                        data.result.data[i].success_rate,
                         "<button id=\"" + data.result.data[i].id + "\" onclick=\"result_click(this.id)\" type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#myModal\">Ticket Detayları</button>"
                     ]).draw(false);
                 }

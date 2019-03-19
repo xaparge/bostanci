@@ -73,7 +73,7 @@
     <text name="TicketNumber">Số vé</text>
     <text name="OpeningDate">Ngày khai trương</text>
     <text name="ClosingDate">Ngày kết thúc</text>
-    <text name="SlaPercent">Phần trăm Sla</text>
+    <text name="SlaPercent">Phần trăm Sla (%)</text>
 
     <text name="SlaProviders">Nhà cung cấp Sla</text>
     <text name="SlaPassed">Thời gian Sla</text>

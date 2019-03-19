@@ -72,7 +72,7 @@
     <text name="TicketNumber">チケット番号</text>
     <text name="OpeningDate">開会日</text>
     <text name="ClosingDate">締め切り日</text>
-    <text name="SlaPercent">チケットの割合</text>
+    <text name="SlaPercent">チケットの割合 (%)</text>
 
     <text name="SlaProviders">チケットプロバイダ</text>
     <text name="SlaPassed">チケットの有効期限</text>

@@ -61,7 +61,7 @@
     <text name="TicketNumber">Numéro De Billet</text>
     <text name="OpeningDate">Date D'ouverture</text>
     <text name="ClosingDate">Date De Clôture</text>
-    <text name="SlaPercent">Sla Pourcentage</text>
+    <text name="SlaPercent">Sla Pourcentage (%)</text>
 
     <text name="SlaProviders">Sla Fournisseurs</text>
     <text name="SlaPassed">Sla Expiré</text>

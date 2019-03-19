@@ -72,7 +72,7 @@
     <text name="TicketNumber">Numero Del Biglietto</text>
     <text name="OpeningDate">Data Di Apertura</text>
     <text name="ClosingDate">Data Di Chiusura</text>
-    <text name="SlaPercent">Sla Percentuale</text>
+    <text name="SlaPercent">Sla Percentuale (%)</text>
 
     <text name="SlaProviders">Provider Sla</text>
     <text name="SlaPassed">Sla È Scaduto</text>

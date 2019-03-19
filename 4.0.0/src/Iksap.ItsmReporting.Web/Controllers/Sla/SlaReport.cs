@@ -138,6 +138,8 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
             double tempsecond_time_limit = singleSlaTable.rate.time_limit * 3600;   // yüzde hesaplama saniye üzerinden yapılması için gerekli dönüşüm yapıldı
             singleSlaTable.success_rate = Math.Round((100 * tempsecond_past) / tempsecond_time_limit, 2);
 
+            if (singleSlaTable.id == 3669) { }
+
 
             if (singleSlaTable.singleUsers.Count == 0)
             {
@@ -376,7 +378,7 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
 
             List<int> slaActiveTime = new List<int> { 0, 1, 2, 7, 10 };   // 0-null 1-yeni 2-çalışılıyor 7-efor bekleniyor 10-değişiklik bekleniyor
 
-            //if (singleSlaTable.id == 322)
+            //if (singleSlaTable.id == 4396)
             //{ }   // debug'ta kontrol için kullanılıyor
 
             userInfo user_temp_first = new userInfo();
@@ -506,47 +508,53 @@ namespace Iksap.ItsmReporting.Web.Controllers.Sla
                     previous_value = slaTable[i].value;
                     previous_value_name = slaTable[i].value_name;
                     previous_iksapUser = user_temp.iksapUser;
+
+                    //// 4396 NOLU TİCKETTAKİ GİBİ SORUNU ÇÖZMEK İÇİN ALTTAKİ İF KONULMUŞTUR
+                    //if (previous_value_name == "Kapandı")
+                    //    break;
                 }
                 previous_prop_key = slaTable[i].prop_key;
             }
-            userInfo u = new userInfo();
-            if (previous_iksapUser == 1)
-            {
-                u.id = previous_id;
-                u.firstname = previous_firstname;
-                u.lastname = previous_lastname;
-                u.mail_address = previous_mail_address;
-                u.value = previous_value;
-                u.value_name = previous_value_name;
-                u.start_time = singleSlaTable.users[singleSlaTable.users.Count - 1].end_time;   // en sonki kullanıcının bitiş zamanı (change_on) bir sonrakinin başlangıç zamanı oluyor
-                u.end_time = DateTime.Now;
-                u.prop_key = previous_prop_key;
-            }
-            else
-            {
-                u.id = previous_id;
-                u.firstname = previous_firstname;
-                u.lastname = previous_lastname;
-                u.mail_address = previous_mail_address;
-                u.value = -1;
-                //u.value_name = "Süre Müşteride";
-                u.value_name = "----";
-                u.start_time = singleSlaTable.users[singleSlaTable.users.Count - 1].end_time;
-                u.end_time = slaTable[0].closed_on;
-                u.prop_key = previous_prop_key;
-            }
-            if (singleSlaTable.rate.Is_7_24 == 1)     // bir önceki rate'e bakıyor çünkü bir sonraki sla'lere geçti
-                u = CalculateSlaTime_Immediate(u);
-            else
-                u = CalculateSlaTime_Normal(u, singleSlaTable.rate);
 
-            u.iksapUser = previous_iksapUser;
-            singleSlaTable.users.Add(u);
+            // 4396 NOLU TİCKETTAKİ GİBİ SORUNU ÇÖZMEK İÇİN ALTTAKİ İF KONULMUŞTUR
+            // Son durumu Kapandı ise user bilgisini eklemeyecek
+            if (previous_value_name != "Kapandı" &&  previous_value_name != "Reddedildi")
+            {
+                userInfo u = new userInfo();
+                if (previous_iksapUser == 1)
+                {
+                    u.id = previous_id;
+                    u.firstname = previous_firstname;
+                    u.lastname = previous_lastname;
+                    u.mail_address = previous_mail_address;
+                    u.value = previous_value;
+                    u.value_name = previous_value_name;
+                    u.start_time = singleSlaTable.users[singleSlaTable.users.Count - 1].end_time;   // en sonki kullanıcının bitiş zamanı (change_on) bir sonrakinin başlangıç zamanı oluyor
+                    u.end_time = DateTime.Now;
+                    u.prop_key = previous_prop_key;
+                }
+                else
+                {
+                    u.id = previous_id;
+                    u.firstname = previous_firstname;
+                    u.lastname = previous_lastname;
+                    u.mail_address = previous_mail_address;
+                    u.value = -1;
+                    //u.value_name = "Süre Müşteride";
+                    u.value_name = "----";
+                    u.start_time = singleSlaTable.users[singleSlaTable.users.Count - 1].end_time;
+                    u.end_time = slaTable[0].closed_on;
+                    u.prop_key = previous_prop_key;
+                }
+                if (singleSlaTable.rate.Is_7_24 == 1)     // bir önceki rate'e bakıyor çünkü bir sonraki sla'lere geçti
+                    u = CalculateSlaTime_Immediate(u);
+                else
+                    u = CalculateSlaTime_Normal(u, singleSlaTable.rate);
 
-            //// success_rate hesaplaması:
-            //double tempSecond_past = (singleSlaTable.sla_time_hour * 3600) + (singleSlaTable.sla_time_minute * 60) + singleSlaTable.sla_time_second;   // yüzde hesaplama saniye üzerinden yapılması için gerekli dönüşüm yapıldı
-            //double tempSecond_time_limit = singleSlaTable.rate.time_limit * 3600;   // yüzde hesaplama saniye üzerinden yapılması için gerekli dönüşüm yapıldı
-            //singleSlaTable.success_rate = Math.Round((100 * tempSecond_past) / tempSecond_time_limit, 2);
+                u.iksapUser = previous_iksapUser;
+                singleSlaTable.users.Add(u);
+            }
+
 
             for (int i = 0; i < slaIdCount; i++)
             {
