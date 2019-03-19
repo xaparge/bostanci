@@ -12,6 +12,11 @@ using System.ComponentModel.DataAnnotations;
 using Abp.Runtime.Security;
 using Newtonsoft.Json;
 using System.Globalization;
+using Iksap.ItsmReporting.Web.Models.Layout;
+using Iksap.ItsmReporting.Sessions;
+using Abp.Threading;
+using Abp.Configuration.Startup;
+using Abp.Runtime.Session;
 
 namespace Iksap.ItsmReporting.Web.Controllers
 
@@ -21,6 +26,16 @@ namespace Iksap.ItsmReporting.Web.Controllers
     {
         private static Dictionary<int, string> months;
         private static Dictionary<string, int> monthsNumber;
+
+        private readonly ISessionAppService _sessionAppService;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
+
+        public HomeController(ISessionAppService sessionAppService, IMultiTenancyConfig multiTenancyConfig)
+        {
+            _sessionAppService = sessionAppService;
+            _multiTenancyConfig = multiTenancyConfig;
+
+        }
 
         public ActionResult Index()
         {
@@ -32,7 +47,14 @@ namespace Iksap.ItsmReporting.Web.Controllers
                                                                         {L("April"), 4},  {L("May"), 5},{L("June"), 6},
                                                                         {L("July"), 7}, {L("August"), 8},{L("September"), 9},
                                                                         {L("October"), 10}, {L("November"), 11}, {L("December"), 12}};
-            return View();
+
+            var model = new SideBarUserAreaViewModel
+            {
+                LoginInformations = AsyncHelper.RunSync(() => _sessionAppService.GetCurrentLoginInformations()),
+                IsMultiTenancyEnabled = _multiTenancyConfig.IsEnabled,
+            };
+
+            return View(model);
         }
 
         public JsonResult GetProjectsTreeList()
